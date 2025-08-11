@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>BiBuKaMi — Игра «Собери капли»</title>
+<meta name="description" content="Мини-игра — соберите капли воды в бутылку и получите приз от BiBuKaMi." />
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#fff; --muted:#59616b; --accent:#06b6d4; --danger:#b00020;
+    --shadow: 0 10px 30px rgba(0,0,0,0.06);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", Arial, sans-serif;background:var(--bg);color:#111}
+  .wrap{max-width:1400px;margin:18px auto;padding:12px 18px}
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  header h1{font-size:18px;margin:0}
+  .game-shell{
+    display:grid;
+    grid-template-columns: 1fr 340px;
+    gap:18px;
+    align-items:start;
+    min-height: calc(100vh - 100px);
+  }
+  .game-card{ background:var(--card); border-radius:12px; padding:14px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:12px; min-height:480px; }
+  .canvas-outer{ flex:1 1 auto; display:flex; align-items:center; justify-content:center; position:relative; min-height:420px; }
+  #gameCanvas{ width:100%; height:100%; max-height:calc(100vh - 260px); border-radius:10px; border:1px solid rgba(0,0,0,0.04); background: linear-gradient(#eaf7fb,#ffffff); display:block; }
+  .start-overlay{ position:absolute; left:0; right:0; top:0; bottom:0; display:flex;align-items:center;justify-content:center; pointer-events:none; border-radius:10px; }
+  .start-inner{ background:rgba(255,255,255,0.96); padding:22px 26px; border-radius:12px; text-align:center; box-shadow:0 8px 32px rgba(6,182,212,0.06); pointer-events:auto; max-width:560px; width:88% }
+  .start-row{ display:flex; gap:10px; align-items:center; justify-content:center; margin-top:12px; flex-wrap:wrap; }
+  .mode-label{ display:flex; align-items:center; gap:8px; padding:8px 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.06); cursor:pointer; background:#fff }
+  .mode-label input{ margin-right:6px }
+  .start-btn{ background:linear-gradient(90deg,var(--accent),#0891b2); color:#fff;border:0;padding:10px 18px;border-radius:10px;font-weight:700;margin-top:10px; cursor:pointer; }
+  .controls-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px}
+  .progress { flex:1; margin-right:12px; height:14px; background:#f1f5f9;border-radius:10px; overflow:hidden; border:1px solid rgba(0,0,0,0.03) }
+  .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#0891b2); width:0%; transition:width .28s ease}
+  .small{font-size:13px;color:var(--muted)}
+
+  /* HUD */
+  .hud{ display:flex; align-items:center; gap:12px; justify-content:space-between; width:100%; }
+  .hud-left{ display:flex; gap:12px; align-items:center; }
+  .hud-item{ background: #fff; border:1px solid rgba(0,0,0,0.04); padding:8px 12px; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.04); font-weight:700; color:#111 }
+  .pause-btn{ padding:6px 10px; border-radius:8px; border:0; background:#111; color:#fff; cursor:pointer; font-weight:700 }
+
+  aside.info{ width:340px; display:flex; flex-direction:column; gap:12px; }
+  .info-card{ background:#fff; border-radius:10px; padding:12px; border:1px solid rgba(0,0,0,0.04); box-shadow:var(--shadow) }
+  .info-card h3{margin:0 0 8px;font-size:15px}
+  .prize{ background:linear-gradient(90deg,#fff,#f7fcff); padding:10px; border-radius:8px; border:1px solid rgba(6,182,212,0.04); font-size:14px; color:var(--muted) }
+
+  .overlay { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.35); visibility:hidden; opacity:0; transition:opacity .18s; z-index:50 }
+  .overlay.show { visibility:visible; opacity:1 }
+  .modal { width: 560px; background:#fff; border-radius:12px; padding:18px; box-shadow:0 20px 60px rgba(0,0,0,0.15); text-align:center }
+  .bottle-preview{width:92px;height:170px;margin:10px auto;position:relative}
+  .bottle-outline{width:100%;height:100%;border-radius:12px;border:4px solid rgba(0,0,0,0.06);position:relative;overflow:hidden}
+  .bottle-fill{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(180deg,#06b6d4,#0891b2);transition:height .6s ease}
+  .btn { display:inline-block; padding:8px 12px; border-radius:8px; border:0; cursor:pointer; font-weight:700 }
+  .btn--ghost { background:transparent; color:var(--accent); border:1px solid rgba(0,0,0,0.06) }
+
+  .mode-help{ font-size:13px; color:var(--muted); margin-top:8px; text-align:left }
+
+  @media (max-width:1000px){ .game-shell{ grid-template-columns: 1fr; } aside.info{ width:100% } #gameCanvas{ max-height:520px } }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Поддержать проект — мини-игра</h1>
+      <a href="index.html" title="Вернуться">← Вернуться</a>
+    </header>
+
+    <div class="game-shell">
+      <div class="game-card" role="region" aria-label="Игра: собери капли воды">
+
+        <!-- HUD -->
+        <div class="hud" aria-hidden="false">
+          <div class="hud-left">
+            <div class="hud-item" id="scoreBox">Очки: 0</div>
+            <div class="hud-item" id="bestBox">Рекорд: 0</div>
+            <div class="hud-item" id="levelBox">Уровень: 1</div>
+            <div class="hud-item" id="multBox">x1</div>
+            <div class="hud-item" id="timerBox" style="min-width:84px">00:00</div>
+          </div>
+          <div>
+            <button id="pauseBtn" class="pause-btn" aria-pressed="false">Пауза</button>
+          </div>
+        </div>
+
+        <div class="canvas-outer" id="canvasOuter">
+          <canvas id="gameCanvas" role="img" aria-label="Игровое поле"></canvas>
+
+          <div id="startOverlay" class="start-overlay" aria-hidden="false">
+            <div class="start-inner" role="dialog" aria-modal="false">
+              <div style="font-size:18px;font-weight:800;margin-bottom:6px">Готовы играть?</div>
+              <div style="color:var(--muted);font-size:14px">Выберите режим и нажмите «Старт». Цель — собрать капли и пройти волны.</div>
+
+              <div class="start-row" style="margin-top:12px; justify-content:center">
+                <label class="mode-label"><input type="radio" name="mode" value="quick" checked> Быстрый (Quick)</label>
+                <label class="mode-label"><input type="radio" name="mode" value="infinite"> Бесконечный (Infinite)</label>
+                <label class="mode-label"><input type="radio" name="mode" value="hardcore"> Хардкор (Hard)</label>
+              </div>
+
+              <div class="mode-help">
+                <small>
+                  Quick — серия коротких волн с таймером.<br>
+                  Infinite — игра на очки без таймера, сложность растёт постоянно.<br>
+                  Hard — более жёсткие таймеры и цели.
+                </small>
+              </div>
+
+              <div style="margin-top:12px; display:flex;gap:10px;align-items:center;justify-content:center">
+                <label style="font-size:13px;color:var(--muted)">Чувствительность</label>
+                <input id="sensitivity" type="range" min="0.5" max="2.0" step="0.1" value="1.0" style="width:160px">
+              </div>
+
+              <button id="startBtn" class="start-btn" aria-label="Начать игру">Старт</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls-row" style="margin-top:8px">
+          <div style="display:flex;align-items:center;gap:12px;flex:1">
+            <div style="min-width:80px" class="small">Капель собрано:</div>
+            <div class="progress" aria-hidden="true"><i id="progressFill" style="width:0%"></i></div>
+            <div id="countText" style="min-width:74px;font-weight:800;text-align:right">0 / 10</div>
+          </div>
+
+          <div style="text-align:right;min-width:180px">
+            <div class="small">Управление: Мышь / ← →</div>
+            <div style="margin-top:8px"><button id="restartBtn" class="btn--ghost" disabled>Перезапустить</button></div>
+          </div>
+        </div>
+
+        <p class="small" style="margin-top:10px;color:var(--muted)">
+          Соберите капли, проходите волны (в режиме Quick/Hardcore). В Infinite — набирайте максимум очков.
+        </p>
+      </div>
+
+      <aside class="info" aria-label="Информация об игре">
+        <div class="info-card">
+          <h3>Инструкция</h3>
+          <ol style="margin:0 0 0 18px; padding:0; color:var(--muted); font-size:14px; line-height:1.5">
+            <li>Выберите режим и нажмите «Старт».</li>
+            <li>Управляйте бутылкой мышью или стрелками.</li>
+            <li>Ловите падающие капли — цель указана в HUD.</li>
+          </ol>
+        </div>
+
+        <div class="info-card">
+          <h3>Приз</h3>
+          <div class="prize">
+            Скидка 10% на первую покупку и промо-код для розыгрыша подарка.
+          </div>
+        </div>
+
+        <div class="info-card" style="display:flex;flex-direction:column;gap:10px;align-items:center">
+          <button id="btnGetPrize" class="btn" disabled>Получить приз</button>
+          <div style="font-size:13px;color:var(--muted);text-align:center">После победы можно получить промокод.</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div id="endOverlay" class="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document" aria-labelledby="endTitle">
+      <h2 id="endTitle">Игра окончена</h2>
+      <div class="bottle-preview" aria-hidden="true">
+        <div class="bottle-outline"><div id="bottleFill" class="bottle-fill" style="height:100%"></div></div>
+      </div>
+      <p id="endMessage">Поздравляем!</p>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:12px">
+        <button id="claimBtn" class="btn">Получить приз</button>
+        <button id="closeOverlay" class="btn--ghost">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+<script src="game.js" defer></script>
+</body>
+</html>

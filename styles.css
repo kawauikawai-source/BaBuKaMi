@@ -1,0 +1,213 @@
+/* styles.css — светлая тема, правки для модалей, профиля и отзывов
+   Обновление: выравнивание кнопок в hero (.btn-group) — одинаковая высота и центрирование */
+
+:root{
+    --bg-top:#ffffff; --bg-bottom:#ffffff;
+    --page-bg:linear-gradient(180deg,var(--bg-top) 0%,var(--bg-bottom) 100%);
+    --text:#0b0b0b; --muted:#444;
+    --primary:#0b0b0b; --primary-contrast:#ffffff;
+    --accent:#06b6d4; --accent-2:#0891b2;
+    --card-bg:#ffffff; --header-bg:rgba(255,255,255,0.84); --header-border:rgba(0,0,0,0.06);
+    --footer-bg:#ffffff; --modal-overlay:rgba(0,0,0,0.06);
+    --input-border:rgba(0,0,0,0.12); --card-border:rgba(0,0,0,0.06);
+    --shadow-1:0 8px 22px rgba(10,10,10,0.06); --shadow-2:0 18px 48px rgba(10,10,10,0.08);
+    --focus-ring:rgba(6,182,212,0.12); --input-bg:rgba(255,255,255,0.98);
+}
+
+/* reset & base */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+    margin:0;font-family:"Segoe UI",Arial,sans-serif;background:var(--page-bg);color:var(--text);
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;transition:background .35s,color .25s
+}
+
+/* header */
+header{
+    background:var(--header-bg);backdrop-filter:blur(6px) saturate(120%);border-bottom:1px solid var(--header-border);
+    display:flex;align-items:center;justify-content:space-between;padding:14px 20px;gap:12px
+}
+.logo{font-weight:800;letter-spacing:.3px;color:var(--primary);font-size:1.125rem}
+
+/* right controls */
+.rightControls{display:flex;align-items:center;gap:12px}
+nav#mainNav{display:flex;gap:10px}
+nav .nav-btn{color:var(--primary);font-weight:600;padding:8px 10px;border-radius:8px;background:transparent;border:0;cursor:pointer}
+nav .nav-btn:focus{outline:2px solid var(--focus-ring)}
+
+/* user area */
+#userArea{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--primary)}
+#userArea button{padding:8px 12px;border-radius:10px;border:1px solid var(--card-border);background:transparent;color:var(--primary);cursor:pointer}
+#userArea button:hover{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--primary-contrast)}
+
+/* main / hero */
+main{max-width:1100px;margin:28px auto;padding:0 16px}
+.hero{
+    text-align:center;
+    padding:44px 10px 26px;
+    margin:0 auto;
+    max-width:880px;
+    display:block;
+}
+.hero-main {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+.hero h1{font-weight:900;margin:0 0 10px;color:var(--primary);font-size:clamp(1.5rem,2.5vw + 1rem,2.25rem);line-height:1.02}
+.hero p{color:var(--muted);margin:0 0 18px;font-size:clamp(1rem,1.8vw,1.125rem)}
+
+/* BUTTON GROUP - ensure buttons align */
+.btn-group {
+  display:inline-flex;
+  gap:12px;
+  align-items:center;
+  justify-content:center;
+  margin-top:12px;
+}
+
+/* buttons: fixed height + centered content */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  height:44px;             /* фиксированная высота для ровного ряда */
+  min-width:44px;
+  padding:0 18px;          /* верх/низ = 0, вертикальное центрирование за счёт height */
+  border-radius:12px;
+  font-weight:800;
+  text-decoration:none;
+  border:1px solid transparent;
+  cursor:pointer;
+  transition:transform .14s,box-shadow .14s,opacity .12s;
+  line-height:1;
+  vertical-align:middle;
+}
+
+/* accent and ghost variants keep same height */
+.btn--accent{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--primary-contrast);box-shadow:0 10px 30px rgba(6,182,212,0.08);border-color:rgba(0,0,0,0.06)}
+.btn--ghost{background:transparent;color:var(--accent);border:1px solid rgba(0,0,0,0.08)}
+
+/* keep small movement on hover but not change baseline */
+.btn:hover{ transform: translateY(-4px); box-shadow: var(--shadow-2); }
+.btn:active{ transform: translateY(-2px) scale(.997); }
+
+/* SVG/icon inside button */
+.btn svg{ width:16px; height:16px; fill:currentColor; display:inline-block; vertical-align:middle; margin-right:6px; }
+
+/* FEATURES: link-style removed, text black */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;padding:28px 6px;margin-bottom:36px}
+.feature{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  background:var(--card-bg);
+  border-radius:14px;
+  padding:22px;
+  text-align:center;
+  border:1px solid var(--card-border);
+  box-shadow:var(--shadow-1);
+  transition:transform .16s,box-shadow .16s,border-color .16s;
+  min-height:160px;
+  color: var(--primary);
+  text-decoration: none;
+}
+.feature:link,
+.feature:visited,
+.feature:active { color: var(--primary); text-decoration: none; }
+.feature:hover,
+.feature:focus { transform: translateY(-8px); box-shadow:var(--shadow-2); outline:none; }
+.feature-icon{font-size:40px;margin-bottom:12px;color:var(--accent)}
+.feature h3{margin:6px 0 8px;color:var(--primary);text-decoration:none}
+.feature p{margin:0;color:var(--muted);text-decoration:none}
+
+/* reviews */
+.reviews-section{background:var(--card-bg);padding:28px;border-radius:14px;border:1px solid var(--card-border);box-shadow:var(--shadow-1);max-width:980px;margin:28px auto;color:var(--muted)}
+.reviews-track{display:flex;transition:transform .44s cubic-bezier(.2,.9,.3,1)}
+.review{min-width:100%;padding:18px;box-sizing:border-box;font-style:italic;color:var(--muted);text-align:center}
+.review strong{display:block;margin-bottom:8px;color:var(--primary);font-weight:800}
+.reviews-slider{position:relative;overflow:hidden;border-radius:12px}
+.slider-controls{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:16px}
+.slider-btn{background:transparent;border:1px solid var(--card-border);padding:8px 12px;border-radius:10px;cursor:pointer;color:var(--primary)}
+.slider-btn:hover{box-shadow:var(--shadow-1);transform:translateY(-3px)}
+.dots{display:flex;gap:8px;align-items:center}
+.dot{width:10px;height:10px;border-radius:50%;background:transparent;border:1px solid var(--card-border);cursor:pointer}
+.dot.active{background:var(--accent);box-shadow:0 6px 18px rgba(6,182,212,0.12)}
+
+footer{padding:18px;text-align:center;color:var(--muted);border-top:1px solid var(--card-border);background:var(--footer-bg);margin-top:40px}
+
+/* modal layout & form inputs */
+.modal{display:none;position:fixed;inset:0;background:var(--modal-overlay);align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .32s}
+.modal.show{display:flex;opacity:1;pointer-events:auto}
+.modal-content{width:360px;max-width:94%;background:var(--card-bg);padding:20px;border-radius:12px;border:1px solid var(--card-border);box-shadow:var(--shadow-2);transform:translateY(-18px) scale(.98);opacity:0;transition:transform .28s,opacity .26s}
+.modal.show .modal-content{transform:none;opacity:1}
+.modal-content input{width:92%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text);font-size:14px}
+.modal-content textarea{width:92%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text);font-size:14px;resize:none;overflow:auto}
+.modal-content input:focus{outline:none;box-shadow:0 6px 20px var(--focus-ring)}
+.modal-content textarea:focus{outline:none;box-shadow:0 6px 20px var(--focus-ring)}
+.msg{font-weight:700;min-height:20px;margin-top:8px}
+.msg--error{color:#e11d48}
+.msg--success{color:#10b981}
+
+/* bank form checkbox gap */
+#bankModal label { display:flex !important; gap:6px !important; align-items:center !important; font-size:13px; margin-top:6px; }
+#bankModal input[type="checkbox"] { width:18px; height:18px; margin:0; flex:0 0 auto; }
+
+/* tabs */
+.tabs{display:flex;gap:6px;justify-content:center;margin-bottom:12px;padding:6px;background:transparent;border-radius:12px}
+.tab-btn{position:relative;padding:8px 14px;border-radius:10px;border:0;background:transparent;color:var(--muted);font-weight:700;cursor:pointer;transition:all .18s, color .18s}
+.tab-btn:hover{color:var(--primary);transform:translateY(-2px)}
+.tab-btn.active{color:var(--primary-contrast);background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:var(--shadow-1);padding:10px 16px}
+.tab-pane{opacity:0;max-height:0;overflow:hidden;pointer-events:none;transition:opacity .32s,max-height .36s,padding .2s}
+.tab-pane.active{opacity:1;max-height:720px;pointer-events:auto;padding:12px 6px;margin-top:8px;background:var(--card-bg);border-radius:10px;border:1px solid var(--card-border);box-shadow:var(--shadow-1)}
+
+#profileModal .modal-content{width:480px;max-width:94%}
+:focus-visible{box-shadow:0 8px 24px var(--focus-ring);border-radius:8px}
+
+@media (max-width:680px){
+  .features{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+  .hero{padding:28px 8px}
+  .hero h1{font-size:1.5rem}
+}
+
+/* profile delete tweaks */
+#deletePane label{ gap:8px !important; align-items:center; }
+#deletePane label input[type="checkbox"]{ width:18px; height:18px; flex:0 0 auto; margin:0; }
+#deletePane label span{ font-size:13px; line-height:1.2; }
+#deleteAccountBtn{ color: var(--primary-contrast); background:#b00020; border-color:#b00020; margin-top:12px !important; }
+#deleteAccountBtn:hover{ filter:brightness(1.03); }
+
+/* New profile button animation */
+#changeEmailBtn,
+#changePassBtn,
+#deleteAccountBtn {
+  transition: transform .22s cubic-bezier(.2,.9,.28,1),
+              box-shadow .22s cubic-bezier(.2,.9,.28,1),
+              filter .14s linear,
+              background-color .14s linear;
+  will-change: transform, box-shadow;
+}
+#changeEmailBtn:hover,
+#changePassBtn:hover,
+#deleteAccountBtn:hover { transform: translateY(-4px) scale(1.02); }
+#changeEmailBtn:hover,
+#changePassBtn:hover { box-shadow: 0 12px 28px rgba(6,182,212,0.06); }
+#deleteAccountBtn:hover { box-shadow: 0 12px 30px rgba(176,0,32,0.12); }
+#changeEmailBtn:active,
+#changePassBtn:active,
+#deleteAccountBtn:active { transform: translateY(-2px) scale(1.01); box-shadow: 0 8px 18px rgba(0,0,0,0.06); }
+@keyframes profilePulseAccent { 0%{box-shadow:0 0 0 rgba(6,182,212,0);}40%{box-shadow:0 0 18px rgba(6,182,212,0.10);}100%{box-shadow:0 0 0 rgba(6,182,212,0);} }
+@keyframes profilePulseDanger { 0%{box-shadow:0 0 0 rgba(176,0,32,0);}40%{box-shadow:0 0 20px rgba(176,0,32,0.12);}100%{box-shadow:0 0 0 rgba(176,0,32,0);} }
+#changeEmailBtn:focus-visible, #changePassBtn:focus-visible { outline: none; animation: profilePulseAccent .72s ease-out 1; }
+#deleteAccountBtn:focus-visible { outline: none; animation: profilePulseDanger .9s ease-out 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  #changeEmailBtn, #changePassBtn, #deleteAccountBtn { transition: none !important; animation: none !important; transform: none !important; box-shadow: none !important; }
+}
+
+/* Reviews section adjustments */
+.reviews-section{ padding:28px; margin:36px auto; max-width:1100px; }
+.slider-controls{ justify-content:center; }

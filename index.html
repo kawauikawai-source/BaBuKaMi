@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BiBuKaMi — Уникальные напитки для здоровья</title>
+<meta name="description" content="BiBuKaMi — стартап, предлагающий уникальные напитки для здоровья. Удобные платежи, безопасность и международная доставка." />
+<meta name="keywords" content="напитки, здоровье, стартап, платежи, безопасность, доставка" />
+<meta name="author" content="BiBuKaMi Team" />
+<link rel="canonical" href="https://yourdomain.com/" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';" />
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header id="pageHeader">
+    <div class="logo">BiBuKaMi</div>
+
+    <div class="rightControls">
+        <nav id="mainNav" aria-label="Главная навигация">
+            <button class="nav-btn" type="button" data-modal="loginModal">Войти</button>
+            <button class="nav-btn" type="button" data-modal="registerModal">Регистрация</button>
+        </nav>
+        <div id="userArea" aria-live="polite"></div>
+    </div>
+</header>
+
+<main id="mainContent">
+<section class="hero" aria-label="Главный экран">
+    <div class="hero-main">
+        <h1>Добро пожаловать в будущее</h1>
+        <p>Наш стартап предлагает уникальные напитки для здоровья.</p>
+
+        <div class="btn-group" style="margin-top:12px;">
+            <button class="btn btn--accent" type="button" data-modal="contactModal" aria-label="Связаться с нами">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+                Связаться с нами
+            </button>
+
+            <a href="files/startup.zip" class="btn btn--ghost" download aria-label="Скачать подробности">Подробнее</a>
+            <a href="files/Unikalnye-napitki-dlya-zdorovya.pdf" class="btn btn--ghost" target="_blank" rel="noopener" aria-label="Открыть презентацию">Презентация</a>
+        </div>
+    </div>
+</section>
+
+<section class="features" aria-label="Преимущества">
+    <article class="feature" role="button" tabindex="0" aria-labelledby="feature1-title" data-modal="bankModal">
+        <div class="feature-icon" aria-hidden="true">💳</div>
+        <h3 id="feature1-title">Удобные платежи</h3>
+        <p>Откройте форму для безопасной оплаты и поддержки проекта.</p>
+    </article>
+
+    <article class="feature" role="button" tabindex="0" aria-labelledby="feature2-title" data-modal="securityModal">
+        <div class="feature-icon" aria-hidden="true">🔒</div>
+        <h3 id="feature2-title">Безопасность</h3>
+        <p>Узнайте, как мы защищаем ваши транзакции и данные.</p>
+    </article>
+
+    <a class="feature" href="game.html" target="_blank" rel="noopener" aria-labelledby="feature3-title">
+        <div class="feature-icon" aria-hidden="true">🌍</div>
+        <h3 id="feature3-title">Поддержать проект</h3>
+        <p>Поддержите развитие — сыграйте в мини-игру и получите шанс на приз.</p>
+    </a>
+</section>
+
+<section class="reviews-section" aria-label="Отзывы клиентов">
+    <h2>Отзывы наших клиентов</h2>
+    <div class="reviews-slider">
+        <div class="reviews-track" id="reviewsTrack" aria-live="polite">
+            <article class="review" role="group" aria-label="Отзыв Алексея">
+                <strong>Алексей:</strong> "Очень удобный сервис!"
+            </article>
+            <article class="review" role="group" aria-label="Отзыв Марии">
+                <strong>Мария:</strong> "Пользуюсь каждый день."
+            </article>
+            <article class="review" role="group" aria-label="Отзыв Ивана">
+                <strong>Иван:</strong> "Безопасно и быстро!"
+            </article>
+            <article class="review" role="group" aria-label="Отзыв Qsiry">
+                <strong>Qsiry:</strong> "Рекомендую всем друзьям."
+            </article>
+        </div>
+    </div>
+    <div class="slider-controls">
+        <button class="slider-btn" aria-label="Предыдущий отзыв" id="prevReviewBtn">&#9664;</button>
+        <button class="slider-btn" aria-label="Следующий отзыв" id="nextReviewBtn">&#9654;</button>
+    </div>
+</section>
+</main>
+
+<footer id="pageFooter">© 2025 BiBuKaMi Water</footer>
+
+<!-- Contact modal -->
+<div id="contactModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="contactTitle" aria-hidden="true">
+    <div class="modal-content" role="document">
+        <button class="close-btn" data-close="contactModal" aria-label="Закрыть окно" type="button">&times;</button>
+        <h3 id="contactTitle">Связаться с нами</h3>
+        <form id="contactForm" novalidate>
+            <input type="text" id="contactName" placeholder="Ваше имя" aria-label="Ваше имя" required />
+            <input type="email" id="contactEmail" placeholder="example@mail.com" aria-label="Email" required />
+            <textarea id="contactMessage" placeholder="Ваше сообщение" aria-label="Ваше сообщение" required style="min-height:100px;"></textarea>
+            <button class="btn" type="submit">Отправить</button>
+        </form>
+        <div id="contactMessageBox" class="msg" role="alert" aria-live="polite" style="margin-top:10px; display:none;"></div>
+    </div>
+</div>
+
+<!-- Bank modal (demo) -->
+<div id="bankModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="bankTitle" aria-hidden="true">
+  <div class="modal-content" role="document">
+    <button class="close-btn" data-close="bankModal" aria-label="Закрыть окно" type="button">&times;</button>
+    <h3 id="bankTitle">Поддержать проект — оплата картой</h3>
+    <p style="color:#555; margin-bottom:8px; font-size:14px;">
+      Это демонстрационная форма — <strong>не вводите реальные данные карты</strong>.
+    </p>
+    <form id="bankForm" novalidate>
+      <input type="text" id="cardName" placeholder="Имя владельца" aria-label="Имя владельца карты" required />
+      <input type="text" id="cardNumber" placeholder="Номер карты (1234 1234 1234 1234)" inputmode="numeric" aria-label="Номер карты" required />
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="cardExp" placeholder="MM/YY" inputmode="numeric" aria-label="Срок действия карты" required style="flex:1" />
+        <input type="text" id="cardCvc" placeholder="CVC" inputmode="numeric" aria-label="CVC" required style="width:100px" />
+      </div>
+      <label style="font-size:13px; margin-top:8px; display:flex; gap:6px; align-items:center;">
+        <input type="checkbox" id="agreeMock" aria-label="Согласие на демонстрационную обработку" />
+        <span>Я понимаю, что это демо-форма и не отправляю реальные данные.</span>
+      </label>
+      <div id="bankMessage" class="msg" role="status" aria-live="polite" style="margin-top:10px; display:none;"></div>
+      <button class="btn btn--accent" type="submit" style="margin-top:12px;">Поддержать (демо)</button>
+    </form>
+  </div>
+</div>
+
+<!-- Security modal -->
+<div id="securityModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="securityTitle" aria-hidden="true">
+  <div class="modal-content" role="document">
+    <button class="close-btn" data-close="securityModal" aria-label="Закрыть окно" type="button">&times;</button>
+    <h3 id="securityTitle">Безопасность транзакций</h3>
+    <p style="color:#444; margin-bottom:8px;">
+      Мы используем современные алгоритмы шифрования и рекомендуем интегрировать проверенных платёжных провайдеров.
+    </p>
+    <ul style="margin-top:8px; color:#444; line-height:1.5;">
+      <li>Шифрование данных TLS при передаче.</li>
+      <li>Токенизация карт у платёжного провайдера.</li>
+      <li>Двухфакторная аутентификация и мониторинг транзакций.</li>
+    </ul>
+    <div style="margin-top:12px;">
+      <button class="btn" data-close="securityModal" type="button">Понятно</button>
+    </div>
+  </div>
+</div>
+
+<!-- Login / Register / Profile modals -->
+<div id="loginModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle" aria-hidden="true">
+    <div class="modal-content" role="document">
+        <button class="close-btn" data-close="loginModal" aria-label="Закрыть окно" type="button">&times;</button>
+        <h3 id="loginTitle">Вход</h3>
+        <input type="text" id="loginNick" placeholder="Ник" aria-label="Ник для входа" required />
+        <input type="password" id="loginPass" placeholder="Пароль" aria-label="Пароль" required />
+        <button class="btn" id="loginBtn">Войти</button>
+        <div id="loginMessage" role="alert" aria-live="assertive" style="margin-top:10px; font-weight: 600;"></div>
+    </div>
+</div>
+
+<div id="registerModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="registerTitle" aria-hidden="true">
+    <div class="modal-content" role="document">
+        <button class="close-btn" data-close="registerModal" aria-label="Закрыть окно" type="button">&times;</button>
+        <h3 id="registerTitle">Регистрация</h3>
+        <input type="text" id="regNick" placeholder="Ник" aria-label="Введите ник" required />
+        <input type="email" id="regEmail" placeholder="Email" aria-label="Введите email" required pattern="^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$" />
+        <input type="password" id="regPass" placeholder="Пароль (минимум 6 символов)" aria-label="Введите пароль" required />
+        <div id="passStrength" aria-hidden="true" style="font-size:13px; margin-bottom:6px"></div>
+        <button class="btn" id="registerBtn">Зарегистрироваться</button>
+        <div id="regMessage" role="alert" aria-live="assertive"></div>
+    </div>
+</div>
+
+<div id="profileModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="profileTitle" aria-hidden="true">
+    <div class="modal-content" role="document">
+        <button class="close-btn" data-close="profileModal" aria-label="Закрыть окно" type="button">&times;</button>
+        <h3 id="profileTitle">Профиль</h3>
+        <div class="tabs" role="tablist" aria-label="Вкладки профиля">
+            <button class="tab-btn active" data-tab="account" id="tabAccount" role="tab" aria-selected="true">Аккаунт</button>
+            <button class="tab-btn" data-tab="password" id="tabPassword" role="tab" aria-selected="false">Сменить пароль</button>
+            <button class="tab-btn" data-tab="delete" id="tabDelete" role="tab" aria-selected="false">Удалить</button>
+        </div>
+
+        <div id="accountPane" class="tab-pane active" role="tabpanel">
+            <p id="accountInfo" style="font-size:14px; margin:6px 0; color:var(--muted)"></p>
+            <label style="display:block; font-size:13px; text-align:left; width:90%; margin:6px auto">Новая почта</label>
+            <input type="email" id="newEmail" placeholder="Новый email" aria-label="Новая почта" pattern="^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$" />
+            <input type="password" id="emailPass" placeholder="Текущий пароль" aria-label="Текущий пароль для подтверждения" />
+            <button class="btn" id="changeEmailBtn" style="padding:8px 12px; margin-top:8px;">Сменить почту</button>
+            <div id="emailMessage" role="status" aria-live="polite" style="min-height:18px; margin-top:8px; font-weight:600"></div>
+        </div>
+
+        <div id="passwordPane" class="tab-pane" role="tabpanel">
+            <input type="password" id="curPass" placeholder="Текущий пароль" aria-label="Текущий пароль" />
+            <input type="password" id="newPass" placeholder="Новый пароль (>=6)" aria-label="Новый пароль" />
+            <input type="password" id="newPass2" placeholder="Повторите новый пароль" aria-label="Подтвердите новый пароль" />
+            <button class="btn" id="changePassBtn" style="padding:8px 12px; margin-top:8px;">Сменить пароль</button>
+            <div id="passMessage" role="status" aria-live="polite" style="min-height:18px; margin-top:8px; font-weight:600"></div>
+        </div>
+
+        <div id="deletePane" class="tab-pane" role="tabpanel">
+            <p style="font-size:13px; color:#ffffff; background:#b00020; padding:8px; border-radius:6px; text-align:center">После удаления аккаунта все данные будут утеряны навсегда.</p>
+            <input type="password" id="delPass" placeholder="Пароль" aria-label="Пароль для удаления" />
+            <label style="display:flex; align-items:center; gap:8px; justify-content:flex-start; margin:8px auto 0; width:90%;">
+                <input type="checkbox" id="confirmDelete" aria-label="Подтвердить удаление" />
+                <span style="font-size:13px">Подтверждаю удаление аккаунта</span>
+            </label>
+            <button class="btn" id="deleteAccountBtn" style="padding:8px 12px; margin-top:8px; background:#b00020; border-color:#b00020;">Удалить аккаунт</button>
+            <div id="delMessage" role="status" aria-live="polite" style="min-height:18px; margin-top:8px; font-weight:600"></div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js" defer></script>
+</body>
+</html>
