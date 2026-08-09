@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Bambiku Casino</title>
   <meta name="description" content="Bambiku Casino - eight distinct worlds of fortune, risk, skill, and midnight ritual."/>
-  <link rel="stylesheet" href="css/style.css?v=site-date-manager-v1"/>
+  <link rel="stylesheet" href="css/style.css?v=mobile-nav-auth-v2"/>
   <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon-bk-512.png?v=1"/>
   <link rel="apple-touch-icon" href="assets/favicon-bk-512.png?v=1"/>
   <meta name="theme-color" content="#00d98b"/>
@@ -35,11 +35,14 @@
   </nav>
 
   <div class="mob-nav" id="mobNav" aria-hidden="true">
+    <div class="mob-nav-head">
+      <span class="mob-nav-brand">Bambi<span>ku</span></span>
+      <button class="mob-nav-close" type="button" data-mobile-nav-close aria-label="Закрыть меню" title="Закрыть меню">&times;</button>
+    </div>
     <a href="#games" data-route="games" data-i18n="nav_games">Games</a>
     <a href="#bonuses" data-route="bonuses" data-i18n="nav_bonuses">Bonuses</a>
     <a href="#vip" data-route="vip" data-i18n="nav_vip">VIP</a>
-    <a href="pages/profile.html" data-route="profile" data-i18n="nav_profile">Profile</a>
-    <a href="pages/deposit.html" data-route="deposit" data-i18n="nav_deposit">Cashier</a>
+    <div class="mob-nav-auth" data-mobile-auth-nav></div>
   </div>
 
   <section id="hero">
@@ -325,7 +328,7 @@
   <script src="js/config/runtime.js?v=infra-v1"></script>
   <script src="js/core/constants.js?v=operator-08-v1"></script>
   <script src="js/core/store.js?v=operator-08-v1"></script>
-  <script src="js/core/ui.js?v=site-date-manager-v1"></script>
+  <script src="js/core/ui.js?v=mobile-nav-auth-v2"></script>
   <script src="js/core/auth.js?v=site-date-manager-v1"></script>
   <script src="js/core/bootstrap.js?v=offline-i18n-v1"></script>
 </body>

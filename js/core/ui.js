@@ -991,7 +991,7 @@
         setMobileOpen(!mob.classList.contains('open'));
       });
       mob.addEventListener('click', e => {
-        if (e.target.closest('a,button')) {
+        if (e.target === mob || e.target.closest('a,button,[data-mobile-nav-close]')) {
           setMobileOpen(false);
         }
       });
@@ -1137,7 +1137,8 @@
     });
 
     const mounts = document.querySelectorAll('[data-auth-nav]');
-    if (!mounts.length) return;
+    const mobileMounts = document.querySelectorAll('[data-mobile-auth-nav]');
+    if (!mounts.length && !mobileMounts.length) return;
     const hasModal = Boolean(document.getElementById('modalOverlay'));
     mounts.forEach(mount => {
       if (user) {
@@ -1156,6 +1157,22 @@
           <a href="${path('profile')}" class="btn btn-outline btn-sm" data-route="profile">${t('nav_profile')}</a>
           <a href="${path('home')}" class="btn btn-outline btn-sm" data-route="home">${t('nav_home')}</a>
         `;
+      }
+    });
+    mobileMounts.forEach(mount => {
+      if (user) {
+        mount.innerHTML = `
+          <a href="${path('profile')}" data-route="profile">${t('nav_profile')}</a>
+          <a href="${path('deposit')}" data-route="deposit">${t('nav_deposit')}</a>
+          <button class="mob-nav-logout" type="button" data-auth-action="logout">${t('nav_logout')}</button>
+        `;
+      } else if (hasModal) {
+        mount.innerHTML = `
+          <button class="btn btn-outline" type="button" data-modal="login">${t('nav_signin')}</button>
+          <button class="btn btn-primary" type="button" data-modal="register">${t('nav_join')}</button>
+        `;
+      } else {
+        mount.innerHTML = '';
       }
     });
   }
@@ -1394,6 +1411,7 @@
     store.subscribe((next, prev, action) => {
       if (next.lang !== prev.lang) {
         applyLang();
+        updateAuthNav();
         renderAuthGate();
         updateApiStatusBanner();
         return;

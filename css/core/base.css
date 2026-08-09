@@ -569,15 +569,22 @@ section{padding:88px 0}
 /* ── MOBILE NAV ──────────────────────────── */
 .mob-nav{
   position:fixed;inset:0;background:var(--bg);z-index:150;
-  padding:72px 24px 36px;flex-direction:column;gap:6px;display:none;
+  padding:18px 24px 30px;flex-direction:column;gap:6px;display:none;
 }
 .mob-nav.open{display:flex}
+.mob-nav-head{display:flex;min-height:54px;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px;border-bottom:1px solid var(--border)}
+.mob-nav-brand{font-family:var(--font);font-size:20px;font-weight:900}.mob-nav-brand span{color:var(--accent)}
+.mob-nav-close{display:grid;width:44px;height:44px;place-items:center;border:1px solid var(--border-h);border-radius:50%;color:var(--text);font-size:28px;font-weight:300;line-height:1;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),background var(--dur) var(--ease)}
+.mob-nav-close:hover{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
 .mob-nav a{
   font-family:var(--font);font-size:21px;font-weight:800;
   color:var(--text-2);padding:13px 0;
   border-bottom:1px solid var(--border);transition:color var(--dur) var(--ease);
 }
 .mob-nav a:hover{color:var(--accent)}
+.mob-nav-auth{display:flex;flex-direction:column;gap:6px}.mob-nav-auth:empty{display:none}
+.mob-nav-auth .btn{width:100%;min-height:50px;justify-content:center;margin-top:8px}
+.mob-nav-auth .mob-nav-logout{width:100%;padding:14px 0;color:var(--text-3);font-family:var(--font);font-size:14px;font-weight:800;text-align:left}
 .mob-nav-actions{display:flex;flex-direction:column;gap:9px;margin-top:26px}
 
 /* ── REVEAL ──────────────────────────────── */
