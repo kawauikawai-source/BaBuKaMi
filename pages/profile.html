@@ -9,7 +9,7 @@
     body[data-page="profile"]::before{content:"";position:fixed;inset:0;z-index:10000;pointer-events:none;background:#080809;opacity:0;visibility:hidden;transition:opacity .24s ease,visibility 0s linear .24s}
     body[data-page="profile"].is-app-booting::before{opacity:1;visibility:visible;transition:none}
   </style>
-  <link rel="stylesheet" href="../css/style.css?v=operator-08-v1"/>
+  <link rel="stylesheet" href="../css/style.css?v=operator-08-chat-v2"/>
   <link rel="icon" type="image/png" sizes="512x512" href="../assets/favicon-bk-512.png?v=1"/>
   <link rel="apple-touch-icon" href="../assets/favicon-bk-512.png?v=1"/>
   <meta name="theme-color" content="#00d98b"/>
@@ -159,7 +159,7 @@
                 <div class="manager-messages" id="managerMessages" aria-live="polite"></div>
                 <form class="manager-composer" id="managerComposer">
                   <label class="sr-only" for="managerInput" data-i18n="manager_input_label">Message Operator 08</label>
-                  <textarea id="managerInput" rows="2" maxlength="1000" data-i18n-ph="manager_input_placeholder" placeholder="Ask about your account, bets or a stuck round"></textarea>
+                  <textarea id="managerInput" rows="3" maxlength="1000" data-i18n-ph="manager_input_placeholder" placeholder="Ask about your account, bets or a stuck round"></textarea>
                   <button class="btn btn-primary" type="submit" id="managerSend" data-i18n="manager_send">Send</button>
                 </form>
                 <footer class="manager-terminal-foot">
@@ -311,7 +311,7 @@
   <script src="../js/core/store.js?v=operator-08-v1"></script>
   <script src="../js/core/ui.js?v=site-date-manager-v1"></script>
   <script src="../js/core/auth.js?v=site-date-manager-v1"></script>
-  <script src="../js/pages/profile.js?v=operator-08-v1"></script>
+  <script src="../js/pages/profile.js?v=operator-08-chat-v2"></script>
   <script src="../js/core/bootstrap.js?v=offline-i18n-v1"></script>
 </body>
 </html>

@@ -613,7 +613,11 @@
       operator.metadata = Object.assign({}, operator.metadata || {}, { action: result.action });
     }
     managerMessages.push(result.user_message, operator);
-    document.getElementById('managerInput').value = '';
+    const input = document.getElementById('managerInput');
+    if (input) {
+      input.value = '';
+      input.style.height = '';
+    }
     renderManagerMessages();
     if (result.ticket || result.action) {
       managerState = await store.getManagerState();
@@ -648,6 +652,12 @@
     }
   }
 
+  function resizeManagerInput(input) {
+    if (!input) return;
+    input.style.height = 'auto';
+    input.style.height = `${Math.min(Math.max(input.scrollHeight, 88), 180)}px`;
+  }
+
   function init() {
     if (document.body.dataset.page !== 'profile') return;
     initTabs();
@@ -657,6 +667,13 @@
     document.getElementById('managerComposer')?.addEventListener('submit', event => {
       event.preventDefault();
       sendManager(document.getElementById('managerInput')?.value, null, {});
+    });
+    const managerInput = document.getElementById('managerInput');
+    managerInput?.addEventListener('input', () => resizeManagerInput(managerInput));
+    managerInput?.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' || event.shiftKey || event.isComposing) return;
+      event.preventDefault();
+      document.getElementById('managerComposer')?.requestSubmit();
     });
     document.getElementById('managerTerminal')?.addEventListener('click', event => {
       const quick = event.target.closest('[data-manager-intent]');
