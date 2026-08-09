@@ -66,6 +66,17 @@ class Settings(BaseSettings):
             self.public_base_url = render_url
             self.api_base_url = f"{render_url}/api"
             self.frontend_origins = render_url
+            local_markers = ("localhost", "127.0.0.1", "0.0.0.0")
+            oauth_urls = {
+                "google_redirect_uri": f"{render_url}/api/auth/google/callback",
+                "google_success_redirect": f"{render_url}/index.html",
+                "telegram_redirect_uri": f"{render_url}/api/auth/telegram/callback",
+                "telegram_success_redirect": f"{render_url}/index.html",
+            }
+            for field_name, hosted_url in oauth_urls.items():
+                configured_url = str(getattr(self, field_name, "")).lower()
+                if any(marker in configured_url for marker in local_markers):
+                    setattr(self, field_name, hosted_url)
 
         env = self.environment.lower()
         origins = self.cors_origins
