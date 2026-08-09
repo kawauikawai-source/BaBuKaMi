@@ -43,8 +43,36 @@
   }
 
   function parseStartedAtMs(value) {
-    const parsed = Date.parse(value || '');
+    const raw = String(value || '').trim();
+    if (!raw) return null;
+    // SQLite can return a UTC timestamp without an explicit offset. Browsers
+    // otherwise interpret it as local time and can freeze the curve for hours.
+    const normalized = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$/.test(raw)
+      ? raw + 'Z'
+      : raw;
+    const parsed = Date.parse(normalized);
     return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  function inferredStartedAtMs(multiplier) {
+    const current = multiplierValue(multiplier);
+    const elapsedSeconds = Math.max(0, Math.log(current / CRASH_START_MULTIPLIER) * CRASH_GROWTH_SECONDS);
+    return Date.now() - elapsedSeconds * 1000;
+  }
+
+  function resolveActiveStartedAtMs(result) {
+    const parsed = parseStartedAtMs(result && result.started_at);
+    const serverMultiplier = multiplierValue(result && result.current_multiplier);
+    if (!parsed) return inferredStartedAtMs(serverMultiplier);
+
+    const elapsedSeconds = Math.max(0, (Date.now() - parsed) / 1000);
+    const clockMultiplier = CRASH_START_MULTIPLIER * Math.exp(elapsedSeconds / CRASH_GROWTH_SECONDS);
+    const driftSeconds = Math.abs(
+      Math.log(Math.max(CRASH_START_MULTIPLIER, clockMultiplier) / serverMultiplier) * CRASH_GROWTH_SECONDS
+    );
+    return parsed > Date.now() + 1500 || driftSeconds > 5
+      ? inferredStartedAtMs(serverMultiplier)
+      : parsed;
   }
 
   function liveActiveMultiplier() {
@@ -133,7 +161,11 @@
 
   function drawVisual(multiplier, status) {
     const value = multiplierValue(multiplier);
-    const progress = Math.min(1, Math.max(0, Math.log(value) / Math.log(CRASH_CHART_MAX_MULTIPLIER)));
+    const progress = Math.min(1, Math.max(
+      0,
+      Math.log(value / CRASH_START_MULTIPLIER)
+        / Math.log(CRASH_CHART_MAX_MULTIPLIER / CRASH_START_MULTIPLIER)
+    ));
     const chart = document.getElementById('crashChart');
     const line = document.getElementById('crashLinePath');
     const fill = document.getElementById('crashFillPath');
@@ -293,8 +325,7 @@
   }
 
   function setActiveVisual(result, snap) {
-    const startedAt = parseStartedAtMs(result && result.started_at);
-    if (startedAt) activeStartedAtMs = startedAt;
+    activeStartedAtMs = resolveActiveStartedAtMs(result);
     visualStatus = 'active';
     targetMultiplier = liveActiveMultiplier();
     if (snap) {
