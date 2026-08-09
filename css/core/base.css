@@ -584,7 +584,9 @@ section{padding:88px 0}
 .mob-nav a:hover{color:var(--accent)}
 .mob-nav-auth{display:flex;flex-direction:column;gap:6px}.mob-nav-auth:empty{display:none}
 .mob-nav-auth .btn{width:100%;min-height:50px;justify-content:center;margin-top:8px}
-.mob-nav-auth .mob-nav-logout{width:100%;padding:14px 0;color:var(--text-3);font-family:var(--font);font-size:14px;font-weight:800;text-align:left}
+.mob-nav-auth .mob-nav-logout{display:flex;width:100%;min-height:52px;align-items:center;justify-content:center;margin-top:8px;border:1px solid rgba(255,84,96,.2);border-radius:8px;padding:12px 18px;background:rgba(255,84,96,.025);color:var(--text-2);font-family:var(--font);font-size:15px;font-weight:900;text-align:center;transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease),color var(--dur) var(--ease),box-shadow var(--dur) var(--ease),transform var(--dur) var(--ease)}
+.mob-nav-auth .mob-nav-logout:hover,.mob-nav-auth .mob-nav-logout:focus-visible{border-color:rgba(255,84,96,.68);background:rgba(255,84,96,.09);color:#ff7b85;box-shadow:0 0 26px rgba(255,84,96,.18)}
+.mob-nav-auth .mob-nav-logout:active{transform:scale(.985)}
 .mob-nav-actions{display:flex;flex-direction:column;gap:9px;margin-top:26px}
 
 /* ── REVEAL ──────────────────────────────── */
