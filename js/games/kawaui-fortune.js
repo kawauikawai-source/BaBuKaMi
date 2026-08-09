@@ -9,6 +9,7 @@
   const ACTIVE_ROUND_KEY = 'bk_kawaui_fortune_active_round';
   const CRASH_START_MULTIPLIER = 0.8;
   const CRASH_CASHOUT_MIN_MULTIPLIER = 1;
+  const CRASH_CHART_MAX_MULTIPLIER = 50;
   const CRASH_GROWTH_SECONDS = 8;
   let selectedBet = 5;
   let activeRoundId = null;
@@ -132,7 +133,7 @@
 
   function drawVisual(multiplier, status) {
     const value = multiplierValue(multiplier);
-    const progress = Math.min(1, Math.log(value) / Math.log(12));
+    const progress = Math.min(1, Math.max(0, Math.log(value) / Math.log(CRASH_CHART_MAX_MULTIPLIER)));
     const chart = document.getElementById('crashChart');
     const line = document.getElementById('crashLinePath');
     const fill = document.getElementById('crashFillPath');

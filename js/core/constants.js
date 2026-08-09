@@ -305,9 +305,10 @@
         "name_en": "Blackjack Pro",
         "type_ru": "Блэкджек",
         "type_en": "Blackjack",
-        "tag": "TOP",
+        "tag": "SOON",
         "emoji": "🃏",
-        "players": 213
+        "future": true,
+        "players": 0
       },
       {
         "id": 10,
@@ -316,9 +317,10 @@
         "name_en": "Baccarat VIP",
         "type_ru": "Баккара",
         "type_en": "Baccarat",
-        "tag": "VIP",
+        "tag": "SOON",
         "emoji": "💎",
-        "players": 67
+        "future": true,
+        "players": 0
       },
       {
         "id": 15,

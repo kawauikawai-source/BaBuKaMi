@@ -34,7 +34,13 @@
 
 .crash-multiplier{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);font-family:var(--font);font-size:clamp(52px,7.2vw,96px);font-weight:900;color:#fff;text-shadow:0 10px 34px rgba(0,0,0,.72),0 0 28px rgba(155,92,255,.36),0 0 18px rgba(245,200,66,.14);z-index:4;letter-spacing:0;pointer-events:none}
 
-.crash-chart-labels{position:absolute;left:34px;right:34px;bottom:20px;display:flex;justify-content:space-between;gap:8px;color:rgba(226,214,255,.7);font-family:var(--font);font-size:12px;font-weight:900;z-index:5}
+.crash-chart-labels{position:absolute;left:34px;right:34px;bottom:20px;height:18px;color:rgba(226,214,255,.7);font-family:var(--font);font-size:12px;font-weight:900;z-index:5}
+
+.crash-chart-labels span{position:absolute;left:var(--axis-position);transform:translateX(-50%);white-space:nowrap}
+
+.crash-chart-labels span:first-child{transform:none}
+
+.crash-chart-labels span:last-child{transform:translateX(-100%)}
 
 .crash-chart.is-flying .crash-dot{animation:graphDotPulse .8s ease-in-out infinite}
 

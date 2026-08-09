@@ -237,7 +237,7 @@
       privacy: inner ? 'privacy.html' : 'pages/privacy.html',
       terms: inner ? 'terms.html' : 'pages/terms.html',
       responsible: inner ? 'responsible.html' : 'pages/responsible.html',
-      dataGames: inner ? '../data/games.json' : 'data/games.json',
+      dataGames: inner ? '../data/games.json?v=catalog-soon-v1' : 'data/games.json?v=catalog-soon-v1',
       dataI18n: inner ? '../data/i18n.json' : 'data/i18n.json',
       css: inner ? '../css/core/base.css' : 'css/core/base.css'
     };
