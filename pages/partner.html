@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Kawaui Studio · Bambiku</title>
   <meta name="description" content="Kawaui Studio - creative partner of Bambiku."/>
-  <link rel="stylesheet" href="../css/style.css?v=home-finish-v1"/>
+  <link rel="stylesheet" href="../css/style.css?v=kawaui-studio-worlds-v1"/>
   <link rel="icon" type="image/png" sizes="512x512" href="../assets/favicon-bk-512.png?v=1"/>
   <link rel="apple-touch-icon" href="../assets/favicon-bk-512.png?v=1"/>
   <meta name="theme-color" content="#00d98b"/>
@@ -28,18 +28,47 @@
 
   <main class="partner-page">
     <div class="partner-shell">
-      <p class="label" data-i18n="partner_label">ПАРТНЁР BAMBIKU</p>
-      <h1 class="partner-title" data-i18n="partner_title">Kawaui Studio</h1>
-      <p class="partner-copy" data-i18n="partner_sub">Мастерская, где миры Bambiku получают характер, правила и собственный ритм.</p>
-      <span class="partner-status" data-i18n="partner_status">Партнёрский контур готовится к открытию</span>
-      <a class="btn btn-primary" href="../index.html" data-route="home" data-i18n="partner_back">Вернуться в Bambiku</a>
+      <header class="partner-command-head">
+        <div>
+          <p class="label" data-i18n="partner_label">КАТАЛОГ МИРОВ</p>
+          <h1 class="partner-title" data-i18n="partner_title">Kawaui Studio</h1>
+          <p class="partner-copy" data-i18n="partner_sub">Мастерская, где миры получают характер, правила и собственный ритм.</p>
+        </div>
+        <span class="partner-status" data-i18n="partner_status">ТЕРМИНАЛ ПРОЕКТОВ // 02 СИГНАЛА</span>
+      </header>
+
+      <section class="partner-worlds" aria-label="Kawaui Studio projects">
+        <a class="partner-world is-current" href="../index.html" data-route="home">
+          <div class="partner-world-top"><span>WORLD // BK-01</span><b data-i18n="partner_world_live">В СЕТИ</b></div>
+          <div class="partner-world-mark">BK</div>
+          <div class="partner-world-copy">
+            <small data-i18n="partner_world_casino_type">ИГРОВОЙ ДОМ</small>
+            <h2>Bambiku Casino</h2>
+            <p data-i18n="partner_world_casino_desc">Восемь миров риска, удачи и странных решений Кавая.</p>
+          </div>
+          <strong class="partner-world-action" data-i18n="partner_world_here">ВЫ СЕЙЧАС ЗДЕСЬ</strong>
+        </a>
+
+        <article class="partner-world is-soon" aria-disabled="true">
+          <div class="partner-world-top"><span>WORLD // BW-02</span><b data-i18n="partner_world_building">СТРОИТСЯ</b></div>
+          <div class="partner-world-mark">BW</div>
+          <div class="partner-world-copy">
+            <small data-i18n="partner_world_water_type">ВОДНЫЙ КОНТУР</small>
+            <h2>BiBuKaMi Water</h2>
+            <p data-i18n="partner_world_water_desc">Новый мир находится за закрытым шлюзом. Терминал ещё не выдаёт пропуска.</p>
+          </div>
+          <strong class="partner-world-action" data-i18n="partner_world_soon">СКОРО</strong>
+        </article>
+      </section>
+
+      <a class="btn btn-outline partner-back" href="../index.html" data-route="home" data-i18n="partner_back">Вернуться в Bambiku</a>
     </div>
   </main>
 
   <div class="toasts" aria-live="polite" aria-atomic="true"></div>
   <script src="../js/config/app-domain.js?v=home-finish-v1"></script>
   <script src="../js/config/runtime.js?v=infra-v1"></script>
-  <script src="../js/core/constants.js?v=home-finish-v1"></script>
+  <script src="../js/core/constants.js?v=kawaui-studio-worlds-v1"></script>
   <script src="../js/core/store.js?v=cashier-vip-rules-v1"></script>
   <script src="../js/core/ui.js?v=optimization-v2"></script>
   <script src="../js/core/auth.js?v=optimization-v2"></script>

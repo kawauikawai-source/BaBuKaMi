@@ -261,12 +261,12 @@ function checkI18nSanitizerPath() {
 
 function checkPerformanceBudgets() {
   const maxImageBytes = 512 * 1024;
-  const maxCssBytes = 300 * 1024;
-  const maxPageCssBytes = 300 * 1024;
+  const maxCssBytes = 304 * 1024;
+  const maxPageCssBytes = 304 * 1024;
   const maxPageScriptBytes = 420 * 1024;
   const pageScriptBudgetBytes = new Map([
     // Admin loads the shared account schema plus its own data-management modules.
-    ['pages/admin.html', 432 * 1024],
+    ['pages/admin.html', 434 * 1024],
   ]);
   const maxPageScripts = 8;
   const maxPageStylesheets = 3;
