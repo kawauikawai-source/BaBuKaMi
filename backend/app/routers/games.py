@@ -76,6 +76,7 @@ from app.core.mines import (
     win_cents_for,
 )
 from app.core.plinko import (
+    ALLOWED_PLINKO_BET_CENTS,
     PLINKO_GAME_ID,
     PLINKO_METHOD_ID,
     PLINKO_TITLE,
@@ -143,7 +144,9 @@ from app.schemas import (
 )
 from app.services.audit import add_audit_log
 from app.services.idempotency import begin_idempotency, complete_idempotency
+from app.services.game_control import consume_game_budget
 from app.services.money import apply_game_result, apply_instant_game_result, reserve_bet
+from app.services.manager import is_allowed_manager_bet
 
 
 router = APIRouter(prefix="/games", tags=["games"])
@@ -957,7 +960,7 @@ def solar_mines_start(
 ) -> MinesRoundResponse:
     bet_cents = amount_to_cents(payload.bet)
     mine_count = int(payload.mine_count)
-    if bet_cents not in ALLOWED_MINES_BET_CENTS:
+    if not is_allowed_manager_bet(db, current_user, MINES_GAME_ID, bet_cents, ALLOWED_MINES_BET_CENTS):
         raise mines_error("err_mines_bet_invalid")
     if mine_count not in ALLOWED_MINE_COUNTS:
         raise mines_error("err_mines_count_invalid")
@@ -1175,7 +1178,7 @@ def neon_pyramids_start(
 ) -> BlocksRoundResponse:
     bet_cents = amount_to_cents(payload.bet)
     difficulty = str(payload.difficulty or DEFAULT_BLOCKS_DIFFICULTY)
-    if bet_cents not in ALLOWED_BLOCKS_BET_CENTS:
+    if not is_allowed_manager_bet(db, current_user, BLOCKS_GAME_ID, bet_cents, ALLOWED_BLOCKS_BET_CENTS):
         raise blocks_error("err_blocks_bet_invalid")
     if difficulty not in ALLOWED_BLOCKS_DIFFICULTIES:
         raise blocks_error("err_blocks_difficulty_invalid")
@@ -1642,6 +1645,7 @@ def settle_holdem_call(db: Session, *, round_item: GameRound, user: User, reques
     transaction = transaction_for_round(db, result)
     ante_cents = int(result.get("ante_cents") or round_item.total_bet_cents)
     call_cents = int(result.get("call_amount_cents") or ante_cents * 2)
+    consume_game_budget(db, user=user, amount_cents=call_cents)
     before_reserve_balance = user.balance_cents
     balance_update = (
         update(User)
@@ -1778,7 +1782,7 @@ def texas_holdem_start(
     db: Session = Depends(get_db),
 ) -> HoldemRoundResponse:
     ante_cents = amount_to_cents(payload.ante)
-    if ante_cents not in ALLOWED_HOLDEM_ANTE_CENTS:
+    if not is_allowed_manager_bet(db, current_user, HOLDEM_GAME_ID, ante_cents, ALLOWED_HOLDEM_ANTE_CENTS):
         raise holdem_error("err_holdem_ante_invalid")
 
     idem = begin_idempotency(
@@ -2218,7 +2222,7 @@ def arctic_protocol_start(
     db: Session = Depends(get_db),
 ) -> SurvivalRoundResponse:
     bet_cents = amount_to_cents(payload.bet)
-    if bet_cents not in ALLOWED_SURVIVAL_BET_CENTS:
+    if not is_allowed_manager_bet(db, current_user, SURVIVAL_GAME_ID, bet_cents, ALLOWED_SURVIVAL_BET_CENTS):
         raise survival_error("err_survival_bet_invalid")
     lang = normalize_lang(payload.lang)
     idem = begin_idempotency(
@@ -2643,8 +2647,11 @@ def midnight_vault_drop(
     rows = int(payload.rows)
     balls = int(payload.balls)
 
+    if not is_allowed_manager_bet(db, current_user, PLINKO_GAME_ID, bet_cents, ALLOWED_PLINKO_BET_CENTS):
+        raise plinko_error("err_plinko_bet_invalid")
+
     try:
-        result = drop_midnight_vault(bet_cents, mode, risk, rows, balls)
+        result = drop_midnight_vault(bet_cents, mode, risk, rows, balls, validate_bet=False)
     except ValueError as exc:
         error_map = {
             "invalid_bet": "err_plinko_bet_invalid",
@@ -2762,10 +2769,10 @@ def lucky_bamboo_spin(
         return SlotSpinResponse.model_validate(idem.replay_response)
 
     bet_cents = amount_to_cents(payload.bet)
-    if bet_cents not in ALLOWED_BET_CENTS:
+    if not is_allowed_manager_bet(db, current_user, SLOT_GAME_ID, bet_cents, ALLOWED_BET_CENTS):
         raise slot_error("err_slot_bet_invalid")
 
-    result = spin_lucky_bamboo(bet_cents)
+    result = spin_lucky_bamboo(bet_cents, validate_bet=False)
     try:
         current_user, transaction = apply_instant_game_result(
             db,
@@ -2841,7 +2848,7 @@ def dragons_fortune_start(
     db: Session = Depends(get_db),
 ) -> CrashRoundResponse:
     bet_cents = amount_to_cents(payload.bet)
-    if bet_cents not in ALLOWED_CRASH_BET_CENTS:
+    if not is_allowed_manager_bet(db, current_user, CRASH_GAME_ID, bet_cents, ALLOWED_CRASH_BET_CENTS):
         raise crash_error("err_crash_bet_invalid")
 
     idem = begin_idempotency(

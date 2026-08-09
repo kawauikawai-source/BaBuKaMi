@@ -556,6 +556,13 @@
     if (document.body.dataset.page !== 'crash') return;
     renderBalance();
     renderBets();
+    store.getManagerState?.().then(result => {
+      if (!result?.error) {
+        BETS.splice(0, BETS.length, ...store.getManagerBetOptions('dragons-fortune'));
+        if (selectedBet === 100) selectedBet = BETS[BETS.length - 1];
+        renderBets();
+      }
+    });
     renderRecent();
     setVisual(CRASH_START_MULTIPLIER, '', { snap: true });
     setControls();

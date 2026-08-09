@@ -4,7 +4,8 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Bambiku Casino</title>
-  <link rel="stylesheet" href="../css/style.css?v=trust-archive-v1"/>
+  <link rel="stylesheet" href="../css/style.css?v=trust-terminal-v3"/>
+  <link rel="stylesheet" href="../css/pages/responsible.css?v=trust-terminal-v3" data-game-control-style="1"/>
   <link rel="icon" type="image/png" sizes="512x512" href="../assets/favicon-bk-512.png?v=1"/>
   <link rel="apple-touch-icon" href="../assets/favicon-bk-512.png?v=1"/>
   <meta name="theme-color" content="#00d98b"/>
@@ -20,46 +21,101 @@
 
   <main class="page-shell legal-page trust-page">
     <div class="container">
-      <header class="trust-command-head trust-command-soon">
+      <header class="trust-command-head game-control-head">
         <div class="trust-command-copy">
-          <p class="trust-kicker"><i></i><span data-i18n="trust_control_channel">КОНТУР САМОКОНТРОЛЯ // ПРОЕКТИРУЕТСЯ</span></p>
-          <div class="trust-title-line"><h1 data-i18n="footer_responsible">Контроль игры</h1><span class="trust-soon-badge" data-i18n="trust_soon">СКОРО</span></div>
-          <p class="page-sub" data-i18n="trust_control_intro">Собственный центр лимитов, пауз и спокойной игры Bambiku появится здесь.</p>
+          <p class="trust-kicker"><i></i><span data-i18n="trust_control_channel">КОНТУР САМОКОНТРОЛЯ // СИСТЕМА ГОТОВА</span></p>
+          <h1 data-i18n="footer_responsible">Контроль игры</h1>
+          <p class="page-sub" data-i18n="trust_control_intro">Задайте предел, настройте напоминание или остановите новые ставки одним решением.</p>
         </div>
         <a href="../index.html" class="btn btn-outline trust-home-btn" data-route="home" data-i18n="legal_back_home">Вернуться на главную</a>
       </header>
 
       <nav class="trust-section-nav" aria-label="Bambiku archive">
         <a class="trust-section-link" href="help.html" data-i18n="footer_help">База знаний</a>
-        <a class="trust-section-link active is-soon" href="responsible.html"><span data-i18n="footer_responsible">Контроль игры</span><b data-i18n="trust_soon">СКОРО</b></a>
+        <a class="trust-section-link active" href="responsible.html" data-i18n="footer_responsible">Контроль игры</a>
         <a class="trust-section-link" href="privacy.html" data-i18n="footer_privacy">Приватность</a>
         <a class="trust-section-link" href="terms.html" data-i18n="footer_terms">Великий пакт</a>
       </nav>
 
-      <section class="trust-preview-panel">
-        <div class="trust-preview-signal" aria-hidden="true"><span></span><span></span><span></span></div>
-        <div class="trust-preview-copy">
-          <p class="label" data-i18n="trust_preview_label">ПРЕДВАРИТЕЛЬНЫЙ ПРОТОКОЛ</p>
-          <h2 data-i18n="trust_control_preview_title">Пока центр строится</h2>
-          <p data-i18n="responsible_sub">Играйте спокойно, делайте паузы и помните: баланс виртуальный.</p>
+      <section class="game-control-terminal" id="gameControlTerminal" aria-live="polite">
+        <header class="game-control-statusbar">
+          <div><span data-i18n="game_control_connection">КОНТУР</span><strong id="gameControlConnection">ПРОВЕРКА</strong></div>
+          <div><span data-i18n="game_control_session">СЕССИЯ</span><strong id="gameControlSession">00:00</strong></div>
+          <div><span data-i18n="game_control_mode">РЕЖИМ</span><strong id="gameControlMode">ОЖИДАНИЕ</strong></div>
+          <div><span data-i18n="game_control_clock">ВРЕМЯ ДОМА</span><strong id="gameControlClock">--:--:--</strong></div>
+        </header>
+
+        <div class="game-control-grid">
+          <section class="game-control-monitor">
+            <div class="control-radar" aria-hidden="true">
+              <div class="control-radar-ticks"></div>
+              <div class="control-radar-axis"></div>
+              <i></i><i></i><i></i>
+              <span class="control-radar-sweep"></span>
+              <b class="control-radar-blip blip-one"></b>
+              <b class="control-radar-blip blip-two"></b>
+              <b class="control-radar-blip blip-three"></b>
+              <em class="control-radar-core"></em>
+            </div>
+            <div class="control-monitor-copy">
+              <p class="label" data-i18n="game_control_monitor_label">СОСТОЯНИЕ КОНТУРА</p>
+              <h2 id="gameControlHeadline" data-i18n="game_control_loading">Считываем игровую активность</h2>
+              <p id="gameControlSummary" data-i18n="game_control_loading_text">Терминал сверяет лимиты и состояние аккаунта.</p>
+            </div>
+            <div class="control-usage">
+              <div class="control-usage-head"><span data-i18n="game_control_daily_usage">СТАВКИ СЕГОДНЯ</span><strong id="gameControlUsageValue">--</strong></div>
+              <div class="control-usage-track"><span id="gameControlUsageFill"></span></div>
+              <small id="gameControlRemaining">--</small>
+            </div>
+          </section>
+
+          <form class="game-control-settings" id="gameControlSettings">
+            <header><div><p class="label" data-i18n="game_control_settings_label">ЛИЧНЫЙ ПРОТОКОЛ</p><h2 data-i18n="game_control_settings_title">Пределы сессии</h2></div><span class="control-save-state" id="gameControlSaveState"></span></header>
+            <label class="control-field">
+              <span data-i18n="game_control_limit_label">Дневной лимит ставок</span>
+              <div class="control-money-input"><b>€</b><input id="gameControlLimit" type="number" min="5" max="100000" step="5" inputmode="decimal" placeholder="100"/><button type="button" id="gameControlUnlimited" data-i18n="game_control_unlimited">БЕЗ ЛИМИТА</button></div>
+              <small data-i18n="game_control_limit_hint">Считается общая сумма новых ставок во всех играх. Выплаты лимит не уменьшают.</small>
+            </label>
+            <fieldset class="control-field">
+              <legend data-i18n="game_control_reminder_label">Напоминать о перерыве</legend>
+              <div class="control-segments" id="gameControlReminder">
+                <button type="button" data-minutes="15">15 MIN</button>
+                <button type="button" data-minutes="30">30 MIN</button>
+                <button type="button" data-minutes="60">60 MIN</button>
+                <button type="button" data-minutes="0" data-i18n="game_control_off">ВЫКЛ</button>
+              </div>
+            </fieldset>
+            <button class="btn btn-primary control-save" type="submit" id="gameControlSave" data-i18n="game_control_save">Сохранить протокол</button>
+          </form>
         </div>
-        <div class="trust-preview-rules">
-          <article><b>18+</b><span data-i18n="responsible_age_text">Интерфейс предназначен только для взрослых.</span></article>
-          <article><b>00:30</b><span data-i18n="responsible_pause_text">Если игра раздражает, остановитесь и вернитесь позже.</span></article>
-          <article><b>VIRTUAL</b><span data-i18n="responsible_demo_text">Баланс, бонусы и выигрыши не являются реальными деньгами.</span></article>
+
+        <section class="game-control-pause">
+          <div><p class="label" data-i18n="game_control_pause_label">АВАРИЙНАЯ ПАУЗА</p><h2 data-i18n="game_control_pause_title">Закрыть доступ к новым ставкам</h2><p data-i18n="game_control_pause_text">Текущий раунд можно завершить. Новые ставки вернутся после окончания паузы или ручного снятия.</p></div>
+          <div class="control-pause-actions" id="gameControlPauseActions">
+            <button type="button" data-pause="15">15 MIN</button>
+            <button type="button" data-pause="60">1 HOUR</button>
+            <button type="button" data-pause="1440">24 HOURS</button>
+            <button class="is-resume" type="button" id="gameControlResume" data-i18n="game_control_resume">СНЯТЬ ПАУЗУ</button>
+          </div>
+        </section>
+
+        <div class="game-control-gate" id="gameControlGate" hidden>
+          <div><span>BK//ID</span><h2 data-i18n="game_control_gate_title">Подключите личный контур</h2><p data-i18n="game_control_gate_text">Войдите в аккаунт, чтобы лимит и пауза действовали на всех устройствах.</p></div>
+          <button class="btn btn-primary" type="button" data-modal="login" data-i18n="form_submit_login">Войти</button>
         </div>
       </section>
     </div>
   </main>
 
-  <footer id="footer" class="compact-footer trust-compact-footer"><div class="container"><p class="footer-legal" data-i18n-html="footer_legal">Bambiku — развлекательная вселенная с виртуальным балансом. Доступ только для 18+.</p><div class="age">18+</div></div></footer>
+  <footer class="trust-compact-footer"><div class="container"><a class="trust-footer-mark" href="../index.html"><span></span>Bambiku</a><p class="footer-legal" data-i18n-html="footer_legal">Bambiku — развлекательная вселенная с виртуальным балансом. Доступ только для 18+.</p><div class="age">18+</div></div></footer>
   <div class="toasts" aria-live="polite" aria-atomic="true"></div>
   <script src="../js/config/app-domain.js?v=ux-trust-v1"></script>
   <script src="../js/config/runtime.js?v=infra-v1"></script>
-  <script src="../js/core/constants.js?v=trust-archive-v1"></script>
-  <script src="../js/core/store.js?v=vip-click-batch-v1"></script>
+  <script src="../js/core/constants.js?v=operator-08-v1"></script>
+  <script src="../js/core/store.js?v=operator-08-v1"></script>
   <script src="../js/core/ui.js?v=optimization-v2"></script>
   <script src="../js/core/auth.js?v=optimization-v2"></script>
-  <script src="../js/core/bootstrap.js?v=offline-i18n-v1"></script>
+  <script src="../js/pages/trust.js?v=trust-nav-v3"></script>
+  <script src="../js/core/bootstrap.js?v=game-control-v2"></script>
 </body>
 </html>

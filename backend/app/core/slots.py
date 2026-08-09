@@ -95,8 +95,8 @@ def evaluate_grid(grid: list[list[str]], bet_cents: int) -> tuple[list[dict], in
     return winning_lines, total_win_cents
 
 
-def spin_lucky_bamboo(bet_cents: int) -> dict:
-    if bet_cents not in ALLOWED_BET_CENTS:
+def spin_lucky_bamboo(bet_cents: int, *, validate_bet: bool = True) -> dict:
+    if validate_bet and bet_cents not in ALLOWED_BET_CENTS:
         raise ValueError("Invalid slot bet")
 
     grid = spin_grid()

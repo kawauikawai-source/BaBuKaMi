@@ -1,6 +1,6 @@
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 
-from sqlalchemy import Boolean, CheckConstraint, DateTime, ForeignKey, Index, Integer, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, CheckConstraint, Date, DateTime, ForeignKey, Index, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
@@ -53,6 +53,112 @@ class User(Base):
         foreign_keys="AuditLog.target_user_id",
         back_populates="target_user",
     )
+    game_control_settings: Mapped["GameControlSettings | None"] = relationship(
+        back_populates="user",
+        uselist=False,
+    )
+    manager_messages: Mapped[list["ManagerMessage"]] = relationship(back_populates="user")
+    manager_actions: Mapped[list["ManagerAction"]] = relationship(back_populates="user")
+    manager_tickets: Mapped[list["ManagerTicket"]] = relationship(
+        back_populates="user",
+        foreign_keys="ManagerTicket.user_id",
+    )
+    manager_bet_presets: Mapped[list["ManagerBetPreset"]] = relationship(back_populates="user")
+
+
+class GameControlSettings(Base):
+    __tablename__ = "game_control_settings"
+    __table_args__ = (
+        UniqueConstraint("user_id", name="uq_game_control_settings_user"),
+        CheckConstraint("daily_bet_limit_cents IS NULL OR daily_bet_limit_cents >= 0", name="ck_game_control_daily_limit"),
+        CheckConstraint("daily_bet_spent_cents >= 0", name="ck_game_control_daily_spent"),
+        CheckConstraint("reminder_minutes >= 0", name="ck_game_control_reminder"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
+    daily_bet_limit_cents: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    daily_bet_spent_cents: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    daily_bet_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    reminder_minutes: Mapped[int] = mapped_column(Integer, nullable=False, default=30)
+    paused_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+
+    user: Mapped[User] = relationship(back_populates="game_control_settings")
+
+
+class ManagerMessage(Base):
+    __tablename__ = "manager_messages"
+    __table_args__ = (Index("ix_manager_messages_user_created", "user_id", "created_at", "id"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
+    role: Mapped[str] = mapped_column(String(16), nullable=False, default="operator")
+    language: Mapped[str] = mapped_column(String(2), nullable=False, default="ru")
+    intent: Mapped[str] = mapped_column(String(64), nullable=False, default="general")
+    text: Mapped[str] = mapped_column(Text, nullable=False)
+    metadata_json: Mapped[str] = mapped_column(Text, nullable=False, default="{}")
+    read_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+    user: Mapped[User] = relationship(back_populates="manager_messages")
+
+
+class ManagerAction(Base):
+    __tablename__ = "manager_actions"
+    __table_args__ = (Index("ix_manager_actions_user_status", "user_id", "status", "created_at"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
+    kind: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    status: Mapped[str] = mapped_column(String(24), nullable=False, default="pending", index=True)
+    payload_json: Mapped[str] = mapped_column(Text, nullable=False, default="{}")
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+    user: Mapped[User] = relationship(back_populates="manager_actions")
+
+
+class ManagerTicket(Base):
+    __tablename__ = "manager_tickets"
+    __table_args__ = (Index("ix_manager_tickets_status_created", "status", "created_at", "id"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
+    category: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
+    status: Mapped[str] = mapped_column(String(24), nullable=False, default="open", index=True)
+    subject: Mapped[str] = mapped_column(String(255), nullable=False)
+    payload_json: Mapped[str] = mapped_column(Text, nullable=False, default="{}")
+    admin_response: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    resolved_by_user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+
+    user: Mapped[User] = relationship(back_populates="manager_tickets", foreign_keys=[user_id])
+    resolved_by: Mapped[User | None] = relationship(foreign_keys=[resolved_by_user_id])
+
+
+class ManagerBetPreset(Base):
+    __tablename__ = "manager_bet_presets"
+    __table_args__ = (
+        UniqueConstraint("user_id", "game_id", name="uq_manager_bet_preset_user_game"),
+        CheckConstraint("bet_cents > 10000", name="ck_manager_bet_preset_above_base"),
+        CheckConstraint("bet_cents % 500 = 0", name="ck_manager_bet_preset_step"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
+    game_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    bet_cents: Mapped[int] = mapped_column(Integer, nullable=False)
+    source: Mapped[str] = mapped_column(String(24), nullable=False, default="manager")
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+
+    user: Mapped[User] = relationship(back_populates="manager_bet_presets")
 
 
 class Transaction(Base):

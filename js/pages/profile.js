@@ -9,6 +9,10 @@
   let historyFilter = 'all';
   let historyGameFilter = 'all';
   let historyVisible = HISTORY_PAGE_SIZE;
+  let managerOpen = false;
+  let managerLoading = false;
+  let managerState = null;
+  let managerMessages = [];
 
   function splitName(name) {
     const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
@@ -217,6 +221,7 @@
     }
     const managerAccess = document.getElementById('profileManagerAccess');
     if (managerAccess) managerAccess.hidden = tier.level < 2;
+    if (tier.level < 2 && managerOpen) setManagerOpen(false);
   }
 
   function renderSecurity(user) {
@@ -485,12 +490,207 @@
     ui.showToast(ui.t('vip_purchase_success', { tier: B.getVipTier(tier).name }));
   }
 
+  function managerLang() {
+    return store.getState().lang === 'en' ? 'en' : 'ru';
+  }
+
+  function managerGameName(gameId) {
+    const names = {
+      'dragons-fortune': 'Kawaui Fortune',
+      'lucky-bamboo': 'Lucky Bamboo',
+      'solar-wilds': 'Eclipse Hunt',
+      'neon-pyramids': 'Neon Pyramids',
+      'midnight-vault': 'Midnight Vault',
+      'texas-holdem': "Texas Hold'em",
+      'arctic-protocol': 'Arctic Protocol',
+      roulette: 'European Roulette'
+    };
+    return names[gameId] || gameId;
+  }
+
+  function renderManagerSummary() {
+    const root = document.getElementById('managerSummary');
+    if (!root) return;
+    if (!managerState) {
+      root.innerHTML = `<div><span>${ui.escapeHTML(ui.t('state_loading_title'))}</span><strong>...</strong></div>`;
+      return;
+    }
+    root.innerHTML = [
+      [ui.t('manager_summary_clearance'), String(managerState.vip_tier || '').toUpperCase()],
+      [ui.t('manager_summary_limit'), ui.formatMoney(Number(managerState.max_bet_cents || 0) / 100)],
+      [ui.t('manager_summary_presets'), `${(managerState.bet_presets || []).length} / ${managerState.max_games || 0}`],
+      [ui.t('manager_summary_tickets'), String(managerState.open_tickets || 0)]
+    ].map(item => `<div><span>${ui.escapeHTML(item[0])}</span><strong>${ui.escapeHTML(item[1])}</strong></div>`).join('');
+  }
+
+  function renderManagerMessages() {
+    const root = document.getElementById('managerMessages');
+    if (!root) return;
+    if (managerLoading && !managerMessages.length) {
+      root.innerHTML = `<div class="manager-message"><div><small>OPERATOR 08</small><p>${ui.escapeHTML(ui.t('state_loading_title'))}</p></div></div>`;
+      return;
+    }
+    if (!managerMessages.length) {
+      root.innerHTML = `<div class="manager-message"><div><small>OPERATOR 08</small><p>${ui.escapeHTML(ui.t('manager_welcome'))}</p></div></div>`;
+      return;
+    }
+    root.innerHTML = managerMessages.map(message => {
+      const role = String(message.role || 'operator');
+      const metadata = message.metadata || {};
+      const action = metadata.action;
+      const canConfirm = action && action.status === 'pending';
+      return `<article class="manager-message is-${ui.escapeHTML(role)}"><div>
+        <small>${ui.escapeHTML(role === 'user' ? ui.t('manager_you') : role === 'admin' ? ui.t('manager_management') : 'OPERATOR 08')}</small>
+        <p>${ui.escapeHTML(message.text || '')}</p>
+        ${canConfirm ? `<div class="manager-message-action"><button type="button" data-manager-confirm="${ui.escapeHTML(action.id)}">${ui.escapeHTML(ui.t('manager_confirm'))}</button></div>` : ''}
+      </div></article>`;
+    }).join('');
+    root.scrollTop = root.scrollHeight;
+  }
+
+  function renderManagerWorkbench(intent) {
+    const root = document.getElementById('managerWorkbench');
+    if (!root) return;
+    root.hidden = false;
+    if (intent === 'bets') {
+      const options = ['dragons-fortune', 'lucky-bamboo', 'solar-wilds', 'neon-pyramids', 'midnight-vault', 'texas-holdem', 'arctic-protocol', 'roulette'];
+      root.innerHTML = `<form class="manager-bet-form" data-manager-form="bet">
+        <select name="game_id" aria-label="${ui.escapeHTML(ui.t('manager_game'))}">${options.map(id => `<option value="${id}">${ui.escapeHTML(managerGameName(id))}</option>`).join('')}</select>
+        <input name="amount" type="number" min="105" step="5" placeholder="105" aria-label="${ui.escapeHTML(ui.t('manager_amount'))}"/>
+        <button class="btn btn-primary" type="submit">${ui.escapeHTML(ui.t('manager_prepare'))}</button>
+      </form>`;
+      return;
+    }
+    if (intent === 'control') {
+      root.innerHTML = `<div class="manager-control-grid">
+        <button class="btn btn-outline" type="button" data-manager-command="pause" data-duration="15">${ui.escapeHTML(ui.t('manager_pause_15'))}</button>
+        <button class="btn btn-outline" type="button" data-manager-command="pause" data-duration="60">${ui.escapeHTML(ui.t('manager_pause_60'))}</button>
+        <button class="btn btn-outline" type="button" data-manager-command="reminder" data-duration="30">${ui.escapeHTML(ui.t('manager_reminder_30'))}</button>
+      </div>
+      <form class="manager-limit-form" data-manager-form="limit">
+        <label for="managerDailyLimit">${ui.escapeHTML(ui.t('manager_daily_limit'))}</label>
+        <div>
+          <span>€</span>
+          <input id="managerDailyLimit" name="amount" type="number" min="5" step="5" placeholder="100" required />
+          <button class="btn btn-primary" type="submit">${ui.escapeHTML(ui.t('manager_prepare'))}</button>
+        </div>
+      </form>`;
+      return;
+    }
+    root.hidden = true;
+    root.innerHTML = '';
+  }
+
+  async function loadManager() {
+    if (managerLoading) return;
+    managerLoading = true;
+    renderManagerMessages();
+    const [stateResult, messagesResult] = await Promise.all([store.getManagerState(), store.getManagerMessages()]);
+    managerLoading = false;
+    if (stateResult.error || messagesResult.error) {
+      ui.showToast(ui.t(stateResult.error || messagesResult.error), 'err');
+      renderManagerMessages();
+      return;
+    }
+    managerState = stateResult;
+    managerMessages = Array.isArray(messagesResult) ? messagesResult : [];
+    renderManagerSummary();
+    renderManagerMessages();
+  }
+
+  async function sendManager(text, intent, payload) {
+    if (!String(text || '').trim()) return;
+    const send = document.getElementById('managerSend');
+    if (send) send.disabled = true;
+    const result = await store.sendManagerMessage(text, intent, payload, managerLang());
+    if (send) send.disabled = false;
+    if (result.error) {
+      ui.showToast(ui.t(result.error), 'err');
+      return;
+    }
+    const operator = Object.assign({}, result.operator_message || {});
+    if (result.action) {
+      operator.metadata = Object.assign({}, operator.metadata || {}, { action: result.action });
+    }
+    managerMessages.push(result.user_message, operator);
+    document.getElementById('managerInput').value = '';
+    renderManagerMessages();
+    if (result.ticket || result.action) {
+      managerState = await store.getManagerState();
+      renderManagerSummary();
+    }
+  }
+
+  async function confirmManagerAction(actionId, button) {
+    if (button) button.disabled = true;
+    const result = await store.confirmManagerAction(actionId);
+    if (result.error) {
+      if (button) button.disabled = false;
+      ui.showToast(ui.t(result.error), 'err');
+      return;
+    }
+    managerState = result.state;
+    managerMessages.push(result.operator_message);
+    managerMessages.forEach(message => {
+      if (message.metadata?.action?.id === Number(actionId)) message.metadata.action.status = 'completed';
+    });
+    renderManagerSummary();
+    renderManagerMessages();
+  }
+
+  function setManagerOpen(open) {
+    managerOpen = Boolean(open);
+    const terminal = document.getElementById('managerTerminal');
+    if (terminal) terminal.hidden = !managerOpen;
+    if (managerOpen) {
+      terminal?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      loadManager();
+    }
+  }
+
   function init() {
     if (document.body.dataset.page !== 'profile') return;
     initTabs();
     document.getElementById('btn-save-personal')?.addEventListener('click', savePersonal);
-    document.getElementById('profileManagerButton')?.addEventListener('click', () => {
-      ui.showToast(ui.t('profile_manager_coming_soon'));
+    document.getElementById('profileManagerButton')?.addEventListener('click', () => setManagerOpen(true));
+    document.getElementById('managerClose')?.addEventListener('click', () => setManagerOpen(false));
+    document.getElementById('managerComposer')?.addEventListener('submit', event => {
+      event.preventDefault();
+      sendManager(document.getElementById('managerInput')?.value, null, {});
+    });
+    document.getElementById('managerTerminal')?.addEventListener('click', event => {
+      const quick = event.target.closest('[data-manager-intent]');
+      if (quick) {
+        const intent = quick.dataset.managerIntent;
+        document.querySelectorAll('[data-manager-intent]').forEach(item => item.classList.toggle('active', item === quick));
+        if (intent === 'bets' || intent === 'control') renderManagerWorkbench(intent);
+        else {
+          renderManagerWorkbench('');
+          sendManager(ui.t('manager_quick_' + intent), intent, {});
+        }
+      }
+      const confirm = event.target.closest('[data-manager-confirm]');
+      if (confirm) confirmManagerAction(confirm.dataset.managerConfirm, confirm);
+      const command = event.target.closest('[data-manager-command]');
+      if (command?.dataset.managerCommand === 'pause') sendManager(ui.t('manager_pause_request'), 'control', { kind: 'pause', duration_minutes: Number(command.dataset.duration) });
+      if (command?.dataset.managerCommand === 'reminder') sendManager(ui.t('manager_reminder_request'), 'control', { kind: 'reminder', reminder_minutes: Number(command.dataset.duration) });
+    });
+    document.getElementById('managerWorkbench')?.addEventListener('submit', event => {
+      const form = event.target.closest('[data-manager-form]');
+      if (!form) return;
+      event.preventDefault();
+      const data = new FormData(form);
+      const amount = Number(data.get('amount'));
+      if (!Number.isFinite(amount) || amount <= 0) return;
+      if (form.dataset.managerForm === 'limit') {
+        sendManager(ui.t('manager_limit_request', { amount: amount.toFixed(2) }), 'control', {
+          kind: 'daily_limit',
+          daily_bet_limit_cents: Math.round(amount * 100)
+        });
+        return;
+      }
+      const gameId = String(data.get('game_id') || '');
+      sendManager(`${managerGameName(gameId)} €${amount}`, 'set_bet', { game_id: gameId, amount_cents: Math.round(amount * 100) });
     });
     document.getElementById('section-overview')?.addEventListener('click', purchaseVip);
     document.getElementById('profileHistoryTabs')?.addEventListener('click', event => {

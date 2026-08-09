@@ -637,6 +637,12 @@
       renderAll();
       return;
     }
+    const managerState = await store.getManagerState?.();
+    if (managerState && !managerState.error) {
+      BETS.splice(0, BETS.length, ...store.getManagerBetOptions('arctic-protocol'));
+      if (selectedBet === 100) selectedBet = BETS[BETS.length - 1];
+      renderBets();
+    }
     await loadActive();
     store.subscribe((next, previous, action) => {
       if (action === 'lang:set' || next.lang !== previous.lang) {

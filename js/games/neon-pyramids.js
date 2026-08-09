@@ -704,6 +704,13 @@
       if (nextUser !== prevUser) restoreActiveRound();
     });
     renderAll();
+    store.getManagerState?.().then(result => {
+      if (!result?.error) {
+        BETS.splice(0, BETS.length, ...store.getManagerBetOptions('neon-pyramids'));
+        if (selectedBet === 100) selectedBet = BETS[BETS.length - 1];
+        renderBets();
+      }
+    });
     restoreActiveRound();
   }
 

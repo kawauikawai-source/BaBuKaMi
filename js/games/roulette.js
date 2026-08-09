@@ -898,6 +898,13 @@
     store.subscribe(() => {
       if (!spinning) renderBalance();
     });
+    store.getManagerState?.().then(result => {
+      if (!result?.error) {
+        CHIPS.splice(0, CHIPS.length, ...store.getManagerBetOptions('roulette'));
+        if (selectedChip === 100) selectedChip = CHIPS[CHIPS.length - 1];
+        renderChips();
+      }
+    });
   }
 
   B.game = { init };

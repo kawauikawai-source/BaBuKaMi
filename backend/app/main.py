@@ -23,6 +23,8 @@ from app.routers.auth import router as auth_router
 from app.routers.cashier import router as cashier_router
 from app.routers.content import router as content_router
 from app.routers.games import router as games_router
+from app.routers.game_control import router as game_control_router
+from app.routers.manager import router as manager_router
 from app.routers.transactions import router as transactions_router
 from app.routers.users import router as users_router
 from app.routers.vip import router as vip_router
@@ -143,6 +145,8 @@ def create_app() -> FastAPI:
     app.include_router(content_router, prefix="/api")
     app.include_router(vip_router, prefix="/api")
     app.include_router(games_router, prefix="/api")
+    app.include_router(game_control_router, prefix="/api")
+    app.include_router(manager_router, prefix="/api")
 
     if settings.serve_frontend:
         frontend_dir = Path(settings.frontend_dist_dir).expanduser().resolve()

@@ -506,6 +506,13 @@
       if (nextUser !== prevUser) restoreActiveRound();
     });
     renderAll();
+    store.getManagerState?.().then(result => {
+      if (!result?.error) {
+        ANTES.splice(0, ANTES.length, ...store.getManagerBetOptions('texas-holdem'));
+        if (selectedAnte === 100) selectedAnte = ANTES[ANTES.length - 1];
+        renderBets();
+      }
+    });
     restoreActiveRound();
   }
 

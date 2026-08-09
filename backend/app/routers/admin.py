@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy import func, select
@@ -10,10 +10,12 @@ from app.core.errors import api_error
 from app.core.rate_limit import limiter
 from app.db.session import get_db
 from app.deps import get_admin_user
-from app.models import AuditLog, GameRound, PromoCode, PromoRedemption, Transaction, User
+from app.models import AuditLog, GameRound, ManagerBetPreset, ManagerMessage, ManagerTicket, PromoCode, PromoRedemption, Transaction, User
 from app.schemas import (
     AdminBalanceAdjustRequest,
     AdminBalanceAdjustResponse,
+    AdminManagerTicketDetail,
+    AdminManagerTicketUpdateRequest,
     AdminPromoCreateRequest,
     AdminPromoDetail,
     AdminPromoPublic,
@@ -27,6 +29,8 @@ from app.schemas import (
     AuditLogPublic,
     GameRoundPublic,
     TransactionPublic,
+    ManagerTicketPublic,
+    UserPublic,
 )
 from app.services.money import apply_balance_delta, approve_withdrawal_transaction, reject_withdrawal_transaction
 from app.services.idempotency import begin_idempotency, complete_idempotency
@@ -38,6 +42,17 @@ from app.services.promos import (
     percent_to_bps,
     promo_public,
     validate_reward_config,
+)
+from app.services.audit import add_audit_log
+from app.services.manager import (
+    MANAGER_TIERS,
+    active_presets,
+    add_message,
+    message_public,
+    parse_json,
+    require_manager_access,
+    ticket_public,
+    utc_now,
 )
 
 
@@ -628,3 +643,138 @@ def list_audit_logs(
         query = query.where(AuditLog.created_at <= end)
     logs = db.scalars(query.order_by(AuditLog.created_at.desc(), AuditLog.id.desc()).offset(offset).limit(limit)).all()
     return [AuditLogPublic.model_validate(log) for log in logs]
+
+
+@router.get("/manager/tickets", response_model=list[ManagerTicketPublic])
+def list_manager_tickets(
+    ticket_status: str = Query(default="open", alias="status", max_length=24),
+    category: str = Query(default="", max_length=32),
+    limit: int = Query(default=50, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
+    admin_user: User = Depends(get_admin_user),
+    db: Session = Depends(get_db),
+) -> list[ManagerTicketPublic]:
+    query = select(ManagerTicket).options(joinedload(ManagerTicket.user))
+    if ticket_status != "all":
+        query = query.where(ManagerTicket.status == ticket_status)
+    if category.strip():
+        query = query.where(ManagerTicket.category == category.strip())
+    tickets = db.scalars(
+        query.order_by(ManagerTicket.created_at.desc(), ManagerTicket.id.desc()).offset(offset).limit(limit)
+    ).all()
+    return [ticket_public(ticket, ticket.user) for ticket in tickets]
+
+
+@router.get("/manager/tickets/{ticket_id}", response_model=AdminManagerTicketDetail)
+def get_manager_ticket_detail(
+    ticket_id: int,
+    admin_user: User = Depends(get_admin_user),
+    db: Session = Depends(get_db),
+) -> AdminManagerTicketDetail:
+    ticket = db.scalar(
+        select(ManagerTicket)
+        .options(joinedload(ManagerTicket.user))
+        .where(ManagerTicket.id == ticket_id)
+    )
+    if not ticket:
+        raise api_error("err_manager_ticket_not_found", status_code=404)
+    messages = list(
+        db.scalars(
+            select(ManagerMessage)
+            .where(ManagerMessage.user_id == ticket.user_id)
+            .order_by(ManagerMessage.id.desc())
+            .limit(100)
+        ).all()
+    )
+    return AdminManagerTicketDetail(
+        ticket=ticket_public(ticket, ticket.user),
+        messages=[message_public(item) for item in reversed(messages)],
+        user=UserPublic.model_validate(ticket.user),
+    )
+
+
+@router.patch("/manager/tickets/{ticket_id}", response_model=ManagerTicketPublic)
+@limiter.limit(settings.rate_limit_admin_money)
+def update_manager_ticket(
+    ticket_id: int,
+    payload: AdminManagerTicketUpdateRequest,
+    request: Request,
+    admin_user: User = Depends(get_admin_user),
+    db: Session = Depends(get_db),
+) -> ManagerTicketPublic:
+    ticket = db.scalar(select(ManagerTicket).where(ManagerTicket.id == ticket_id).with_for_update())
+    if not ticket:
+        raise api_error("err_manager_ticket_not_found", status_code=404)
+    if ticket.status in {"resolved", "rejected", "closed"}:
+        raise api_error("err_manager_ticket_settled", status_code=409)
+
+    owner = db.get(User, ticket.user_id)
+    if owner is None:
+        raise api_error("err_user_not_found", status_code=404)
+    metadata = parse_json(ticket.payload_json)
+    approved_bet = payload.approved_bet_cents
+    approved_game = (payload.game_id or metadata.get("game_id") or "").strip()
+    if approved_bet is not None:
+        rules = require_manager_access(owner)
+        requested = int(metadata.get("bet_cents") or 0)
+        if (
+            ticket.category != "bet_exception"
+            or approved_game not in {"dragons-fortune", "lucky-bamboo", "solar-wilds", "neon-pyramids", "midnight-vault", "texas-holdem", "arctic-protocol", "roulette"}
+            or approved_bet > rules["exception_cap_cents"]
+            or approved_bet <= rules["max_bet_cents"]
+            or approved_bet > requested
+            or approved_bet % 500
+        ):
+            raise api_error("err_manager_bet_exception_invalid")
+        preset = db.scalar(
+            select(ManagerBetPreset).where(
+                ManagerBetPreset.user_id == owner.id,
+                ManagerBetPreset.game_id == approved_game,
+            )
+        )
+        if preset is None and len(active_presets(db, owner.id)) >= rules["max_games"]:
+            raise api_error("err_manager_game_limit", status_code=409, meta={"max_games": rules["max_games"]})
+        if preset is None:
+            preset = ManagerBetPreset(user_id=owner.id, game_id=approved_game, bet_cents=approved_bet)
+        preset.bet_cents = approved_bet
+        preset.source = "admin_exception"
+        preset.expires_at = utc_now() + timedelta(hours=24)
+        db.add(preset)
+
+    ticket.status = payload.status
+    ticket.admin_response = payload.response.strip()
+    ticket.resolved_by_user_id = admin_user.id if payload.status in {"resolved", "rejected", "closed"} else None
+    ticket.resolved_at = utc_now() if ticket.resolved_by_user_id else None
+    db.add(ticket)
+    if payload.response.strip():
+        latest = db.scalar(
+            select(ManagerMessage)
+            .where(ManagerMessage.user_id == owner.id)
+            .order_by(ManagerMessage.id.desc())
+            .limit(1)
+        )
+        add_message(
+            db,
+            owner,
+            role="admin",
+            language=latest.language if latest else "ru",
+            intent="ticket_reply",
+            text=payload.response.strip(),
+            metadata={"ticket_id": ticket.id, "status": ticket.status},
+        )
+    add_audit_log(
+        db,
+        action="manager.ticket.resolve",
+        actor_user=admin_user,
+        target_user=owner,
+        metadata={
+            "ticket_id": ticket.id,
+            "status": ticket.status,
+            "approved_bet_cents": approved_bet,
+            "game_id": approved_game or None,
+        },
+        request=request,
+    )
+    db.commit()
+    db.refresh(ticket)
+    return ticket_public(ticket, owner)

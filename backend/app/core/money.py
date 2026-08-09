@@ -48,12 +48,15 @@ CARD_DEPOSIT_METHODS = {"card"}
 WITHDRAW_METHODS = {"card", "usdt"}
 GAME_BET_LIMITS_CENTS = {
     "roulette": (100, 99_999_999),
-    "lucky-bamboo": (500, 10_000),
-    "midnight-vault": (500, 10_000),
-    "solar-wilds": (500, 10_000),
-    "neon-pyramids": (500, 10_000),
-    "texas-holdem": (500, 10_000),
-    "dragons-fortune": (500, 10_000),
+    # Routes validate that values above the standard EUR 100 chip belong to
+    # the current user's active Operator 08 preset.
+    "lucky-bamboo": (500, 50_000),
+    "midnight-vault": (500, 50_000),
+    "solar-wilds": (500, 50_000),
+    "neon-pyramids": (500, 50_000),
+    "texas-holdem": (500, 50_000),
+    "dragons-fortune": (500, 50_000),
+    "arctic-protocol": (500, 50_000),
 }
 
 

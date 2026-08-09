@@ -6,6 +6,7 @@ from app.core.errors import api_error
 from app.models import Transaction, User
 from app.core.vip import award_vip_bet_points
 from app.services.audit import add_audit_log
+from app.services.game_control import consume_game_budget
 
 
 def create_transaction(
@@ -176,6 +177,7 @@ def apply_game_result(
     request: Request | None = None,
 ) -> User:
     user = db.merge(user)
+    consume_game_budget(db, user=user, amount_cents=total_bet_cents)
     before_balance = user.balance_cents
     after_balance = before_balance + net_cents
     if after_balance < 0:
@@ -280,6 +282,7 @@ def reserve_bet(
     request: Request | None = None,
 ) -> tuple[User, Transaction, int, int]:
     user = db.merge(user)
+    consume_game_budget(db, user=user, amount_cents=amount_cents)
     before_balance = int(user.balance_cents or 0)
     balance_update = (
         update(User)

@@ -38,6 +38,8 @@ class Settings(BaseSettings):
     rate_limit_admin_money: str = "20/minute"
     rate_limit_vip_clicker: str = "120/minute"
     rate_limit_vip_purchase: str = "10/minute"
+    rate_limit_manager_messages: str = "30/minute"
+    rate_limit_manager_actions: str = "15/minute"
     admin_emails: str = Field(default="", validation_alias=AliasChoices("BAMBIKU_ADMIN_EMAILS", "ADMIN_EMAILS"))
 
     google_client_id: str = ""

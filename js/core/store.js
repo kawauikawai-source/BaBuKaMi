@@ -190,6 +190,8 @@
       /^\/admin\/users\/[^/]+\/balance$/,
       /^\/admin\/withdrawals\/[^/]+\/(approve|reject)$/,
       /^\/vip\/tiers\/purchase$/,
+      /^\/manager\/messages$/,
+      /^\/manager\/actions\/[^/]+\/confirm$/,
       /^\/games\/roulette\/spin$/,
       /^\/games\/slots\/lucky-bamboo\/spin$/,
       /^\/games\/plinko\/midnight-vault\/drop$/,
@@ -597,6 +599,7 @@
 
   function setApiUser(apiUser, action) {
     const user = userFromApi(apiUser);
+    if (state.currentUser && state.currentUser.apiId !== user.apiId) managerStateCache = null;
     const previous = state.users.find(item => item.id === user.id) || state.currentUser;
     if ((!user.history || !user.history.length) && previous && Array.isArray(previous.history)) {
       user.history = previous.history.map(normalizeTransaction);
@@ -705,6 +708,17 @@
   }
 
   let state = createInitialState();
+  let managerStateCache = null;
+
+  function managerBetOptions(gameId) {
+    const presets = managerStateCache && Array.isArray(managerStateCache.bet_presets) ? managerStateCache.bet_presets : [];
+    const preset = presets.find(item => item.game_id === gameId);
+    return [5, 10, 25, preset ? Number(preset.bet_cents) / 100 : 100];
+  }
+
+  function validGameBet(gameId, value) {
+    return managerBetOptions(gameId).includes(Number(value));
+  }
   const listeners = new Set();
 
   function refreshDerived(next) {
@@ -738,6 +752,7 @@
 
   function clearApiSession(action) {
     saveApiToken('');
+    managerStateCache = null;
     remove(C.storage.session);
     if (!state) return;
     setState(next => {
@@ -1129,7 +1144,7 @@
       const active = activeUser(state);
       const value = Number(bet);
       if (!active || !active.apiId) return fail('err_auth_required');
-      if (![5, 10, 25, 100].includes(value)) return fail('err_slot_bet_invalid');
+      if (!validGameBet('lucky-bamboo', value)) return fail('err_slot_bet_invalid');
       if (value > toNumber(active.balance)) return fail('err_slot_balance');
 
       try {
@@ -1149,7 +1164,7 @@
       const selectedRows = Number(rows || 12);
       const selectedBalls = Number(balls || 1);
       if (!active || !active.apiId) return fail('err_auth_required');
-      if (![5, 10, 25, 100].includes(value)) return fail('err_plinko_bet_invalid');
+      if (!validGameBet('midnight-vault', value)) return fail('err_plinko_bet_invalid');
       if (!['classic', 'multi'].includes(selectedMode)) return fail('err_plinko_mode_invalid');
       if (!['low', 'medium', 'high'].includes(selectedRisk)) return fail('err_plinko_risk_invalid');
       if (![8, 12, 16].includes(selectedRows)) return fail('err_plinko_rows_invalid');
@@ -1175,7 +1190,7 @@
       const active = activeUser(state);
       const value = Number(bet);
       if (!active || !active.apiId) return fail('err_auth_required');
-      if (![5, 10, 25, 100].includes(value)) return fail('err_survival_bet_invalid');
+      if (!validGameBet('arctic-protocol', value)) return fail('err_survival_bet_invalid');
       if (value > toNumber(active.balance)) return fail('err_survival_balance');
       try {
         const result = await requestApi('/games/survival/arctic-protocol/start', {
@@ -1272,7 +1287,7 @@
       const value = Number(bet);
       const mines = Number(mineCount);
       if (!active || !active.apiId) return fail('err_auth_required');
-      if (![5, 10, 25, 100].includes(value)) return fail('err_mines_bet_invalid');
+      if (!validGameBet('solar-wilds', value)) return fail('err_mines_bet_invalid');
       if (![5, 7, 10, 12].includes(mines)) return fail('err_mines_count_invalid');
       if (value > toNumber(active.balance)) return fail('err_mines_balance');
 
@@ -1333,7 +1348,7 @@
       const value = Number(bet);
       const level = String(difficulty || 'level1');
       if (!active || !active.apiId) return fail('err_auth_required');
-      if (![5, 10, 25, 100].includes(value)) return fail('err_blocks_bet_invalid');
+      if (!validGameBet('neon-pyramids', value)) return fail('err_blocks_bet_invalid');
       if (!['level1', 'level2', 'level3'].includes(level)) return fail('err_blocks_difficulty_invalid');
       if (value > toNumber(active.balance)) return fail('err_blocks_balance');
 
@@ -1409,7 +1424,7 @@
       const active = activeUser(state);
       const value = Number(ante);
       if (!active || !active.apiId) return fail('err_auth_required');
-      if (![5, 10, 25, 100].includes(value)) return fail('err_holdem_ante_invalid');
+      if (!validGameBet('texas-holdem', value)) return fail('err_holdem_ante_invalid');
       if (value > toNumber(active.balance)) return fail('err_holdem_balance');
 
       try {
@@ -1459,7 +1474,7 @@
       const active = activeUser(state);
       const value = Number(bet);
       if (!active || !active.apiId) return fail('err_auth_required');
-      if (![5, 10, 25, 100].includes(value)) return fail('err_crash_bet_invalid');
+      if (!validGameBet('dragons-fortune', value)) return fail('err_crash_bet_invalid');
       if (value > toNumber(active.balance)) return fail('err_crash_balance');
 
       try {
@@ -1749,6 +1764,141 @@
         return okUser(updateApiWallet(result.wallet, result.transaction, 'vip:tier:purchase'));
       } catch (err) {
         return vipError(err);
+      }
+    },
+    async getGameControl() {
+      const active = activeUser(state);
+      if (!active || !active.apiId) return fail('err_auth_required');
+      try {
+        return await requestApi('/game-control');
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    getManagerBetOptions(gameId) {
+      return managerBetOptions(String(gameId || ''));
+    },
+    async getManagerState() {
+      const active = activeUser(state);
+      if (!active || !active.apiId) return fail('err_auth_required');
+      try {
+        const result = await requestApi('/manager');
+        managerStateCache = result;
+        return result;
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async getManagerMessages(beforeId) {
+      const active = activeUser(state);
+      if (!active || !active.apiId) return fail('err_auth_required');
+      try {
+        const params = new URLSearchParams({ limit: '100' });
+        if (beforeId) params.set('before_id', String(beforeId));
+        return await requestApi('/manager/messages?' + params.toString());
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async sendManagerMessage(text, intent, payload, lang) {
+      const active = activeUser(state);
+      if (!active || !active.apiId) return fail('err_auth_required');
+      try {
+        return await requestApi('/manager/messages', {
+          method: 'POST',
+          body: JSON.stringify({
+            text: String(text || '').trim(),
+            intent: intent || null,
+            payload: payload || {},
+            language: lang === 'en' ? 'en' : 'ru'
+          })
+        });
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async confirmManagerAction(actionId) {
+      const active = activeUser(state);
+      if (!active || !active.apiId) return fail('err_auth_required');
+      try {
+        const result = await requestApi('/manager/actions/' + encodeURIComponent(actionId) + '/confirm', { method: 'POST' });
+        if (result && result.state) managerStateCache = result.state;
+        return result;
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async getManagerTickets() {
+      const active = activeUser(state);
+      if (!active || !active.apiId) return fail('err_auth_required');
+      try {
+        return await requestApi('/manager/tickets?limit=100');
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async adminListManagerTickets(status, paging) {
+      const active = activeUser(state);
+      if (!active || !active.apiId || !active.isAdmin) return fail('err_admin_required');
+      try {
+        const params = new URLSearchParams(Object.assign({ status: status || 'open' }, paging || {}));
+        return await requestApi('/admin/manager/tickets?' + params.toString());
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async adminGetManagerTicket(ticketId) {
+      const active = activeUser(state);
+      if (!active || !active.apiId || !active.isAdmin) return fail('err_admin_required');
+      try {
+        return await requestApi('/admin/manager/tickets/' + encodeURIComponent(ticketId));
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async adminUpdateManagerTicket(ticketId, payload) {
+      const active = activeUser(state);
+      if (!active || !active.apiId || !active.isAdmin) return fail('err_admin_required');
+      try {
+        return await requestApi('/admin/manager/tickets/' + encodeURIComponent(ticketId), {
+          method: 'PATCH',
+          body: JSON.stringify(payload || {})
+        });
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async updateGameControl(payload) {
+      const active = activeUser(state);
+      if (!active || !active.apiId) return fail('err_auth_required');
+      try {
+        return await requestApi('/game-control/settings', {
+          method: 'PUT',
+          body: JSON.stringify(payload || {})
+        });
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async pauseGameControl(durationMinutes) {
+      const active = activeUser(state);
+      if (!active || !active.apiId) return fail('err_auth_required');
+      try {
+        return await requestApi('/game-control/pause', {
+          method: 'POST',
+          body: JSON.stringify({ duration_minutes: Number(durationMinutes) })
+        });
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async resumeGameControl() {
+      const active = activeUser(state);
+      if (!active || !active.apiId) return fail('err_auth_required');
+      try {
+        return await requestApi('/game-control/resume', { method: 'POST' });
+      } catch (err) {
+        return fail(authErrorKey(err));
       }
     },
     addHistory(entry) {

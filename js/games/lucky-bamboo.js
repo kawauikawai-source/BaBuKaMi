@@ -241,6 +241,13 @@
     store.subscribe(() => {
       if (!spinning) renderBalance();
     });
+    store.getManagerState?.().then(result => {
+      if (!result?.error) {
+        BETS.splice(0, BETS.length, ...store.getManagerBetOptions('lucky-bamboo'));
+        if (selectedBet === 100) selectedBet = BETS[BETS.length - 1];
+        renderBets();
+      }
+    });
   }
 
   B.slot = { init };

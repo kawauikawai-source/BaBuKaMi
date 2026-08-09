@@ -306,6 +306,13 @@
   function init() {
     if (document.body.dataset.page !== 'mines') return;
     renderAll();
+    store.getManagerState?.().then(result => {
+      if (!result?.error) {
+        BETS.splice(0, BETS.length, ...store.getManagerBetOptions('solar-wilds'));
+        if (selectedBet === 100) selectedBet = BETS[BETS.length - 1];
+        renderBets();
+      }
+    });
     bindEvents();
     restoreActiveRound(false);
     store.subscribe(() => {

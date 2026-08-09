@@ -51,8 +51,8 @@ def split_bet_cents(total_bet_cents: int, ball_count: int) -> list[int]:
     return [base + (1 if index < remainder else 0) for index in range(ball_count)]
 
 
-def drop_midnight_vault(bet_cents: int, mode: str, risk: str, rows: int, balls: int) -> dict:
-    if bet_cents not in ALLOWED_PLINKO_BET_CENTS:
+def drop_midnight_vault(bet_cents: int, mode: str, risk: str, rows: int, balls: int, *, validate_bet: bool = True) -> dict:
+    if validate_bet and bet_cents not in ALLOWED_PLINKO_BET_CENTS:
         raise ValueError("invalid_bet")
     if mode not in ALLOWED_PLINKO_MODES:
         raise ValueError("invalid_mode")

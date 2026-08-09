@@ -146,6 +146,131 @@ class MessageResponse(BaseModel):
     message: str
 
 
+class GameControlSettingsUpdateRequest(BaseModel):
+    daily_bet_limit_cents: int | None = Field(default=None, ge=0, le=10_000_000)
+    reminder_minutes: int = Field(default=30)
+
+    @field_validator("reminder_minutes")
+    @classmethod
+    def validate_reminder_minutes(cls, value: int) -> int:
+        if value not in {0, 15, 30, 60}:
+            raise ValueError("Invalid reminder interval")
+        return value
+
+
+class GameControlPauseRequest(BaseModel):
+    duration_minutes: int
+
+    @field_validator("duration_minutes")
+    @classmethod
+    def validate_pause_duration(cls, value: int) -> int:
+        if value not in {15, 60, 1440}:
+            raise ValueError("Invalid pause duration")
+        return value
+
+
+class GameControlResponse(BaseModel):
+    daily_bet_limit_cents: int | None
+    daily_bet_spent_cents: int
+    daily_bet_remaining_cents: int | None
+    reminder_minutes: int
+    paused_until: datetime | None
+    is_paused: bool
+    server_time: datetime
+
+
+class ManagerMessageRequest(BaseModel):
+    text: str = Field(min_length=1, max_length=1000)
+    language: str = Field(default="ru", pattern="^(ru|en)$")
+    intent: str | None = Field(default=None, max_length=64)
+    payload: dict = Field(default_factory=dict)
+
+
+class ManagerMessagePublic(BaseModel):
+    id: int
+    role: str
+    language: str
+    intent: str
+    text: str
+    metadata: dict = Field(default_factory=dict)
+    is_unread: bool = False
+    created_at: datetime
+
+
+class ManagerActionPublic(BaseModel):
+    id: int
+    kind: str
+    status: str
+    payload: dict = Field(default_factory=dict)
+    expires_at: datetime
+    created_at: datetime
+
+
+class ManagerTicketPublic(BaseModel):
+    id: int
+    category: str
+    status: str
+    subject: str
+    payload: dict = Field(default_factory=dict)
+    admin_response: str = ""
+    user_id: int | None = None
+    user_name: str = ""
+    user_email: str = ""
+    created_at: datetime
+    updated_at: datetime
+    resolved_at: datetime | None = None
+
+
+class ManagerBetPresetPublic(BaseModel):
+    game_id: str
+    bet_cents: int
+    source: str
+    expires_at: datetime | None = None
+
+
+class ManagerStateResponse(BaseModel):
+    operator_name: str = "Operator 08"
+    line_status: str
+    vip_tier: str
+    max_bet_cents: int
+    max_games: int
+    unread_count: int
+    balance_cents: int
+    vip_points: int
+    pending_withdrawals: int
+    active_rounds: int
+    cashier_rules: dict
+    game_control: GameControlResponse
+    bet_presets: list[ManagerBetPresetPublic]
+    open_tickets: int
+
+
+class ManagerMessageResult(BaseModel):
+    user_message: ManagerMessagePublic
+    operator_message: ManagerMessagePublic
+    action: ManagerActionPublic | None = None
+    ticket: ManagerTicketPublic | None = None
+
+
+class ManagerActionConfirmResponse(BaseModel):
+    action: ManagerActionPublic
+    operator_message: ManagerMessagePublic
+    state: ManagerStateResponse
+
+
+class AdminManagerTicketUpdateRequest(BaseModel):
+    status: str = Field(pattern="^(open|in_progress|resolved|rejected|closed)$")
+    response: str = Field(default="", max_length=2000)
+    approved_bet_cents: int | None = Field(default=None, gt=10_000, le=50_000)
+    game_id: str | None = Field(default=None, max_length=64)
+
+
+class AdminManagerTicketDetail(BaseModel):
+    ticket: ManagerTicketPublic
+    messages: list[ManagerMessagePublic]
+    user: UserPublic
+
+
 class GoogleStatusResponse(BaseModel):
     enabled: bool
     login_url: str

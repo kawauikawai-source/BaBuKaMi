@@ -7,16 +7,19 @@
 
   let activeStatus = 'pending';
   let activePromoStatus = 'active';
+  let activeSupportStatus = 'open';
   let activeTab = 'overview';
   let activeUserPanel = 'profile';
   let selectedUser = null;
   let selectedPromo = null;
+  let selectedSupportTicket = null;
   let usersPageIndex = 0;
   let withdrawalsLoading = false;
   let usersLoading = false;
   let overviewLoading = false;
   let auditLoading = false;
   let promosLoading = false;
+  let supportLoading = false;
   let userSearchTimer = 0;
   let auditSearchTimer = 0;
   let lastUsers = [];
@@ -32,7 +35,8 @@
     transactions: { offset: 0, hasMore: false, items: [] },
     rounds: { offset: 0, hasMore: false, items: [] },
     promoRedemptions: { offset: 0, hasMore: false, items: [] },
-    promoDetailRedemptions: { offset: 0, hasMore: false, items: [] }
+    promoDetailRedemptions: { offset: 0, hasMore: false, items: [] },
+    support: { offset: 0, hasMore: false, items: [] }
   };
   const calendarLabels = {
     ru: {
@@ -1306,6 +1310,183 @@
     await loadAudit(false);
   }
 
+  function managerTicketStatusLabel(value) {
+    const status = String(value || '').toLowerCase();
+    const key = {
+      open: 'admin_support_open',
+      in_progress: 'admin_support_progress',
+      resolved: 'admin_support_resolved',
+      rejected: 'admin_support_rejected',
+      closed: 'admin_support_closed'
+    }[status];
+    return key ? ui.t(key) : titleCaseValue(status);
+  }
+
+  function managerTicketCategoryLabel(value) {
+    const category = String(value || '').toLowerCase();
+    if (category === 'bet_exception') return ui.t('admin_support_bet_exception');
+    if (category === 'technical') return ui.t('admin_support_technical');
+    return titleCaseValue(category);
+  }
+
+  function renderSupportTickets(items) {
+    const mount = document.getElementById('adminSupportTickets');
+    if (!mount) return;
+    const list = Array.isArray(items) ? items : [];
+    if (!list.length) {
+      mount.innerHTML = `<div class="admin-empty">${ui.escapeHTML(ui.t('admin_support_empty'))}</div>`;
+      return;
+    }
+    mount.innerHTML = list.map(ticket => {
+      const selected = String(selectedSupportTicket?.id || '') === String(ticket.id);
+      return `
+        <button class="admin-support-ticket ${selected ? 'is-selected' : ''}" type="button" data-manager-ticket-id="${ui.escapeHTML(ticket.id)}">
+          <span class="admin-support-ticket-top">
+            <strong>#${ui.escapeHTML(ticket.id)} · ${ui.escapeHTML(ticket.user_name || ticket.user_email || ('User ' + ticket.user_id))}</strong>
+            <span class="admin-pill ${statusClass(ticket.status)}">${ui.escapeHTML(managerTicketStatusLabel(ticket.status))}</span>
+          </span>
+          <span class="admin-support-ticket-subject">${ui.escapeHTML(ticket.subject || '-')}</span>
+          <span class="admin-support-ticket-meta">
+            <span>${ui.escapeHTML(managerTicketCategoryLabel(ticket.category))}</span>
+            <time>${ui.escapeHTML(formatDate(ticket.created_at))}</time>
+          </span>
+        </button>
+      `;
+    }).join('');
+  }
+
+  function renderSupportDetail(detail) {
+    const mount = document.getElementById('adminSupportDetail');
+    if (!mount) return;
+    if (!detail || detail.error || !detail.ticket) {
+      mount.innerHTML = `<div class="admin-empty admin-support-placeholder"><strong>${ui.escapeHTML(ui.t('admin_support_select_title'))}</strong><span>${ui.escapeHTML(ui.t('admin_support_select_text'))}</span></div>`;
+      return;
+    }
+    const ticket = detail.ticket;
+    const user = detail.user || {};
+    const messages = Array.isArray(detail.messages) ? detail.messages : [];
+    const request = ticket.payload || {};
+    const betTicket = ticket.category === 'bet_exception';
+    const requestedEuros = Number(request.bet_cents || 0) / 100;
+    const finalStatus = ['resolved', 'rejected', 'closed'].includes(ticket.status);
+    mount.innerHTML = `
+      <div class="admin-support-detail-head">
+        <div>
+          <p class="label">${ui.escapeHTML(managerTicketCategoryLabel(ticket.category))} // #${ui.escapeHTML(ticket.id)}</p>
+          <h2>${ui.escapeHTML(ticket.subject || '-')}</h2>
+          <p>${ui.escapeHTML(ticket.user_name || user.name || '-')} · ${ui.escapeHTML(ticket.user_email || user.email || '')}</p>
+        </div>
+        <span class="admin-pill ${statusClass(ticket.status)}">${ui.escapeHTML(managerTicketStatusLabel(ticket.status))}</span>
+      </div>
+      <div class="admin-support-user-strip">
+        <div><span>${ui.escapeHTML(ui.t('admin_balance'))}</span><strong>${ui.escapeHTML(centsToMoney(user.balance_cents))}</strong></div>
+        <div><span>VIP</span><strong>${ui.escapeHTML(titleCaseValue(user.vip_tier || 'bronze'))}</strong></div>
+        <div><span>${ui.escapeHTML(ui.t('profile_games_played'))}</span><strong>${ui.escapeHTML(ui.formatNumber(user.games_played || 0))}</strong></div>
+        <div><span>${ui.escapeHTML(ui.t('admin_created'))}</span><strong>${ui.escapeHTML(formatDate(ticket.created_at))}</strong></div>
+      </div>
+      <div class="admin-support-chat" id="adminSupportChat">
+        ${messages.length ? messages.map(message => `
+          <article class="admin-support-message is-${ui.escapeHTML(message.role || 'operator')}">
+            <span>${ui.escapeHTML(message.role === 'user' ? (ticket.user_name || ui.t('admin_user')) : message.role === 'admin' ? ui.t('admin_support_management') : 'Operator 08')}</span>
+            <p>${ui.escapeHTML(message.text || '')}</p>
+            <time>${ui.escapeHTML(formatDate(message.created_at))}</time>
+          </article>
+        `).join('') : `<div class="admin-empty">${ui.escapeHTML(ui.t('admin_support_no_messages'))}</div>`}
+      </div>
+      <form class="admin-support-resolution" id="adminSupportResolution">
+        ${betTicket ? `
+          <div class="admin-support-bet-request">
+            <label><span>${ui.escapeHTML(ui.t('admin_support_game'))}</span><strong>${ui.escapeHTML(request.game_id || '-')}</strong></label>
+            <label><span>${ui.escapeHTML(ui.t('admin_support_requested_bet'))}</span><strong>${ui.escapeHTML(ui.formatMoney(requestedEuros))}</strong></label>
+            <label for="adminSupportApprovedBet"><span>${ui.escapeHTML(ui.t('admin_support_approved_bet'))}</span><input class="f-input" id="adminSupportApprovedBet" type="number" min="105" max="500" step="5" value="${ui.escapeHTML(requestedEuros || '')}" ${finalStatus ? 'disabled' : ''}/></label>
+          </div>
+        ` : ''}
+        <label class="admin-support-response" for="adminSupportResponse">
+          <span class="f-label">${ui.escapeHTML(ui.t('admin_support_response'))}</span>
+          <textarea class="f-input" id="adminSupportResponse" rows="3" maxlength="2000" ${finalStatus ? 'disabled' : ''}>${ui.escapeHTML(ticket.admin_response || '')}</textarea>
+        </label>
+        <div class="admin-support-actions">
+          ${finalStatus ? `<span class="admin-muted-note">${ui.escapeHTML(ui.t('admin_support_settled'))}</span>` : `
+            <button class="btn btn-outline btn-sm" type="button" data-manager-ticket-action="in_progress">${ui.escapeHTML(ui.t('admin_support_take'))}</button>
+            <button class="btn btn-primary btn-sm" type="button" data-manager-ticket-action="resolved">${ui.escapeHTML(ui.t('admin_support_resolve'))}</button>
+            <button class="btn btn-outline btn-sm is-danger" type="button" data-manager-ticket-action="rejected">${ui.escapeHTML(ui.t('admin_support_reject'))}</button>
+            <button class="btn btn-outline btn-sm" type="button" data-manager-ticket-action="closed">${ui.escapeHTML(ui.t('admin_support_close'))}</button>
+          `}
+        </div>
+      </form>
+    `;
+    window.setTimeout(() => {
+      const chat = document.getElementById('adminSupportChat');
+      if (chat) chat.scrollTop = chat.scrollHeight;
+    }, 0);
+  }
+
+  async function loadSupport(append) {
+    if (supportLoading) return;
+    supportLoading = true;
+    if (!append) resetPage('support');
+    updateLoadMore('support', true);
+    const category = document.getElementById('adminSupportCategory')?.value || '';
+    const result = await store.adminListManagerTickets(activeSupportStatus, {
+      category,
+      limit: pageSize('support'),
+      offset: paging.support.offset
+    });
+    supportLoading = false;
+    if (result && result.error) {
+      updateLoadMore('support', false);
+      ui.showToast(ui.t(result.error), 'err');
+      renderSupportTickets([]);
+      return;
+    }
+    const items = setPageResult('support', result, Boolean(append));
+    renderSupportTickets(items);
+  }
+
+  async function selectSupportTicket(id) {
+    const ticket = paging.support.items.find(item => String(item.id) === String(id));
+    selectedSupportTicket = ticket || { id: Number(id) };
+    renderSupportTickets(paging.support.items);
+    const mount = document.getElementById('adminSupportDetail');
+    if (mount) mount.innerHTML = `<div class="admin-empty">${ui.escapeHTML(ui.t('admin_loading'))}</div>`;
+    const detail = await store.adminGetManagerTicket(id);
+    if (detail && detail.error) {
+      ui.showToast(ui.t(detail.error), 'err');
+      renderSupportDetail(null);
+      return;
+    }
+    selectedSupportTicket = detail.ticket;
+    renderSupportDetail(detail);
+  }
+
+  async function updateSupportTicket(status) {
+    if (!selectedSupportTicket) return;
+    const response = document.getElementById('adminSupportResponse')?.value.trim() || '';
+    const payload = { status, response };
+    if (selectedSupportTicket.category === 'bet_exception' && status === 'resolved') {
+      const amount = Number(document.getElementById('adminSupportApprovedBet')?.value || 0);
+      if (!Number.isFinite(amount) || amount <= 100 || amount % 5) {
+        ui.showToast(ui.t('err_manager_bet_exception_invalid'), 'err');
+        return;
+      }
+      payload.approved_bet_cents = Math.round(amount * 100);
+      payload.game_id = selectedSupportTicket.payload?.game_id || '';
+    }
+    const message = ui.t('admin_support_confirm', {
+      id: selectedSupportTicket.id,
+      status: managerTicketStatusLabel(status)
+    });
+    if (!await confirmAction(message, managerTicketStatusLabel(status), status === 'rejected' ? 'danger' : 'default')) return;
+    const result = await store.adminUpdateManagerTicket(selectedSupportTicket.id, payload);
+    if (result && result.error) {
+      ui.showToast(ui.t(result.error), 'err');
+      return;
+    }
+    ui.showToast(ui.t('admin_support_updated'));
+    await loadSupport(false);
+    await selectSupportTicket(result.id || selectedSupportTicket.id);
+  }
+
   function refreshActiveTab() {
     if (activeTab === 'withdrawals') {
       loadWithdrawals();
@@ -1317,6 +1498,10 @@
     }
     if (activeTab === 'promos') {
       loadPromos();
+      return;
+    }
+    if (activeTab === 'support') {
+      loadSupport();
       return;
     }
     loadOverview();
@@ -1394,6 +1579,7 @@
     if (kind === 'rounds') return loadSelectedUserDetail({ appendRounds: true });
     if (kind === 'promoRedemptions') return loadSelectedUserDetail({ appendPromoRedemptions: true });
     if (kind === 'promoDetailRedemptions') return loadPromoDetailRedemptions(true);
+    if (kind === 'support') return loadSupport(true);
     return null;
   }
 
@@ -1425,6 +1611,28 @@
         activePromoStatus = promoStatus.dataset.adminPromoStatus || 'active';
         document.querySelectorAll('[data-admin-promo-status]').forEach(btn => btn.classList.toggle('active', btn === promoStatus));
         loadPromos();
+        return;
+      }
+
+      const supportStatus = event.target.closest('[data-manager-ticket-status]');
+      if (supportStatus) {
+        activeSupportStatus = supportStatus.dataset.managerTicketStatus || 'open';
+        document.querySelectorAll('[data-manager-ticket-status]').forEach(btn => btn.classList.toggle('active', btn === supportStatus));
+        selectedSupportTicket = null;
+        renderSupportDetail(null);
+        loadSupport(false);
+        return;
+      }
+
+      const supportTicket = event.target.closest('[data-manager-ticket-id]');
+      if (supportTicket) {
+        selectSupportTicket(supportTicket.dataset.managerTicketId);
+        return;
+      }
+
+      const supportAction = event.target.closest('[data-manager-ticket-action]');
+      if (supportAction) {
+        updateSupportTicket(supportAction.dataset.managerTicketAction);
         return;
       }
 
@@ -1507,6 +1715,12 @@
       document.getElementById(id)?.addEventListener('input', () => renderPromoPreview('adminPromoEdit'));
     });
     document.getElementById('adminPromoRedemptionsRefresh')?.addEventListener('click', () => loadPromoDetailRedemptions(false));
+    document.getElementById('adminSupportRefresh')?.addEventListener('click', () => loadSupport(false));
+    document.getElementById('adminSupportCategory')?.addEventListener('change', () => {
+      selectedSupportTicket = null;
+      renderSupportDetail(null);
+      loadSupport(false);
+    });
     document.getElementById('adminUserHistoryRefresh')?.addEventListener('click', () => loadSelectedUserDetail());
     ['adminTxType', 'adminTxStatus', 'adminTxFrom', 'adminTxTo'].forEach(id => {
       document.getElementById(id)?.addEventListener('change', () => loadSelectedUserDetail({ rounds: false, promoRedemptions: false }));
@@ -1552,6 +1766,8 @@
         renderAudit(paging.audit.items);
         renderWithdrawals(paging.withdrawals.items);
         renderPromos(paging.promos.items);
+        renderSupportTickets(paging.support.items);
+        if (selectedSupportTicket) selectSupportTicket(selectedSupportTicket.id);
       }
       const nextUser = next.currentUser || {};
       const prevUser = prev.currentUser || {};

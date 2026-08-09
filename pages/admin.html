@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Bambiku Casino</title>
-  <link rel="stylesheet" href="../css/style.css?v=vip-inline-clickers-v3"/>
+  <link rel="stylesheet" href="../css/style.css?v=operator-08-v1"/>
   <link rel="icon" type="image/png" sizes="512x512" href="../assets/favicon-bk-512.png?v=1"/>
   <link rel="apple-touch-icon" href="../assets/favicon-bk-512.png?v=1"/>
   <meta name="theme-color" content="#00d98b"/>
@@ -45,6 +45,7 @@
         <button class="admin-tab active" type="button" data-admin-tab="overview" role="tab" aria-selected="true" aria-controls="admin-panel-overview" data-i18n="admin_tab_overview">Overview</button>
         <button class="admin-tab" type="button" data-admin-tab="withdrawals" role="tab" aria-selected="false" aria-controls="admin-panel-withdrawals" data-i18n="admin_tab_withdrawals">Withdrawals</button>
         <button class="admin-tab" type="button" data-admin-tab="promos" role="tab" aria-selected="false" aria-controls="admin-panel-promos" data-i18n="admin_tab_promos">Promos</button>
+        <button class="admin-tab" type="button" data-admin-tab="support" role="tab" aria-selected="false" aria-controls="admin-panel-support" data-i18n="admin_tab_support">Support</button>
         <button class="admin-tab" type="button" data-admin-tab="audit" role="tab" aria-selected="false" aria-controls="admin-panel-audit" data-i18n="admin_tab_audit">Audit</button>
       </div>
 
@@ -391,6 +392,45 @@
         </section>
       </section>
 
+      <section class="admin-panel admin-tab-panel" id="admin-panel-support" data-admin-panel="support" role="tabpanel" hidden>
+        <div class="admin-toolbar admin-support-toolbar">
+          <div>
+            <p class="label" data-i18n="admin_support_label">VIP DESK // 08</p>
+            <h2 data-i18n="admin_support_title">Operator requests</h2>
+            <p class="admin-muted-note" data-i18n="admin_support_sub">Player requests, correspondence and temporary bet permissions.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" type="button" id="adminSupportRefresh" data-i18n="admin_refresh">Refresh</button>
+        </div>
+        <div class="admin-support-filters" role="tablist" aria-label="Support ticket status">
+          <button class="admin-status active" type="button" data-manager-ticket-status="open" data-i18n="admin_support_open">Open</button>
+          <button class="admin-status" type="button" data-manager-ticket-status="in_progress" data-i18n="admin_support_progress">In progress</button>
+          <button class="admin-status" type="button" data-manager-ticket-status="resolved" data-i18n="admin_support_resolved">Resolved</button>
+          <button class="admin-status" type="button" data-manager-ticket-status="rejected" data-i18n="admin_support_rejected">Rejected</button>
+          <button class="admin-status" type="button" data-manager-ticket-status="all" data-i18n="admin_status_all">All</button>
+          <select class="f-input" id="adminSupportCategory" aria-label="Ticket category">
+            <option value="" data-i18n="admin_support_all_categories">All categories</option>
+            <option value="bet_exception" data-i18n="admin_support_bet_exception">Bet exception</option>
+            <option value="technical" data-i18n="admin_support_technical">Technical</option>
+          </select>
+        </div>
+        <div class="admin-support-layout">
+          <div class="admin-support-queue">
+            <div class="admin-support-list" id="adminSupportTickets">
+              <div class="admin-empty" data-i18n="admin_support_empty">No operator requests.</div>
+            </div>
+            <div class="admin-load-more-wrap">
+              <button class="btn btn-outline btn-sm admin-load-more" type="button" data-admin-load-more="support" id="adminSupportMore" hidden data-i18n="admin_show_more">Show more</button>
+            </div>
+          </div>
+          <section class="admin-support-detail" id="adminSupportDetail" aria-live="polite">
+            <div class="admin-empty admin-support-placeholder">
+              <strong data-i18n="admin_support_select_title">Select a request</strong>
+              <span data-i18n="admin_support_select_text">The player's profile and Operator 08 correspondence will appear here.</span>
+            </div>
+          </section>
+        </div>
+      </section>
+
       <section class="admin-panel admin-tab-panel" id="admin-panel-audit" data-admin-panel="audit" role="tabpanel" hidden>
         <div class="admin-toolbar admin-withdrawals-toolbar">
           <div>
@@ -517,11 +557,11 @@
 
   <script src="../js/config/app-domain.js?v=ux-trust-v1"></script>
   <script src="../js/config/runtime.js?v=infra-v1"></script>
-  <script src="../js/core/constants.js?v=optimization-v2"></script>
-  <script src="../js/core/store.js?v=vip-click-batch-v1"></script>
+  <script src="../js/core/constants.js?v=operator-08-v1"></script>
+  <script src="../js/core/store.js?v=operator-08-v1"></script>
   <script src="../js/core/ui.js?v=optimization-v2"></script>
   <script src="../js/core/auth.js?v=optimization-v2"></script>
-  <script src="../js/pages/admin.js?v=optimization-v2"></script>
+  <script src="../js/pages/admin.js?v=operator-08-v1"></script>
   <script src="../js/core/bootstrap.js?v=offline-i18n-v1"></script>
 </body>
 </html>
