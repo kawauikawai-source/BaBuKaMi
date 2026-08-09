@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Bambiku Casino</title>
+  <link rel="stylesheet" href="../css/style.css?v=inner-page-grid-v1"/>
+  <link rel="icon" href="data:,"/>
+</head>
+<body data-page="game" data-page-root="game">
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="../index.html" class="logo" data-route="home"><span class="dot"></span>Bambi<span>ku</span></a>
+        <ul class="nav-links">
+          <li><a href="../index.html#games" data-route="games" data-i18n="nav_games">Games</a></li>
+          <li><a href="../index.html#bonuses" data-route="bonuses" data-i18n="nav_bonuses">Bonuses</a></li>
+          <li><a href="../index.html#vip" data-route="vip" data-i18n="nav_vip">VIP</a></li>
+        </ul>
+        <div class="nav-actions">
+          <div class="lang-switch">
+            <button class="lang-btn active" type="button" data-lang="ru">RU</button>
+            <button class="lang-btn" type="button" data-lang="en">EN</button>
+          </div>
+          <div class="nav-auth" data-auth-nav>
+            <a href="deposit.html" class="btn btn-primary btn-sm" data-route="deposit" data-i18n="nav_deposit">Cashier</a>
+            <a href="profile.html" class="btn btn-outline btn-sm" data-route="profile" data-i18n="nav_profile">Profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell game-page roulette-page">
+    <div class="container">
+      <header class="page-head game-head game-command-head" data-system="EU-01 // VII">
+        <div class="game-command-copy">
+          <div class="game-command-kicker"><i aria-hidden="true"></i><span data-i18n="roulette_lore_status">THE HOUSE IS LISTENING</span><b>EU-01</b></div>
+          <p class="label" data-i18n="roulette_label">Table Game</p>
+          <h1 class="page-title" data-i18n="roulette_title">European Roulette</h1>
+          <p class="page-sub" data-i18n="roulette_sub">Place chips, spin the wheel, and get a backend-backed result.</p>
+          <div class="game-command-meta" aria-label="Roulette parameters">
+            <span><small data-i18n="roulette_lore_1_label">LUCK</small><strong data-i18n="roulette_lore_1_value">FAVORS THE BOLD</strong></span>
+            <span><small data-i18n="roulette_lore_2_label">WHEEL</small><strong data-i18n="roulette_lore_2_value">REMEMBERS ALL</strong></span>
+            <span><small data-i18n="roulette_lore_3_label">ZERO</small><strong data-i18n="roulette_lore_3_value">WAITS ALONE</strong></span>
+          </div>
+        </div>
+        <a href="../index.html#games" class="btn btn-outline game-command-back" data-route="games" data-i18n="roulette_back">Back to Games</a>
+      </header>
+
+      <section class="roulette-layout game-console-layout">
+        <div class="roulette-stage game-console-stage">
+          <div class="roulette-container" id="rouletteContainer" aria-live="polite">
+            <canvas id="rouletteCanvas" class="roulette-canvas" width="1000" height="1000" aria-label="European roulette wheel"></canvas>
+            <div class="roulette-pointer" aria-hidden="true"></div>
+          </div>
+          <div class="roulette-result" id="rouletteResult" data-i18n="roulette_result_empty">Result will appear here</div>
+          <div class="roulette-recent" id="rouletteRecent" aria-label="Recent roulette results"></div>
+        </div>
+
+        <aside class="roulette-panel game-console-panel">
+          <div class="balance-card">
+            <span data-i18n="cashier_your_balance">Your Balance</span>
+            <strong id="game-balance">&euro;0</strong>
+          </div>
+          <div class="chip-row" id="rouletteChips" aria-label="Roulette chips"></div>
+          <div class="bet-slip">
+            <div class="section-row">
+              <strong data-i18n="roulette_bets">Bets</strong>
+              <button class="btn btn-ghost btn-sm" type="button" id="rouletteClear" data-i18n="roulette_clear">Clear</button>
+            </div>
+            <div class="bet-slip-list" id="rouletteBetSlip"></div>
+            <div class="bet-total">
+              <span data-i18n="roulette_total">Total</span>
+              <strong id="rouletteTotal">&euro;0</strong>
+            </div>
+            <button class="btn btn-primary roulette-spin-btn" type="button" id="rouletteSpin">SPIN</button>
+          </div>
+        </aside>
+      </section>
+
+      <section class="roulette-table-wrap">
+        <div class="roulette-table">
+          <div class="roulette-number-grid" id="rouletteNumbers"></div>
+          <div class="roulette-outside-grid" id="rouletteOutside"></div>
+        </div>
+        <button class="roulette-advanced-toggle" type="button" id="rouletteAdvancedToggle" aria-expanded="false" aria-controls="rouletteAdvancedPanel">
+          <span data-i18n="roulette_advanced_bets">roulette_advanced_bets</span>
+          <span class="roulette-advanced-icon" aria-hidden="true"></span>
+        </button>
+        <div class="roulette-inside-grid" id="rouletteAdvancedPanel" hidden>
+          <div class="inside-box">
+            <h2 data-i18n="roulette_streets">Street / Six line</h2>
+            <div class="inside-buttons" id="rouletteRows"></div>
+          </div>
+          <div class="inside-box">
+            <h2 data-i18n="roulette_splits">Split</h2>
+            <div class="inside-buttons compact" id="rouletteSplits"></div>
+          </div>
+          <div class="inside-box">
+            <h2 data-i18n="roulette_corners">Corner</h2>
+            <div class="inside-buttons compact" id="rouletteCorners"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="toasts" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="../js/config/app-domain.js?v=ux-trust-v1"></script>
+  <script src="../js/config/runtime.js?v=infra-v1"></script>
+  <script src="../js/core/constants.js?v=optimization-v2"></script>
+  <script src="../js/core/store.js?v=vip-click-batch-v1"></script>
+  <script src="../js/core/ui.js?v=optimization-v2"></script>
+  <script src="../js/core/auth.js?v=optimization-v2"></script>
+  <script src="../js/games/roulette.js?v=optimization-v2"></script>
+  <script src="../js/core/bootstrap.js?v=offline-i18n-v1"></script>
+</body>
+</html>

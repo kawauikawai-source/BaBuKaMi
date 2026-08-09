@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Bambiku Casino</title>
+  <link rel="stylesheet" href="../css/style.css?v=inner-page-grid-v1"/>
+  <link rel="icon" href="data:,"/>
+</head>
+<body data-page="plinko" data-page-root="plinko">
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="../index.html" class="logo" data-route="home"><span class="dot"></span>Bambi<span>ku</span></a>
+        <ul class="nav-links">
+          <li><a href="../index.html#games" data-route="games" data-i18n="nav_games">Games</a></li>
+          <li><a href="../index.html#bonuses" data-route="bonuses" data-i18n="nav_bonuses">Bonuses</a></li>
+          <li><a href="../index.html#vip" data-route="vip" data-i18n="nav_vip">VIP</a></li>
+        </ul>
+        <div class="nav-actions">
+          <div class="lang-switch">
+            <button class="lang-btn active" type="button" data-lang="ru">RU</button>
+            <button class="lang-btn" type="button" data-lang="en">EN</button>
+          </div>
+          <div class="nav-auth" data-auth-nav>
+            <a href="deposit.html" class="btn btn-primary btn-sm" data-route="deposit" data-i18n="nav_deposit">Cashier</a>
+            <a href="profile.html" class="btn btn-outline btn-sm" data-route="profile" data-i18n="nav_profile">Profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell game-page plinko-page">
+    <div class="container">
+      <header class="page-head game-head game-command-head" data-system="MV-16 // 8.12.16">
+        <div class="game-command-copy">
+          <div class="game-command-kicker"><i aria-hidden="true"></i><span data-i18n="plinko_lore_status">THE VAULT HEARS EVERY DROP</span><b>MV-16</b></div>
+          <p class="label" data-i18n="plinko_label">Vault game</p>
+          <h1 class="page-title" data-i18n="plinko_title">Midnight Vault</h1>
+          <p class="page-sub" data-i18n="plinko_sub">Drop vault orbs through neon pins and catch metal multiplier pockets.</p>
+          <div class="game-command-meta" aria-label="Midnight Vault parameters">
+            <span><small data-i18n="plinko_lore_1_label">ORB</small><strong data-i18n="plinko_lore_1_value">SEEKS A PATH</strong></span>
+            <span><small data-i18n="plinko_lore_2_label">PINS</small><strong data-i18n="plinko_lore_2_value">BEND FORTUNE</strong></span>
+            <span><small data-i18n="plinko_lore_3_label">POCKET</small><strong data-i18n="plinko_lore_3_value">KEEPS THE ANSWER</strong></span>
+          </div>
+        </div>
+        <a href="../index.html#games" class="btn btn-outline game-command-back" data-route="games" data-i18n="roulette_back">Back to Games</a>
+      </header>
+
+      <section class="plinko-layout game-console-layout">
+        <div class="plinko-stage game-console-stage" id="plinkoStage">
+          <div class="plinko-board-shell" id="plinkoBoardShell">
+            <div class="plinko-board" id="plinkoBoard" aria-live="polite"></div>
+          </div>
+          <div class="plinko-result" id="plinkoResult" data-i18n="plinko_waiting">Choose settings and drop an orb</div>
+          <div class="plinko-recent" id="plinkoRecent"></div>
+        </div>
+
+        <aside class="plinko-panel game-console-panel">
+          <div class="balance-card">
+            <span data-i18n="cashier_your_balance">Your Balance</span>
+            <strong id="plinko-balance">&euro;0</strong>
+          </div>
+          <div class="slot-bet-box">
+            <strong data-i18n="plinko_bet">Bet</strong>
+            <div class="chip-row" id="plinkoBets"></div>
+          </div>
+          <div class="plinko-control-box">
+            <strong data-i18n="plinko_mode">Mode</strong>
+            <div class="plinko-options" id="plinkoModes"></div>
+          </div>
+          <div class="plinko-control-box">
+            <strong data-i18n="plinko_risk">Risk</strong>
+            <div class="plinko-options" id="plinkoRisks"></div>
+          </div>
+          <div class="plinko-control-box">
+            <strong data-i18n="plinko_rows">Rows</strong>
+            <div class="plinko-options" id="plinkoRows"></div>
+          </div>
+          <div class="plinko-control-box" id="plinkoBallsBox">
+            <strong data-i18n="plinko_balls">Balls</strong>
+            <div class="plinko-options" id="plinkoBalls"></div>
+          </div>
+          <button class="btn btn-primary plinko-drop-btn" type="button" id="plinkoDrop">DROP</button>
+        </aside>
+      </section>
+    </div>
+  </main>
+
+  <div class="toasts" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="../js/config/app-domain.js?v=ux-trust-v1"></script>
+  <script src="../js/config/runtime.js?v=infra-v1"></script>
+  <script src="../js/core/constants.js?v=optimization-v2"></script>
+  <script src="../js/core/store.js?v=vip-click-batch-v1"></script>
+  <script src="../js/core/ui.js?v=optimization-v2"></script>
+  <script src="../js/core/auth.js?v=optimization-v2"></script>
+  <script src="../js/games/midnight-vault.js?v=optimization-v2"></script>
+  <script src="../js/core/bootstrap.js?v=offline-i18n-v1"></script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Bambiku Casino</title>
+  <link rel="stylesheet" href="../css/style.css?v=trust-archive-v1"/>
+  <link rel="icon" href="data:,"/>
+</head>
+<body class="trust-page-body" data-page="help" data-page-root="help">
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="../index.html" class="logo" data-route="home"><span class="dot"></span>Bambi<span>ku</span></a>
+        <ul class="nav-links">
+          <li><a href="../index.html#games" data-route="games" data-i18n="nav_games">Игры</a></li>
+          <li><a href="../index.html#bonuses" data-route="bonuses" data-i18n="nav_bonuses">Бонусы</a></li>
+          <li><a href="../index.html#vip" data-route="vip" data-i18n="nav_vip">VIP</a></li>
+        </ul>
+        <div class="nav-actions">
+          <div class="lang-switch">
+            <button class="lang-btn active" type="button" data-lang="ru">RU</button>
+            <button class="lang-btn" type="button" data-lang="en">EN</button>
+          </div>
+          <div class="nav-auth" data-auth-nav></div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell help-page trust-page">
+    <div class="container">
+      <header class="trust-command-head">
+        <div class="trust-command-copy">
+          <p class="trust-kicker"><i></i><span data-i18n="trust_archive_online">АРХИВ ДОМА // ДОСТУП ОТКРЫТ</span></p>
+          <h1 class="page-title" data-i18n="footer_help">База знаний</h1>
+          <p class="page-sub" data-i18n="help_sub">Найдите ответы на ваши вопросы</p>
+        </div>
+        <a href="../index.html" class="btn btn-outline trust-home-btn" data-route="home" data-i18n="legal_back_home">Вернуться на главную</a>
+      </header>
+
+      <nav class="trust-section-nav" aria-label="Bambiku archive">
+        <a class="trust-section-link active" href="help.html" data-i18n="footer_help">База знаний</a>
+        <a class="trust-section-link is-soon" href="responsible.html"><span data-i18n="footer_responsible">Контроль игры</span><b data-i18n="trust_soon">СКОРО</b></a>
+        <a class="trust-section-link" href="privacy.html" data-i18n="footer_privacy">Приватность</a>
+        <a class="trust-section-link" href="terms.html" data-i18n="footer_terms">Великий пакт</a>
+      </nav>
+
+      <section class="trust-content-panel">
+        <header class="trust-content-head">
+          <p class="label" data-i18n="help_title">Центр помощи</p>
+          <p class="page-sub" data-i18n="trust_help_intro">Выберите раздел или найдите нужный протокол по ключевому слову.</p>
+        </header>
+
+        <div class="help-search">
+          <input class="f-input" id="faq-search" type="search" data-i18n-ph="help_search_ph" placeholder="Поиск по вопросам..."/>
+          <button class="btn btn-primary" type="button" id="btn-search" data-i18n="help_search">Найти</button>
+        </div>
+
+        <div class="help-layout">
+          <aside class="help-sidebar" role="tablist" aria-label="Help categories">
+            <strong data-i18n="help_categories">Категории</strong>
+            <button class="help-cat active" type="button" data-cat="all" data-i18n="help_all" role="tab" aria-selected="true">Все вопросы</button>
+            <button class="help-cat" type="button" data-cat="account" data-i18n="help_account" role="tab" aria-selected="false">Аккаунт</button>
+            <button class="help-cat" type="button" data-cat="payments" data-i18n="help_payments" role="tab" aria-selected="false">Платежи</button>
+            <button class="help-cat" type="button" data-cat="games" data-i18n="help_games" role="tab" aria-selected="false">Игры</button>
+            <button class="help-cat" type="button" data-cat="bonuses" data-i18n="help_bonuses" role="tab" aria-selected="false">Бонусы</button>
+            <button class="help-cat" type="button" data-cat="safety" data-i18n="help_safety" role="tab" aria-selected="false">Безопасность</button>
+            <button class="help-cat" type="button" data-cat="offline" data-i18n="help_offline" role="tab" aria-selected="false">API offline</button>
+          </aside>
+          <section class="faq-container" id="faq-container" role="tabpanel"></section>
+        </div>
+      </section>
+
+      <section class="contact-panel">
+        <p class="label" data-i18n="help_contact_label">Нужна помощь?</p>
+        <h2 class="h2" data-i18n="help_contact_title">Свяжитесь с нами</h2>
+        <p class="sub" data-i18n="help_contact_sub">Архив принимает сообщения круглосуточно</p>
+        <div class="contact-grid">
+          <div class="contact-card">
+            <strong data-i18n="help_email_title">Email-поддержка</strong>
+            <p data-i18n="help_email_desc">Напишите нам по любому вопросу.</p>
+            <a class="btn btn-outline btn-sm" href="mailto:support@bambiku.com">support@bambiku.com</a>
+          </div>
+          <div class="contact-card">
+            <strong data-i18n="help_partner_title">Партнёрство</strong>
+            <p data-i18n="help_partner_desc">Предложения по сотрудничеству.</p>
+            <a class="btn btn-outline btn-sm" href="mailto:partners@bambiku.com">partners@bambiku.com</a>
+          </div>
+          <div class="contact-card is-coming-soon">
+            <strong data-i18n="footer_responsible">Контроль игры</strong>
+            <p data-i18n="trust_control_preview">Личный центр лимитов и пауз строится внутри Bambiku.</p>
+            <a class="btn btn-outline btn-sm" href="responsible.html"><span data-i18n="footer_responsible">Контроль игры</span><b class="btn-badge" data-i18n="trust_soon">СКОРО</b></a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer id="footer" class="compact-footer trust-compact-footer">
+    <div class="container">
+      <p class="footer-legal" data-i18n-html="footer_legal">Bambiku — развлекательная вселенная с виртуальным балансом. Доступ только для 18+.</p>
+      <div class="age">18+</div>
+    </div>
+  </footer>
+
+  <script src="../js/config/app-domain.js?v=ux-trust-v1"></script>
+  <script src="../js/config/runtime.js?v=infra-v1"></script>
+  <script src="../js/core/constants.js?v=trust-archive-v1"></script>
+  <script src="../js/core/store.js?v=vip-click-batch-v1"></script>
+  <script src="../js/core/ui.js?v=optimization-v2"></script>
+  <script src="../js/core/auth.js?v=optimization-v2"></script>
+  <script src="../js/core/bootstrap.js?v=offline-i18n-v1"></script>
+</body>
+</html>

@@ -1,0 +1,538 @@
+/* Bambiku cashier console. */
+
+body[data-page="deposit"]{
+  --game-console-accent:#00d98b;
+  --game-console-soft:rgba(0,217,139,.075);
+  --game-console-faint:rgba(0,217,139,.024);
+  --game-console-border:rgba(0,217,139,.2);
+}
+
+body[data-page="deposit"] #navbar{
+  background:rgba(8,8,9,.96);
+  border-bottom-color:var(--border);
+  backdrop-filter:blur(22px);
+}
+
+.cashier-page.page-shell{
+  padding-top:96px;
+  background:
+    radial-gradient(circle at 12% 8%,rgba(0,217,139,.05),transparent 29%),
+    radial-gradient(circle at 88% 18%,rgba(110,128,150,.035),transparent 27%),
+    var(--bg);
+}
+
+.cashier-page .container{max-width:1500px}
+
+.cashier-command-head{
+  background:
+    linear-gradient(90deg,rgba(0,217,139,.07),transparent 46%),
+    repeating-linear-gradient(90deg,transparent 0 72px,rgba(0,217,139,.018) 73px),
+    rgba(10,10,11,.97)!important;
+}
+
+.cashier-command-head::before{box-shadow:0 0 18px rgba(0,217,139,.34)!important}
+.cashier-command-head::after{color:rgba(0,217,139,.22)!important}
+
+.cashier-layout{
+  grid-template-columns:minmax(0,1fr) 380px;
+  gap:24px;
+}
+
+.cashier-panel,
+.cashier-summary{
+  border-radius:8px;
+  background:var(--bg-card);
+}
+
+.cashier-panel{
+  min-width:0;
+  min-height:690px;
+  padding:30px;
+  background:
+    linear-gradient(180deg,rgba(69,151,119,.035),transparent 25%),
+    var(--bg-card);
+}
+
+.cashier-summary{
+  min-height:570px;
+  padding:28px;
+  background:
+    linear-gradient(180deg,rgba(69,151,119,.05),transparent 32%),
+    var(--bg-card);
+}
+
+.cashier-tabs{
+  gap:0;
+  margin:0 0 30px;
+  padding:0;
+  border:0;
+  border-bottom:1px solid var(--border);
+  border-radius:0;
+  background:transparent;
+}
+
+.cashier-tab{
+  min-height:58px;
+  border-bottom:2px solid transparent;
+  border-radius:0;
+  color:var(--text-3);
+  font-size:14px;
+  transition:color .2s var(--ease),border-color .2s var(--ease),background-color .2s var(--ease);
+}
+
+.cashier-tab:hover{color:var(--text);background:rgba(255,255,255,.018)}
+
+.cashier-tab.active{
+  border-bottom-color:var(--accent);
+  background:rgba(0,217,139,.055);
+  color:var(--accent);
+}
+
+.cashier-section-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:6px;
+}
+
+.cashier-section-head > span{
+  display:grid;
+  place-items:center;
+  width:34px;
+  height:34px;
+  border:1px solid rgba(0,217,139,.28);
+  color:var(--accent);
+  font-size:10px;
+  font-weight:900;
+}
+
+.cashier-section-head h2{
+  margin:0;
+  font-family:var(--font);
+  font-size:24px;
+  line-height:1.15;
+}
+
+.cashier-page .method-grid{
+  gap:12px;
+  margin:18px 0 28px;
+}
+
+.cashier-page .method-btn{
+  position:relative;
+  min-height:94px;
+  justify-content:center;
+  gap:10px;
+  overflow:hidden;
+  border-radius:7px;
+  padding:17px 18px;
+  background:#111214;
+}
+
+.cashier-page .method-btn::after{
+  content:"";
+  position:absolute;
+  inset:auto 0 0;
+  height:2px;
+  background:transparent;
+}
+
+.cashier-page .method-btn:hover{
+  border-color:rgba(255,255,255,.16);
+  background:#141619;
+}
+
+.cashier-page .method-btn.selected{
+  border-color:rgba(0,217,139,.34);
+  background:#121917;
+  box-shadow:none;
+}
+
+.cashier-page .method-btn.selected::after{background:var(--accent)}
+
+.cashier-page .method-btn span{
+  color:var(--accent);
+  font-size:10px;
+  letter-spacing:.08em;
+}
+
+.cashier-page .method-btn strong{font-size:14px}
+.cashier-page .method-btn.is-coming-soon{cursor:not-allowed;opacity:.58}
+.cashier-page .method-btn.is-coming-soon:hover{border-color:var(--border);background:#111214}
+.cashier-page .method-btn.is-coming-soon small{position:absolute;top:10px;right:10px;border:1px solid rgba(0,217,139,.24);border-radius:4px;padding:4px 6px;color:var(--accent);font-size:8px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+
+.cashier-page .f-group{margin-top:18px}
+.cashier-page .f-label{margin-bottom:9px}
+
+.cashier-page .preset-grid{
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:10px;
+  margin:10px 0 12px;
+}
+
+.cashier-page .preset-btn{
+  min-height:50px;
+  border-radius:6px;
+  background:#111214;
+  transition:border-color .18s var(--ease),color .18s var(--ease),background-color .18s var(--ease);
+}
+
+.cashier-page .preset-btn:hover,
+.cashier-page .preset-btn.hot{
+  border-color:rgba(243,199,68,.52);
+  background:rgba(243,199,68,.055);
+  color:var(--gold);
+}
+
+.cashier-page .f-input{min-height:54px;border-radius:6px;background:#111214}
+
+.cashier-page .form-grid.compact{
+  grid-template-columns:minmax(0,1.5fr) minmax(180px,.5fr);
+  gap:14px;
+}
+
+.cashier-page .secure-note{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:16px 0 18px;
+  color:var(--text-3);
+}
+
+.withdraw-preview{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:1px;
+  margin:18px 0;
+  overflow:hidden;
+  border:1px solid var(--border);
+  border-radius:7px;
+  background:var(--border);
+}
+
+.withdraw-preview > div{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  min-height:62px;
+  padding:14px 16px;
+  background:#111214;
+}
+
+.withdraw-preview span{color:var(--text-3);font-size:12px}
+.withdraw-preview strong{color:var(--text-2);font-size:14px}
+.withdraw-preview.has-amount #withdraw-preview-payout{color:var(--accent);font-size:17px}
+
+.withdraw-success-receipt{
+  min-height:48px;
+  margin:8px 0 20px;
+  border-left:2px solid var(--accent);
+  padding:10px 14px;
+  background:rgba(0,217,139,.05);
+  text-align:left;
+}
+
+.cashier-page .secure-note::before{
+  content:"";
+  width:7px;
+  height:7px;
+  flex:0 0 7px;
+  border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 10px rgba(0,217,139,.5);
+}
+
+.cashier-page .cashier-submit{
+  min-height:58px;
+  border-radius:7px;
+  font-size:14px;
+}
+
+.card-checkout-step{opacity:0;transform:translateY(10px);transition:opacity .24s var(--ease),transform .24s var(--ease)}
+.card-checkout-step.is-visible{opacity:1;transform:none}
+.card-checkout-head{align-items:flex-start;margin-bottom:22px}
+.card-checkout-head p{margin:7px 0 0;color:var(--text-3);font-size:13px}
+.card-checkout-amount{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:72px;border:1px solid var(--border);border-left:2px solid var(--accent);padding:15px 18px;background:#111214}
+.card-checkout-amount span{color:var(--text-3);font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.card-checkout-amount strong{color:var(--accent);font-size:25px}
+.payment-rail-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0 6px}
+.payment-rail,.crypto-asset,.crypto-network{position:relative;display:flex;min-width:0;min-height:78px;flex-direction:column;align-items:flex-start;justify-content:center;gap:5px;overflow:hidden;border:1px solid var(--border);border-radius:7px;padding:14px 16px;background:#111214;color:var(--text-2);text-align:left;transition:border-color .18s var(--ease),background-color .18s var(--ease),color .18s var(--ease)}
+.payment-rail::after,.crypto-asset::after,.crypto-network::after{content:"";position:absolute;inset:auto 0 0;height:2px;background:transparent}
+
+.payment-rail:hover,.crypto-asset:hover,.crypto-network:hover{border-color:rgba(255,255,255,.18);color:var(--text)}
+.payment-rail.selected,.crypto-asset.selected,.crypto-network.selected{border-color:rgba(0,217,139,.35);background:#121917;color:var(--text)}
+.payment-rail.selected::after,.crypto-asset.selected::after,.crypto-network.selected::after{background:var(--accent)}
+.payment-rail b{font-size:15px;letter-spacing:.03em}
+.payment-rail span{overflow:hidden;color:var(--text-3);font-size:11px;text-overflow:ellipsis;white-space:nowrap}
+
+.crypto-option-label{margin:20px 0 9px;color:var(--text-3);font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.crypto-asset-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.crypto-asset b{font-size:15px;letter-spacing:.04em}
+.crypto-asset span{overflow:hidden;color:var(--text-3);font-size:10px;text-overflow:ellipsis;white-space:nowrap}
+.crypto-network-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.crypto-network{min-height:46px;align-items:center;padding:10px 12px;font-size:12px;font-weight:800;text-align:center}
+.crypto-address-group{margin-top:20px}
+.crypto-address-group small{display:block;margin-top:8px;color:var(--text-3);font-size:11px}
+.crypto-address-input{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:13px}
+
+.withdraw-checkout-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:20px}
+.withdraw-checkout-summary div{display:flex;min-height:72px;flex-direction:column;justify-content:center;gap:6px;border:1px solid var(--border);border-left:2px solid var(--accent);padding:14px 16px;background:#111214}
+.withdraw-checkout-summary span{color:var(--text-3);font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+.withdraw-checkout-summary strong{font-size:22px}
+.withdraw-checkout-summary div:last-child strong{color:var(--accent)}
+
+.card-route-fields{
+  margin-top:20px;
+  border-top:1px solid var(--border);
+  padding-top:2px;
+}
+
+.card-detail-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+
+.card-checkout-actions{
+  display:grid;
+  grid-template-columns:minmax(150px,.35fr) minmax(240px,1fr);
+  gap:12px;
+  margin-top:18px;
+}
+
+.card-checkout-actions .btn{min-height:56px}
+
+.card-oops-overlay{
+  position:fixed;
+  inset:0;
+  z-index:12000;
+  display:grid;
+  place-items:center;
+  padding:20px;
+  background:rgba(3,4,5,.82);
+  opacity:0;
+  backdrop-filter:blur(12px);
+  transition:opacity .18s ease;
+}
+
+.card-oops-overlay.is-visible{opacity:1}
+
+.card-oops-modal{
+  width:min(520px,100%);
+  overflow:hidden;
+  border:1px solid rgba(0,217,139,.28);
+  border-radius:8px;
+  padding:28px 30px 30px;
+  background:
+    linear-gradient(rgba(0,217,139,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,217,139,.045) 1px,transparent 1px),
+    linear-gradient(180deg,rgba(0,217,139,.055),transparent 42%),
+    #0d0f10;
+  background-size:40px 40px,40px 40px,auto,auto;
+  box-shadow:0 24px 80px rgba(0,0,0,.58);
+  text-align:center;
+  transform:translateY(12px) scale(.985);
+  transition:transform .22s var(--ease);
+}
+
+.card-oops-overlay.is-visible .card-oops-modal{transform:none}
+
+.card-oops-sticker{
+  display:grid;
+  height:280px;
+  place-items:center;
+  margin:-8px auto 6px;
+}
+
+.card-oops-sticker img{
+  display:block;
+  width:min(280px,76vw);
+  max-width:100%;
+  height:280px;
+  object-fit:contain;
+  filter:drop-shadow(0 18px 24px rgba(0,0,0,.36));
+}
+
+.card-oops-kicker{
+  display:block;
+  margin-bottom:8px;
+  color:var(--accent);
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.14em;
+}
+
+.card-oops-modal h2{margin:0;font-size:32px}
+.card-oops-modal p{max-width:410px;margin:12px auto 22px;color:var(--text-2);line-height:1.55}
+.card-oops-modal .btn{width:100%;min-height:54px}
+
+.cashier-page .promo-check-row .btn{min-height:42px}
+
+.cashier-page .promo-preview-card{
+  border-radius:6px;
+  background:#111214;
+}
+
+.cashier-page .success-overlay{
+  min-height:520px;
+  align-content:center;
+  justify-items:center;
+  padding:60px 24px;
+}
+
+.cashier-page .success-overlay.show{display:grid}
+
+.cashier-page .success-icon{
+  width:68px;
+  height:68px;
+  margin-bottom:18px;
+  border-radius:8px;
+  box-shadow:0 0 28px rgba(0,217,139,.2);
+}
+
+.cashier-page .success-overlay h2{font-size:28px}
+.cashier-page .success-overlay p{max-width:480px;color:var(--text-2)}
+
+.cashier-page .balance-card{
+  margin:0 0 24px;
+  padding:4px 0 24px;
+  border:0;
+  border-bottom:1px solid var(--border);
+  border-radius:0;
+  background:transparent;
+}
+
+.cashier-balance-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.cashier-balance-head i{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 12px rgba(0,217,139,.55);
+}
+
+.cashier-page .balance-card strong{
+  display:block;
+  margin-top:10px;
+  color:var(--accent);
+  font-size:38px;
+  line-height:1;
+}
+
+.cashier-page .balance-card small{
+  display:block;
+  margin-top:12px;
+  color:var(--text-3);
+  font-size:11px;
+}
+
+.cashier-summary-title{
+  margin-bottom:10px;
+  color:var(--text-3);
+  font-family:var(--font);
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.cashier-page .info-list{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:1px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  border-radius:7px;
+  background:var(--border);
+}
+
+.cashier-page .info-list div{
+  min-height:82px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  border:0;
+  border-radius:0;
+  padding:15px;
+  background:#111214;
+}
+
+.cashier-page .info-list strong{color:var(--text);font-size:14px}
+
+.cashier-page .bonus-hint{
+  margin:18px 0;
+  border-left:2px solid var(--gold);
+  border-radius:0 6px 6px 0;
+  padding:14px 15px;
+  background:rgba(243,199,68,.055);
+  line-height:1.5;
+}
+
+.cashier-accepted-box{
+  margin-top:20px;
+  padding-top:20px;
+  border-top:1px solid var(--border);
+}
+
+.cashier-accepted-box > span{
+  display:block;
+  margin-bottom:10px;
+  font-family:var(--font);
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.cashier-accepted-box .pay-tag{
+  min-width:64px;
+  padding:8px 11px;
+  border-radius:5px;
+  background:#111214;
+  text-align:center;
+}
+
+@media(max-width:1050px){
+  .cashier-layout{grid-template-columns:minmax(0,1fr) 330px}
+  .cashier-panel,.cashier-summary{padding:24px}
+  .cashier-page .preset-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+
+@media(max-width:860px){
+  .cashier-layout{grid-template-columns:1fr}
+  .cashier-summary{position:static;min-height:0;order:-1}
+  .cashier-page .balance-card{margin-bottom:18px}
+}
+
+@media(max-width:620px){
+  .cashier-page .container{padding:0 14px}
+  .cashier-panel,.cashier-summary{min-height:0;padding:20px 16px}
+  .cashier-page .method-grid{grid-template-columns:1fr}
+  .cashier-page .preset-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cashier-page .form-grid.compact{grid-template-columns:1fr}
+  .cashier-page .info-list{grid-template-columns:1fr 1fr}
+  .cashier-section-head h2{font-size:20px}
+  .cashier-page .balance-card strong{font-size:32px}
+  .payment-rail-grid{grid-template-columns:1fr}
+  .payment-rail{min-height:64px}
+  .crypto-asset-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .crypto-network-grid{grid-template-columns:1fr}
+  .crypto-network{min-height:44px}
+  .withdraw-checkout-summary{grid-template-columns:1fr}
+  .card-detail-grid,.card-checkout-actions{grid-template-columns:1fr}
+  .card-oops-modal{padding:22px 18px 20px}
+  .card-oops-sticker{height:230px}
+  .card-oops-sticker img{width:min(230px,74vw);height:230px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .cashier-tab,.cashier-page .method-btn,.cashier-page .preset-btn,.card-checkout-step,.payment-rail,.card-oops-overlay,.card-oops-modal{transition:none}
+}

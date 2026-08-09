@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-bambiku}
+      POSTGRES_USER: ${POSTGRES_USER:-bambiku}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-bambiku} -d ${POSTGRES_DB:-bambiku}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env.production
+    environment:
+      BAMBIKU_ENV: ${BAMBIKU_ENV:-production}
+      BAMBIKU_LOG_LEVEL: ${BAMBIKU_LOG_LEVEL:-INFO}
+      BAMBIKU_LOG_FORMAT: ${BAMBIKU_LOG_FORMAT:-json}
+      BAMBIKU_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-bambiku}:${POSTGRES_PASSWORD:-change-me}@db:5432/${POSTGRES_DB:-bambiku}
+      BAMBIKU_PUBLIC_BASE_URL: ${BAMBIKU_PUBLIC_BASE_URL:-http://127.0.0.1:5500}
+      BAMBIKU_API_BASE_URL: ${BAMBIKU_API_BASE_URL:-http://127.0.0.1:5500/api}
+      BAMBIKU_FRONTEND_ORIGINS: ${BAMBIKU_FRONTEND_ORIGINS:-http://localhost:5500,http://127.0.0.1:5500}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    image: nginx:1.27-alpine
+    volumes:
+      - ./:/usr/share/nginx/html:ro
+      - ./deploy/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./deploy/nginx/runtime.js:/usr/share/nginx/html/js/config/runtime.js:ro
+    depends_on:
+      backend:
+        condition: service_started
+    ports:
+      - "${FRONTEND_PORT:-5500}:80"
+
+volumes:
+  postgres-data:

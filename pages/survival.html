@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Arctic Protocol | Bambiku</title>
+  <link rel="preload" href="../assets/images/arctic-protocol-bunker.webp" as="image" type="image/webp" fetchpriority="high"/>
+  <link rel="stylesheet" href="../css/style.css?v=inner-page-grid-v1"/>
+  <link rel="icon" href="data:,"/>
+</head>
+<body data-page="survival" data-page-root="survival">
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="../index.html" class="logo" data-route="home"><span class="dot"></span>Bambi<span>ku</span></a>
+        <ul class="nav-links">
+          <li><a href="../index.html#games" data-route="games" data-i18n="nav_games">Games</a></li>
+          <li><a href="../index.html#bonuses" data-route="bonuses" data-i18n="nav_bonuses">Bonuses</a></li>
+          <li><a href="../index.html#vip" data-route="vip" data-i18n="nav_vip">VIP</a></li>
+        </ul>
+        <div class="nav-actions">
+          <div class="lang-switch">
+            <button class="lang-btn active" type="button" data-lang="ru">RU</button>
+            <button class="lang-btn" type="button" data-lang="en">EN</button>
+          </div>
+          <div class="nav-auth" data-auth-nav>
+            <a href="deposit.html" class="btn btn-primary btn-sm" data-route="deposit" data-i18n="nav_deposit">Cashier</a>
+            <a href="profile.html" class="btn btn-outline btn-sm" data-route="profile" data-i18n="nav_profile">Profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell game-page survival-page">
+    <div class="container">
+      <header class="page-head game-head game-command-head survival-command-head" data-system="ARCTIC PROTOCOL // CONTROL">
+        <div class="game-command-copy survival-command-copy">
+          <div class="game-command-kicker survival-command-kicker">
+            <i aria-hidden="true"></i>
+            <span data-i18n="survival_command_status">SURVIVAL NETWORK ONLINE</span>
+            <b>AP-06</b>
+          </div>
+          <h1 class="page-title" data-i18n="survival_title">Arctic Protocol</h1>
+          <p class="page-sub" data-i18n="survival_sub">Six decisions. One surviving protocol. Thirty seconds each.</p>
+          <div class="game-command-meta survival-command-meta" aria-label="Protocol parameters">
+            <span><small data-i18n="survival_command_sector">SECTOR</small><strong data-i18n="survival_command_sector_value">CRYO-7</strong></span>
+            <span><small data-i18n="survival_command_oxygen">OXYGEN RESERVE</small><strong data-i18n="survival_command_oxygen_value">41 DAYS</strong></span>
+            <span><small data-i18n="survival_command_core">CORE MODE</small><strong data-i18n="survival_command_core_value">AUTONOMOUS</strong></span>
+          </div>
+        </div>
+        <a href="../index.html#games" class="btn btn-outline game-command-back survival-command-back" data-route="games" data-i18n="roulette_back">Back to Games</a>
+      </header>
+
+      <section class="survival-layout game-console-layout">
+        <div class="survival-stage game-console-stage" id="survivalStage">
+          <div class="survival-bunker" aria-live="polite">
+            <div class="survival-atmosphere" aria-hidden="true"></div>
+            <div class="survival-frost" aria-hidden="true"></div>
+            <div class="survival-emergency" aria-hidden="true"></div>
+
+            <div class="survival-hud">
+              <span class="survival-system"><i></i><span data-i18n="survival_system">BUNKER CORE // AP-06</span></span>
+              <span id="survivalCategory">THREAT NOT SELECTED</span>
+            </div>
+
+            <div class="survival-terminal">
+              <nav class="survival-briefing-nav" id="survivalBriefingNav" aria-label="Protocol sections">
+                <button type="button" data-survival-section="event">
+                  <span>01</span>
+                  <strong data-i18n="survival_briefing_event">Event</strong>
+                </button>
+                <button type="button" data-survival-section="dossier">
+                  <span>02</span>
+                  <strong data-i18n="survival_briefing_dossier">Stage dossier</strong>
+                </button>
+                <button type="button" data-survival-section="decision">
+                  <span>03</span>
+                  <strong data-i18n="survival_briefing_decision">Decision</strong>
+                </button>
+              </nav>
+
+              <div class="survival-cause" id="survivalCause">
+                <span data-i18n="survival_cause_label">EXTINCTION EVENT</span>
+                <strong>Awaiting protocol launch</strong>
+                <p>Choose a stake. The server will select one catastrophe and six linked decisions.</p>
+              </div>
+
+              <div class="survival-progress">
+                <div>
+                  <span data-i18n="survival_stage">STAGE</span>
+                  <strong id="survivalStageValue">0 / 6</strong>
+                </div>
+                <div class="survival-stage-track" aria-hidden="true">
+                  <i id="survivalStageTrack"></i>
+                </div>
+                <div class="survival-timer" id="survivalTimer" aria-label="Decision timer" hidden>
+                  <span id="survivalTimerValue">30</span>
+                </div>
+              </div>
+
+              <section class="survival-question" id="survivalQuestion" hidden>
+                <div class="survival-question-heading">
+                  <span id="survivalStageLabel"></span>
+                  <h2 id="survivalQuestionTitle"></h2>
+                  <p id="survivalQuestionPrompt"></p>
+                </div>
+                <div class="survival-parameters" id="survivalParameters"></div>
+                <div class="survival-choices" id="survivalChoices"></div>
+              </section>
+
+              <div class="survival-briefing-footer" id="survivalBriefingFooter" hidden>
+                <p data-i18n="survival_timer_hint">The timer starts only after the choices are opened.</p>
+                <button class="btn survival-briefing-action" type="button" id="survivalBriefingAction"></button>
+              </div>
+
+              <section class="survival-resolution" id="survivalResolution" hidden>
+                <span class="survival-resolution-kicker" id="survivalResolutionKicker"></span>
+                <h2 id="survivalResolutionTitle"></h2>
+                <p id="survivalExplanation"></p>
+              </section>
+
+              <section class="survival-death-screen" id="survivalDeathScreen" hidden>
+                <div class="survival-death-signal" aria-hidden="true">
+                  <span>&#9760;</span>
+                </div>
+                <div class="survival-death-heading">
+                  <span data-i18n="survival_death_kicker">PROTOCOL TERMINATED</span>
+                  <h2 data-i18n="survival_death_title">YOU DIED</h2>
+                  <p id="survivalDeathStage"></p>
+                </div>
+                <div class="survival-death-report">
+                  <article>
+                    <span data-i18n="survival_death_decision">LAST DECISION</span>
+                    <strong id="survivalDeathDecision"></strong>
+                  </article>
+                  <article class="survival-death-cause">
+                    <span data-i18n="survival_death_cause">CAUSE OF DEATH</span>
+                    <strong id="survivalDeathCause"></strong>
+                  </article>
+                  <article>
+                    <span data-i18n="survival_death_protocol">SURVIVAL PROTOCOL</span>
+                    <strong id="survivalDeathProtocol"></strong>
+                  </article>
+                </div>
+              </section>
+            </div>
+
+            <div class="survival-result" id="survivalResult" hidden></div>
+          </div>
+        </div>
+
+        <aside class="survival-panel game-console-panel">
+          <div class="balance-card">
+            <span data-i18n="cashier_your_balance">Your Balance</span>
+            <strong id="survivalBalance">&euro;0</strong>
+          </div>
+          <div class="slot-bet-box">
+            <strong data-i18n="survival_bet">Stake</strong>
+            <div class="chip-row" id="survivalBets"></div>
+          </div>
+          <div class="survival-objective">
+            <span data-i18n="survival_objective">SURVIVAL REWARD</span>
+            <strong>6.00x</strong>
+            <p id="survivalPotential">&euro;30.00</p>
+          </div>
+          <button class="btn btn-primary survival-action" type="button" id="survivalAction">START</button>
+        </aside>
+      </section>
+    </div>
+  </main>
+
+  <div class="toasts" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="../js/config/app-domain.js?v=ux-trust-v1"></script>
+  <script src="../js/config/runtime.js?v=infra-v1"></script>
+  <script src="../js/core/constants.js?v=optimization-v2"></script>
+  <script src="../js/core/store.js?v=vip-click-batch-v1"></script>
+  <script src="../js/core/ui.js?v=optimization-v2"></script>
+  <script src="../js/core/auth.js?v=optimization-v2"></script>
+  <script src="../js/games/arctic-protocol.js?v=optimization-v2"></script>
+  <script src="../js/core/bootstrap.js?v=offline-i18n-v1"></script>
+</body>
+</html>

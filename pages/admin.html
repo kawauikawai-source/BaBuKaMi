@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Bambiku Casino</title>
+  <link rel="stylesheet" href="../css/style.css?v=vip-inline-clickers-v3"/>
+  <link rel="icon" href="data:,"/>
+</head>
+<body data-page="admin" data-page-root="admin">
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="../index.html" class="logo" data-route="home"><span class="dot"></span>Bambi<span>ku</span></a>
+        <ul class="nav-links">
+          <li><a href="../index.html#games" data-route="games" data-i18n="nav_games">Games</a></li>
+          <li><a href="../index.html#bonuses" data-route="bonuses" data-i18n="nav_bonuses">Bonuses</a></li>
+          <li><a href="../index.html#vip" data-route="vip" data-i18n="nav_vip">VIP</a></li>
+        </ul>
+        <div class="nav-actions">
+          <div class="lang-switch">
+            <button class="lang-btn active" type="button" data-lang="ru">RU</button>
+            <button class="lang-btn" type="button" data-lang="en">EN</button>
+          </div>
+          <div class="nav-auth" data-auth-nav></div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell admin-page">
+    <div class="container">
+      <header class="page-head game-head">
+        <div>
+          <p class="label" data-i18n="admin_title">Admin</p>
+          <h1 class="page-title" data-i18n="admin_title">Admin</h1>
+          <p class="page-sub" data-i18n="admin_sub">Withdrawal requests and basic cashier control.</p>
+        </div>
+        <button class="btn btn-outline" type="button" id="adminRefreshAll" data-i18n="admin_refresh">Refresh</button>
+      </header>
+
+      <div class="admin-tabs" role="tablist" aria-label="Admin sections">
+        <button class="admin-tab active" type="button" data-admin-tab="overview" role="tab" aria-selected="true" aria-controls="admin-panel-overview" data-i18n="admin_tab_overview">Overview</button>
+        <button class="admin-tab" type="button" data-admin-tab="withdrawals" role="tab" aria-selected="false" aria-controls="admin-panel-withdrawals" data-i18n="admin_tab_withdrawals">Withdrawals</button>
+        <button class="admin-tab" type="button" data-admin-tab="promos" role="tab" aria-selected="false" aria-controls="admin-panel-promos" data-i18n="admin_tab_promos">Promos</button>
+        <button class="admin-tab" type="button" data-admin-tab="audit" role="tab" aria-selected="false" aria-controls="admin-panel-audit" data-i18n="admin_tab_audit">Audit</button>
+      </div>
+
+      <section class="admin-panel admin-tab-panel active" id="admin-panel-overview" data-admin-panel="overview" role="tabpanel">
+        <div class="admin-toolbar">
+          <div>
+            <p class="label" data-i18n="admin_tab_overview">Overview</p>
+            <h2 data-i18n="admin_overview_title">Summary</h2>
+          </div>
+        </div>
+        <div class="stat-grid admin-overview-grid">
+          <div class="stat-box">
+            <div class="stat-box-label" data-i18n="admin_overview_users">Users</div>
+            <div class="stat-box-val" id="adminOverviewUsers">0</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-box-label" data-i18n="admin_overview_pending">Pending withdrawals</div>
+            <div class="stat-box-val gold" id="adminOverviewPending">0</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-box-label" data-i18n="admin_overview_completed">Approved</div>
+            <div class="stat-box-val accent" id="adminOverviewCompleted">0</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-box-label" data-i18n="admin_overview_rejected">Rejected</div>
+            <div class="stat-box-val" id="adminOverviewRejected">0</div>
+          </div>
+        </div>
+        <div class="admin-overview-users-block" id="admin-panel-users">
+          <div class="admin-toolbar">
+            <div>
+              <p class="label" data-i18n="admin_tab_users">admin_tab_users</p>
+              <h2 data-i18n="admin_users_title">admin_users_title</h2>
+            </div>
+            <button class="btn btn-outline btn-sm" type="button" id="adminUsersRefresh" data-i18n="admin_refresh">Refresh</button>
+          </div>
+          <div class="admin-users-grid">
+          <div class="admin-user-list">
+            <label class="f-label" for="adminUserSearch" data-i18n="admin_user_search">Search user</label>
+            <input class="f-input" id="adminUserSearch" type="search" placeholder="Email/Name"/>
+            <div class="admin-user-cards" id="adminUsersBody">
+              <div class="admin-empty" data-i18n="admin_no_users">No users</div>
+            </div>
+            <div class="admin-user-pager" id="adminUsersPager">
+              <button class="btn btn-outline btn-sm" type="button" id="adminUsersPrev" data-admin-user-page="-1" data-i18n="admin_prev_page">Previous</button>
+              <span id="adminUsersPage" data-i18n="admin_page_one">Page 1</span>
+              <button class="btn btn-outline btn-sm" type="button" id="adminUsersNext" data-admin-user-page="1" data-i18n="admin_next_page">Next</button>
+            </div>
+          </div>
+          <div class="admin-user-desk">
+            <form class="admin-balance-form" id="adminBalanceForm">
+              <div class="admin-balance-selected">
+                <span class="profile-balance-label" data-i18n="admin_selected_user">Selected user</span>
+                <strong id="adminSelectedUser" data-i18n="admin_no_user_selected">Not selected</strong>
+              </div>
+              <div class="admin-money-action-row">
+                <label class="admin-money-field" for="adminBalanceAmount">
+                  <span class="f-label" data-i18n="admin_balance_amount">Amount</span>
+                  <input class="f-input" id="adminBalanceAmount" type="number" min="0.01" step="0.01" placeholder="100"/>
+                </label>
+                <label class="admin-money-field" for="adminBalanceNote">
+                  <span class="f-label" data-i18n="admin_balance_note">Reason</span>
+                  <input class="f-input" id="adminBalanceNote" type="text" maxlength="255" placeholder="Bonus/Correction"/>
+                </label>
+                <div class="admin-balance-actions">
+                  <button class="btn btn-primary" type="submit" data-admin-balance="credit" data-i18n="admin_credit">Credit</button>
+                  <button class="btn btn-outline" type="submit" data-admin-balance="debit" data-i18n="admin_debit">Debit</button>
+                </div>
+              </div>
+            </form>
+            <div class="admin-user-subtabs" id="adminUserSubtabs" hidden>
+              <button class="admin-user-subtab active" type="button" data-admin-user-tab="profile" data-i18n="admin_user_profile">User profile</button>
+              <button class="admin-user-subtab" type="button" data-admin-user-tab="transactions" data-i18n="admin_user_transactions">Transactions</button>
+              <button class="admin-user-subtab" type="button" data-admin-user-tab="rounds" data-i18n="admin_user_rounds">Game rounds</button>
+              <button class="admin-user-subtab" type="button" data-admin-user-tab="promos" data-i18n="admin_user_promos">admin_user_promos</button>
+            </div>
+            <div class="admin-user-workspace" id="adminUserDetail" hidden>
+            <section class="inside-box" data-admin-user-panel="profile">
+              <h2 data-i18n="admin_user_profile">User profile</h2>
+              <div class="admin-detail-list" id="adminUserProfile"></div>
+            </section>
+            <section class="inside-box" data-admin-user-panel="transactions" hidden>
+              <div class="admin-section-head">
+                <h2 data-i18n="admin_user_transactions">Transactions</h2>
+                <button class="btn btn-outline btn-sm" type="button" id="adminUserHistoryRefresh" data-i18n="admin_refresh">Refresh</button>
+              </div>
+              <div class="admin-filter-row admin-history-filters">
+                <select class="f-input" id="adminTxType">
+                  <option value="" data-i18n="admin_filter_all_types">All types</option>
+                  <option value="deposit" data-i18n="tx_deposit">Deposit</option>
+                  <option value="withdraw" data-i18n="tx_withdraw">Withdrawal</option>
+                  <option value="game" data-i18n="tx_game">Game</option>
+                  <option value="vip" data-i18n="tx_vip">VIP</option>
+                </select>
+                <select class="f-input" id="adminTxStatus">
+                  <option value="" data-i18n="admin_filter_all_statuses">All statuses</option>
+                  <option value="pending" data-i18n="admin_tx_status_pending">admin_tx_status_pending</option>
+                  <option value="completed" data-i18n="admin_tx_status_completed">admin_tx_status_completed</option>
+                  <option value="rejected" data-i18n="admin_tx_status_rejected">admin_tx_status_rejected</option>
+                </select>
+                <div class="admin-date-field">
+                  <input class="f-input admin-date-input" id="adminTxFrom" type="text" inputmode="none" autocomplete="off" readonly data-admin-date data-i18n-ph="admin_date_from" placeholder="admin_date_from"/>
+                  <button class="admin-date-trigger" type="button" data-admin-date-toggle="adminTxFrom" aria-label="Open calendar"></button>
+                </div>
+                <div class="admin-date-field">
+                  <input class="f-input admin-date-input" id="adminTxTo" type="text" inputmode="none" autocomplete="off" readonly data-admin-date data-i18n-ph="admin_date_to" placeholder="admin_date_to"/>
+                  <button class="admin-date-trigger" type="button" data-admin-date-toggle="adminTxTo" aria-label="Open calendar"></button>
+                </div>
+              </div>
+              <div class="admin-table-wrap">
+                <table class="admin-table admin-detail-table">
+                  <thead>
+                    <tr>
+                      <th data-i18n="th_date">Date</th>
+                      <th data-i18n="th_type">Type</th>
+                      <th data-i18n="admin_status">Status</th>
+                      <th data-i18n="admin_amount">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminUserTransactions"><tr><td colspan="4" class="admin-empty">-</td></tr></tbody>
+                </table>
+              </div>
+              <div class="admin-load-more-wrap">
+                <button class="btn btn-outline btn-sm admin-load-more" type="button" data-admin-load-more="transactions" id="adminTransactionsMore" hidden data-i18n="admin_show_more">Show more</button>
+              </div>
+            </section>
+            <section class="inside-box" data-admin-user-panel="rounds" hidden>
+              <h2 data-i18n="admin_user_rounds">Game rounds</h2>
+              <div class="admin-filter-row admin-history-filters">
+                <input class="f-input" id="adminRoundGame" type="search" placeholder="Game ID"/>
+                <select class="f-input" id="adminRoundStatus">
+                  <option value="" data-i18n="admin_filter_all_statuses">All statuses</option>
+                  <option value="active" data-i18n="admin_tx_status_active">admin_tx_status_active</option>
+                  <option value="completed" data-i18n="admin_tx_status_completed">admin_tx_status_completed</option>
+                  <option value="lost" data-i18n="admin_tx_status_lost">admin_tx_status_lost</option>
+                </select>
+                <div class="admin-date-field">
+                  <input class="f-input admin-date-input" id="adminRoundFrom" type="text" inputmode="none" autocomplete="off" readonly data-admin-date data-i18n-ph="admin_date_from" placeholder="admin_date_from"/>
+                  <button class="admin-date-trigger" type="button" data-admin-date-toggle="adminRoundFrom" aria-label="Open calendar"></button>
+                </div>
+                <div class="admin-date-field">
+                  <input class="f-input admin-date-input" id="adminRoundTo" type="text" inputmode="none" autocomplete="off" readonly data-admin-date data-i18n-ph="admin_date_to" placeholder="admin_date_to"/>
+                  <button class="admin-date-trigger" type="button" data-admin-date-toggle="adminRoundTo" aria-label="Open calendar"></button>
+                </div>
+              </div>
+              <div class="admin-table-wrap">
+                <table class="admin-table admin-detail-table">
+                  <thead>
+                    <tr>
+                      <th data-i18n="th_date">Date</th>
+                      <th data-i18n="admin_game">Game</th>
+                      <th data-i18n="admin_status">Status</th>
+                      <th data-i18n="admin_result">Result</th>
+                      <th data-i18n="admin_amount">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminUserRounds"><tr><td colspan="5" class="admin-empty">-</td></tr></tbody>
+                </table>
+              </div>
+              <div class="admin-load-more-wrap">
+                <button class="btn btn-outline btn-sm admin-load-more" type="button" data-admin-load-more="rounds" id="adminRoundsMore" hidden data-i18n="admin_show_more">Show more</button>
+              </div>
+            </section>
+            <section class="inside-box" data-admin-user-panel="promos" hidden>
+              <h2 data-i18n="admin_user_promos">admin_user_promos</h2>
+              <div class="admin-table-wrap">
+                <table class="admin-table admin-detail-table">
+                  <thead>
+                    <tr>
+                      <th data-i18n="th_date">Date</th>
+                      <th data-i18n="admin_promo_code">Code</th>
+                      <th data-i18n="admin_promo_bonus">admin_promo_bonus</th>
+                      <th data-i18n="admin_promo_deposit">admin_promo_deposit</th>
+                      <th data-i18n="admin_transaction_id">admin_transaction_id</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminUserPromoRedemptions"><tr><td colspan="5" class="admin-empty">-</td></tr></tbody>
+                </table>
+              </div>
+              <div class="admin-load-more-wrap">
+                <button class="btn btn-outline btn-sm admin-load-more" type="button" data-admin-load-more="promoRedemptions" id="adminPromoRedemptionsMore" hidden data-i18n="admin_show_more">Show more</button>
+              </div>
+            </section>
+            </div>
+          </div>
+        </div>
+        </div>
+      </section>
+
+      <section class="admin-panel admin-tab-panel" id="admin-panel-promos" data-admin-panel="promos" role="tabpanel" hidden>
+        <div class="admin-toolbar admin-withdrawals-toolbar">
+          <div>
+            <p class="label" data-i18n="admin_tab_promos">Promos</p>
+            <h2 data-i18n="admin_promos_title">Promo codes</h2>
+          </div>
+        </div>
+        <div class="admin-promo-stats" id="adminPromoStats">
+          <button class="admin-promo-stat-card active" type="button" data-admin-promo-status="active"><span data-i18n="admin_status_active">Active</span><strong>-</strong></button>
+          <button class="admin-promo-stat-card" type="button" data-admin-promo-status="scheduled"><span data-i18n="admin_status_scheduled">Scheduled</span><strong>-</strong></button>
+          <button class="admin-promo-stat-card" type="button" data-admin-promo-status="inactive"><span data-i18n="admin_status_inactive">Inactive</span><strong>-</strong></button>
+          <button class="admin-promo-stat-card" type="button" data-admin-promo-status="expired"><span data-i18n="admin_status_expired">Expired</span><strong>-</strong></button>
+          <button class="admin-promo-stat-card" type="button" data-admin-promo-status="all"><span data-i18n="admin_status_all">All</span><strong>-</strong></button>
+        </div>
+        <div class="admin-promos-layout">
+          <form class="admin-balance-form admin-promo-form" id="adminPromoForm">
+            <div class="admin-promo-form-head">
+              <span class="profile-balance-label" data-i18n="admin_promo_create">Create promo</span>
+              <strong data-i18n="admin_promo_create_sub">Balance bonus</strong>
+            </div>
+            <div class="admin-promo-field span-2">
+              <label class="f-label" for="adminPromoCode" data-i18n="admin_promo_code">Code</label>
+              <input class="f-input promo-code-input" id="adminPromoCode" type="text" maxlength="64" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="START50"/>
+            </div>
+            <div class="admin-promo-field span-3">
+              <label class="f-label" for="adminPromoTitle" data-i18n="admin_promo_title">Title</label>
+              <input class="f-input" id="adminPromoTitle" type="text" maxlength="255" placeholder="Starter Boost"/>
+            </div>
+            <div class="admin-promo-field span-2">
+              <label class="f-label" for="adminPromoRewardType" data-i18n="admin_promo_reward_type">Reward Type</label>
+              <select class="f-input" id="adminPromoRewardType">
+                <option value="fixed" data-i18n="admin_promo_fixed">Fixed amount</option>
+                <option value="percent" data-i18n="admin_promo_percent">Percent</option>
+              </select>
+            </div>
+            <div class="admin-promo-field span-2">
+              <label class="f-label" for="adminPromoAmount" data-i18n="admin_promo_amount">Amount</label>
+              <input class="f-input" id="adminPromoAmount" type="number" min="0.01" step="0.01" placeholder="50"/>
+            </div>
+            <div class="admin-promo-field span-1" data-promo-percent>
+              <label class="f-label" for="adminPromoPercent" data-i18n="admin_promo_percent_value">Percent</label>
+              <input class="f-input" id="adminPromoPercent" type="number" min="0.01" max="100" step="0.01" placeholder="10"/>
+            </div>
+            <div class="admin-promo-field span-2" data-promo-percent>
+              <label class="f-label" for="adminPromoMaxBonus" data-i18n="admin_promo_max_bonus">Max Bonus</label>
+              <input class="f-input" id="adminPromoMaxBonus" type="number" min="0" step="0.01" placeholder="75"/>
+            </div>
+            <div class="admin-promo-field span-2" data-promo-percent>
+              <label class="f-label" for="adminPromoMinDeposit" data-i18n="admin_promo_min_deposit">Min Deposit</label>
+              <input class="f-input" id="adminPromoMinDeposit" type="number" min="0" step="0.01" placeholder="20"/>
+            </div>
+            <div class="admin-promo-field span-2">
+              <label class="f-label" for="adminPromoUsageLimit" data-i18n="admin_promo_usage_limit">Usage Limit</label>
+              <input class="f-input" id="adminPromoUsageLimit" type="number" min="0" step="1" value="100"/>
+            </div>
+            <div class="admin-promo-field span-2">
+              <label class="f-label" for="adminPromoPerUserLimit" data-i18n="admin_promo_per_user_limit">Per User Limit</label>
+              <input class="f-input" id="adminPromoPerUserLimit" type="number" min="0" step="1" value="1"/>
+            </div>
+            <div class="admin-promo-field span-2">
+              <label class="f-label" for="adminPromoStartsAt" data-i18n="admin_promo_starts_at">Starts At</label>
+              <div class="admin-date-field admin-promo-date-field">
+                <input class="f-input admin-date-input" id="adminPromoStartsAt" type="text" inputmode="none" autocomplete="off" readonly data-admin-date data-i18n-ph="admin_promo_starts_at" placeholder="Starts At"/>
+                <button class="admin-date-trigger" type="button" data-admin-date-toggle="adminPromoStartsAt" aria-label="Open calendar"></button>
+              </div>
+            </div>
+            <div class="admin-promo-field span-2">
+              <label class="f-label" for="adminPromoExpiresAt" data-i18n="admin_promo_expires_at">Expires At</label>
+              <div class="admin-date-field admin-promo-date-field">
+                <input class="f-input admin-date-input" id="adminPromoExpiresAt" type="text" inputmode="none" autocomplete="off" readonly data-admin-date data-i18n-ph="admin_promo_expires_at" placeholder="Expires At"/>
+                <button class="admin-date-trigger" type="button" data-admin-date-toggle="adminPromoExpiresAt" aria-label="Open calendar"></button>
+              </div>
+            </div>
+            <label class="check-line admin-promo-active">
+              <input id="adminPromoActive" type="checkbox" checked/>
+              <span data-i18n="admin_promo_active">Active</span>
+            </label>
+            <div class="admin-promo-preview" id="adminPromoPreview" data-i18n="admin_promo_preview_empty">Fill reward fields to preview the player bonus.</div>
+            <button class="btn btn-primary admin-promo-submit" type="submit" data-i18n="admin_promo_create_btn">Create Promo</button>
+          </form>
+          <div class="admin-promo-list">
+            <div class="admin-table-wrap">
+              <table class="admin-table admin-promos-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="admin_promo_code">Code</th>
+                    <th data-i18n="admin_promo_reward">Reward</th>
+                    <th data-i18n="admin_status">Status</th>
+                    <th data-i18n="admin_promo_used">Used</th>
+                    <th data-i18n="admin_actions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminPromosBody">
+                  <tr><td colspan="5" class="admin-empty" data-i18n="admin_empty">No requests</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="admin-load-more-wrap">
+              <button class="btn btn-outline btn-sm admin-load-more" type="button" data-admin-load-more="promos" id="adminPromosMore" hidden data-i18n="admin_show_more">Show more</button>
+            </div>
+          </div>
+        </div>
+        <section class="admin-promo-detail" id="adminPromoDetail" hidden>
+          <div class="admin-section-head">
+            <div>
+              <p class="label" data-i18n="admin_promo_selected">Selected promo</p>
+              <h2 id="adminPromoDetailTitle">-</h2>
+            </div>
+            <div class="admin-promo-detail-actions">
+              <button class="btn btn-outline btn-sm" type="button" id="adminPromoEditBtn" data-i18n="admin_promo_edit">Edit</button>
+              <button class="btn btn-outline btn-sm" type="button" id="adminPromoDetailDisableBtn" data-i18n="admin_promo_disable">Disable</button>
+            </div>
+          </div>
+          <div class="admin-promo-detail-grid" id="adminPromoDetailGrid"></div>
+          <div class="admin-promo-history-grid">
+            <div class="inside-box">
+              <div class="admin-section-head">
+                <h2 data-i18n="admin_promo_redemptions">Redemptions</h2>
+                <button class="btn btn-outline btn-sm" type="button" id="adminPromoRedemptionsRefresh" data-i18n="admin_refresh">Refresh</button>
+              </div>
+              <div class="admin-table-wrap">
+                <table class="admin-table admin-promo-redemptions-table">
+                  <thead>
+                    <tr>
+                      <th data-i18n="admin_user">User</th>
+                      <th data-i18n="admin_promo_bonus">admin_promo_bonus</th>
+                      <th data-i18n="admin_promo_deposit">admin_promo_deposit</th>
+                      <th data-i18n="admin_transaction_id">admin_transaction_id</th>
+                      <th data-i18n="th_date">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminPromoDetailRedemptions"><tr><td colspan="5" class="admin-empty" data-i18n="admin_empty">No requests</td></tr></tbody>
+                </table>
+              </div>
+              <div class="admin-load-more-wrap">
+                <button class="btn btn-outline btn-sm admin-load-more" type="button" data-admin-load-more="promoDetailRedemptions" id="adminPromoDetailRedemptionsMore" hidden data-i18n="admin_show_more">Show more</button>
+              </div>
+            </div>
+            <div class="inside-box">
+              <h2 data-i18n="admin_promo_audit">Promo audit</h2>
+              <div class="admin-table-wrap">
+                <table class="admin-table admin-promo-audit-table">
+                  <thead>
+                    <tr>
+                      <th data-i18n="th_date">Date</th>
+                      <th data-i18n="admin_action">Action</th>
+                      <th data-i18n="admin_metadata">admin_metadata</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminPromoDetailAudit"><tr><td colspan="3" class="admin-empty" data-i18n="admin_empty">No requests</td></tr></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="admin-panel admin-tab-panel" id="admin-panel-audit" data-admin-panel="audit" role="tabpanel" hidden>
+        <div class="admin-toolbar admin-withdrawals-toolbar">
+          <div>
+            <p class="label" data-i18n="admin_tab_audit">Audit</p>
+            <h2 data-i18n="admin_audit_title">Audit log</h2>
+          </div>
+          <button class="btn btn-outline btn-sm" type="button" id="adminAuditRefresh" data-i18n="admin_refresh">Refresh</button>
+        </div>
+        <div class="admin-filter-row admin-audit-filters">
+          <input class="f-input" id="adminAuditAction" type="search" placeholder="Action"/>
+          <input class="f-input" id="adminAuditActor" type="number" min="1" placeholder="Actor User ID"/>
+          <input class="f-input" id="adminAuditTarget" type="number" min="1" placeholder="Target User ID"/>
+          <div class="admin-date-field">
+            <input class="f-input admin-date-input" id="adminAuditFrom" type="text" inputmode="none" autocomplete="off" readonly data-admin-date data-i18n-ph="admin_date_from" placeholder="admin_date_from"/>
+            <button class="admin-date-trigger" type="button" data-admin-date-toggle="adminAuditFrom" aria-label="Open calendar"></button>
+          </div>
+          <div class="admin-date-field">
+            <input class="f-input admin-date-input" id="adminAuditTo" type="text" inputmode="none" autocomplete="off" readonly data-admin-date data-i18n-ph="admin_date_to" placeholder="admin_date_to"/>
+            <button class="admin-date-trigger" type="button" data-admin-date-toggle="adminAuditTo" aria-label="Open calendar"></button>
+          </div>
+          <button class="btn btn-primary btn-sm" type="button" id="adminAuditApply" data-i18n="admin_filter_apply">admin_filter_apply</button>
+          <button class="btn btn-outline btn-sm" type="button" id="adminAuditReset" data-i18n="admin_filter_reset">admin_filter_reset</button>
+        </div>
+        <div class="admin-horizontal-list admin-audit-list" id="adminAuditBody">
+          <div class="admin-empty" data-i18n="admin_empty">No requests</div>
+        </div>
+        <div class="admin-load-more-wrap">
+          <button class="btn btn-outline btn-sm admin-load-more" type="button" data-admin-load-more="audit" id="adminAuditMore" hidden data-i18n="admin_show_more">Show more</button>
+        </div>
+      </section>
+
+      <section class="admin-panel admin-tab-panel" id="admin-panel-withdrawals" data-admin-panel="withdrawals" role="tabpanel" hidden>
+        <div class="admin-toolbar admin-withdrawals-toolbar">
+          <div>
+            <p class="label" data-i18n="admin_withdrawals">Withdrawals</p>
+            <h2 data-i18n="admin_withdrawals_title">Withdrawal requests</h2>
+          </div>
+          <div class="admin-status-tabs" role="tablist" aria-label="Withdrawal status">
+            <button class="admin-status active" type="button" data-admin-status="pending" data-i18n="admin_status_pending">Pending</button>
+            <button class="admin-status" type="button" data-admin-status="completed" data-i18n="admin_status_completed">Approved</button>
+            <button class="admin-status" type="button" data-admin-status="rejected" data-i18n="admin_status_rejected">Rejected</button>
+            <button class="admin-status" type="button" data-admin-status="all" data-i18n="admin_status_all">All</button>
+          </div>
+        </div>
+        <div class="admin-horizontal-list admin-withdrawal-list" id="adminWithdrawalsBody">
+          <div class="admin-empty" data-i18n="admin_empty">No requests</div>
+        </div>
+        <div class="admin-load-more-wrap">
+          <button class="btn btn-outline btn-sm admin-load-more" type="button" data-admin-load-more="withdrawals" id="adminWithdrawalsMore" hidden data-i18n="admin_show_more">Show more</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="admin-promo-edit-overlay" id="adminPromoEditOverlay" aria-hidden="true">
+    <form class="admin-promo-edit-modal" id="adminPromoEditForm">
+      <div class="admin-section-head">
+        <div>
+          <p class="label" data-i18n="admin_promo_edit">Edit</p>
+          <h2 id="adminPromoEditTitle">Promo</h2>
+        </div>
+        <button class="btn btn-outline btn-sm" type="button" data-admin-promo-edit-close data-i18n="kyc_cancel">Cancel</button>
+      </div>
+      <label class="f-label" for="adminPromoEditName" data-i18n="admin_promo_title">Title</label>
+      <input class="f-input" id="adminPromoEditName" type="text" maxlength="255"/>
+      <label class="f-label" for="adminPromoEditRewardType" data-i18n="admin_promo_reward_type">Reward Type</label>
+      <select class="f-input" id="adminPromoEditRewardType">
+        <option value="fixed" data-i18n="admin_promo_fixed">Fixed amount</option>
+        <option value="percent" data-i18n="admin_promo_percent">Percent</option>
+      </select>
+      <div class="admin-filter-row admin-promo-reward-row">
+        <div>
+          <label class="f-label" for="adminPromoEditAmount" data-i18n="admin_promo_amount">Amount</label>
+          <input class="f-input" id="adminPromoEditAmount" type="number" min="0.01" step="0.01"/>
+        </div>
+        <div data-promo-edit-percent>
+          <label class="f-label" for="adminPromoEditPercent" data-i18n="admin_promo_percent_value">Percent</label>
+          <input class="f-input" id="adminPromoEditPercent" type="number" min="0.01" max="100" step="0.01"/>
+        </div>
+      </div>
+      <div class="admin-filter-row" data-promo-edit-percent>
+        <div>
+          <label class="f-label" for="adminPromoEditMaxBonus" data-i18n="admin_promo_max_bonus">Max Bonus</label>
+          <input class="f-input" id="adminPromoEditMaxBonus" type="number" min="0" step="0.01"/>
+        </div>
+        <div>
+          <label class="f-label" for="adminPromoEditMinDeposit" data-i18n="admin_promo_min_deposit">Min Deposit</label>
+          <input class="f-input" id="adminPromoEditMinDeposit" type="number" min="0" step="0.01"/>
+        </div>
+      </div>
+      <div class="admin-filter-row">
+        <div>
+          <label class="f-label" for="adminPromoEditUsageLimit" data-i18n="admin_promo_usage_limit">Usage Limit</label>
+          <input class="f-input" id="adminPromoEditUsageLimit" type="number" min="0" step="1"/>
+        </div>
+        <div>
+          <label class="f-label" for="adminPromoEditPerUserLimit" data-i18n="admin_promo_per_user_limit">Per User Limit</label>
+          <input class="f-input" id="adminPromoEditPerUserLimit" type="number" min="0" step="1"/>
+        </div>
+      </div>
+      <label class="f-label" for="adminPromoEditStartsAt" data-i18n="admin_promo_starts_at">Starts At</label>
+      <div class="admin-date-field admin-promo-date-field">
+        <input class="f-input admin-date-input" id="adminPromoEditStartsAt" type="text" inputmode="none" autocomplete="off" readonly data-admin-date data-i18n-ph="admin_promo_starts_at"/>
+        <button class="admin-date-trigger" type="button" data-admin-date-toggle="adminPromoEditStartsAt" aria-label="Open calendar"></button>
+      </div>
+      <label class="f-label" for="adminPromoEditExpiresAt" data-i18n="admin_promo_expires_at">Expires At</label>
+      <div class="admin-date-field admin-promo-date-field">
+        <input class="f-input admin-date-input" id="adminPromoEditExpiresAt" type="text" inputmode="none" autocomplete="off" readonly data-admin-date data-i18n-ph="admin_promo_expires_at"/>
+        <button class="admin-date-trigger" type="button" data-admin-date-toggle="adminPromoEditExpiresAt" aria-label="Open calendar"></button>
+      </div>
+      <label class="check-line">
+        <input id="adminPromoEditActive" type="checkbox"/>
+        <span data-i18n="admin_promo_active">Active</span>
+      </label>
+      <div class="admin-promo-preview" id="adminPromoEditPreview"></div>
+      <div class="admin-promo-edit-actions">
+        <button class="btn btn-outline" type="button" data-admin-promo-edit-close data-i18n="admin_confirm_cancel">Cancel</button>
+        <button class="btn btn-primary" type="submit" data-i18n="admin_promo_save">Save changes</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="toasts" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="../js/config/app-domain.js?v=ux-trust-v1"></script>
+  <script src="../js/config/runtime.js?v=infra-v1"></script>
+  <script src="../js/core/constants.js?v=optimization-v2"></script>
+  <script src="../js/core/store.js?v=vip-click-batch-v1"></script>
+  <script src="../js/core/ui.js?v=optimization-v2"></script>
+  <script src="../js/core/auth.js?v=optimization-v2"></script>
+  <script src="../js/pages/admin.js?v=optimization-v2"></script>
+  <script src="../js/core/bootstrap.js?v=offline-i18n-v1"></script>
+</body>
+</html>

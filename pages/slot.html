@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Bambiku Casino</title>
+  <link rel="stylesheet" href="../css/style.css?v=inner-page-grid-v1"/>
+  <link rel="icon" href="data:,"/>
+</head>
+<body data-page="slot" data-page-root="slot">
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="../index.html" class="logo" data-route="home"><span class="dot"></span>Bambi<span>ku</span></a>
+        <ul class="nav-links">
+          <li><a href="../index.html#games" data-route="games" data-i18n="nav_games">Games</a></li>
+          <li><a href="../index.html#bonuses" data-route="bonuses" data-i18n="nav_bonuses">Bonuses</a></li>
+          <li><a href="../index.html#vip" data-route="vip" data-i18n="nav_vip">VIP</a></li>
+        </ul>
+        <div class="nav-actions">
+          <div class="lang-switch">
+            <button class="lang-btn active" type="button" data-lang="ru">RU</button>
+            <button class="lang-btn" type="button" data-lang="en">EN</button>
+          </div>
+          <div class="nav-auth" data-auth-nav>
+            <a href="deposit.html" class="btn btn-primary btn-sm" data-route="deposit" data-i18n="nav_deposit">Cashier</a>
+            <a href="profile.html" class="btn btn-outline btn-sm" data-route="profile" data-i18n="nav_profile">Profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell game-page slot-page">
+    <div class="container">
+      <header class="page-head game-head game-command-head" data-system="LB-05 // 5x3">
+        <div class="game-command-copy">
+          <div class="game-command-kicker"><i aria-hidden="true"></i><span data-i18n="slot_lore_status">THE GROVE HAS AWAKENED</span><b>LB-05</b></div>
+          <p class="label" data-i18n="slot_label">Slot</p>
+          <h1 class="page-title" data-i18n="slot_title">Lucky Bamboo</h1>
+          <p class="page-sub" data-i18n="slot_sub">Spin 5 reels, catch paylines, and get a backend-backed result.</p>
+          <div class="game-command-meta" aria-label="Lucky Bamboo parameters">
+            <span><small data-i18n="slot_lore_1_label">GROVE</small><strong data-i18n="slot_lore_1_value">WHISPERS</strong></span>
+            <span><small data-i18n="slot_lore_2_label">PANDA</small><strong data-i18n="slot_lore_2_value">KEEPS WATCH</strong></span>
+            <span><small data-i18n="slot_lore_3_label">LOTUS</small><strong data-i18n="slot_lore_3_value">BRINGS FORTUNE</strong></span>
+          </div>
+        </div>
+        <a href="../index.html#games" class="btn btn-outline game-command-back" data-route="games" data-i18n="roulette_back">Back to Games</a>
+      </header>
+
+      <section class="slot-layout game-console-layout">
+        <div class="slot-stage game-console-stage">
+          <div class="slot-machine" id="slotMachine" aria-live="polite">
+            <div class="slot-reels" id="slotReels"></div>
+            <div class="slot-line-flash" id="slotLineFlash" hidden></div>
+          </div>
+          <div class="slot-result" id="slotResult" data-i18n="slot_result_empty">Result will appear here</div>
+          <div class="slot-result-lines" id="slotResultLines" hidden></div>
+          <div class="slot-recent" id="slotRecent"></div>
+        </div>
+
+        <aside class="slot-panel game-console-panel">
+          <div class="balance-card">
+            <span data-i18n="cashier_your_balance">Your Balance</span>
+            <strong id="slot-balance">&euro;0</strong>
+          </div>
+          <div class="slot-bet-box">
+            <strong data-i18n="slot_bet">Bet</strong>
+            <div class="chip-row" id="slotBets"></div>
+            <button class="btn btn-primary slot-spin-btn" type="button" id="slotSpin">SPIN</button>
+          </div>
+          <div class="slot-paytable">
+            <strong data-i18n="slot_paytable">Paytable</strong>
+            <div id="slotPaytable"></div>
+          </div>
+        </aside>
+      </section>
+    </div>
+  </main>
+
+  <div class="toasts" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="../js/config/app-domain.js?v=ux-trust-v1"></script>
+  <script src="../js/config/runtime.js?v=infra-v1"></script>
+  <script src="../js/core/constants.js?v=optimization-v2"></script>
+  <script src="../js/core/store.js?v=vip-click-batch-v1"></script>
+  <script src="../js/core/ui.js?v=optimization-v2"></script>
+  <script src="../js/core/auth.js?v=optimization-v2"></script>
+  <script src="../js/games/lucky-bamboo.js?v=optimization-v2"></script>
+  <script src="../js/core/bootstrap.js?v=offline-i18n-v1"></script>
+</body>
+</html>

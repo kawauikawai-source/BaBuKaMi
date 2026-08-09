@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Bambiku Casino</title>
+  <link rel="stylesheet" href="../css/style.css?v=inner-page-grid-v1"/>
+  <link rel="icon" href="data:,"/>
+</head>
+<body data-page="blocks" data-page-root="blocks">
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="../index.html" class="logo" data-route="home"><span class="dot"></span>Bambi<span>ku</span></a>
+        <ul class="nav-links">
+          <li><a href="../index.html#games" data-route="games" data-i18n="nav_games">Games</a></li>
+          <li><a href="../index.html#bonuses" data-route="bonuses" data-i18n="nav_bonuses">Bonuses</a></li>
+          <li><a href="../index.html#vip" data-route="vip" data-i18n="nav_vip">VIP</a></li>
+        </ul>
+        <div class="nav-actions">
+          <div class="lang-switch">
+            <button class="lang-btn active" type="button" data-lang="ru">RU</button>
+            <button class="lang-btn" type="button" data-lang="en">EN</button>
+          </div>
+          <div class="nav-auth" data-auth-nav>
+            <a href="deposit.html" class="btn btn-primary btn-sm" data-route="deposit" data-i18n="nav_deposit">Cashier</a>
+            <a href="profile.html" class="btn btn-outline btn-sm" data-route="profile" data-i18n="nav_profile">Profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell game-page blocks-page">
+    <div class="container">
+      <header class="page-head game-head game-command-head" data-system="NP-15 // 10x15">
+        <div class="game-command-copy">
+          <div class="game-command-kicker"><i aria-hidden="true"></i><span data-i18n="blocks_lore_status">THE PYRAMID DEMANDS ORDER</span><b>NP-15</b></div>
+          <p class="label" data-i18n="blocks_label">Skill game</p>
+          <h1 class="page-title" data-i18n="blocks_title">Neon Pyramids</h1>
+          <p class="page-sub" data-i18n="blocks_sub">Drop neon pieces, clear lines, grow the multiplier, and cash out before the stack burns out.</p>
+          <div class="game-command-meta" aria-label="Neon Pyramids parameters">
+            <span><small data-i18n="blocks_lore_1_label">NEON</small><strong data-i18n="blocks_lore_1_value">AWAKENS</strong></span>
+            <span><small data-i18n="blocks_lore_2_label">LINES</small><strong data-i18n="blocks_lore_2_value">BECOME POWER</strong></span>
+            <span><small data-i18n="blocks_lore_3_label">HEIGHT</small><strong data-i18n="blocks_lore_3_value">INVITES RUIN</strong></span>
+          </div>
+        </div>
+        <a href="../index.html#games" class="btn btn-outline game-command-back" data-route="games" data-i18n="roulette_back">Back to Games</a>
+      </header>
+
+      <section class="blocks-layout game-console-layout">
+        <div class="blocks-stage game-console-stage">
+          <div class="blocks-board-shell">
+            <div class="blocks-board" id="blocksBoard" aria-live="polite"></div>
+            <div class="blocks-floating-piece" id="blocksFloatingPiece" aria-hidden="true"></div>
+          </div>
+          <div class="blocks-status" id="blocksStatus" data-i18n="blocks_waiting">Choose a bet and start a round</div>
+          <div class="blocks-recent" id="blocksRecent"></div>
+        </div>
+
+        <aside class="blocks-panel game-console-panel">
+          <div class="balance-card">
+            <span data-i18n="cashier_your_balance">Your Balance</span>
+            <strong id="blocks-balance">&euro;0</strong>
+          </div>
+          <div class="blocks-meter">
+            <span data-i18n="blocks_multiplier">Multiplier</span>
+            <strong id="blocksMultiplier">0.10x</strong>
+            <small id="blocksPotential">&euro;0.00</small>
+          </div>
+          <div class="blocks-stats">
+            <div><span data-i18n="blocks_score">Score</span><strong id="blocksScore">0</strong></div>
+            <div><span data-i18n="blocks_lines">Lines</span><strong id="blocksLines">0</strong></div>
+            <div><span data-i18n="blocks_pieces">Pieces</span><strong id="blocksPieces">0</strong></div>
+            <div><span data-i18n="blocks_speed">Speed</span><strong id="blocksSpeed">650ms</strong></div>
+          </div>
+          <div class="blocks-next-box" id="blocksNextBox" hidden>
+            <strong data-i18n="blocks_next">Next</strong>
+            <div class="blocks-next-list" id="blocksNext"></div>
+          </div>
+          <div class="slot-bet-box">
+            <strong data-i18n="mines_bet">Bet</strong>
+            <div class="chip-row" id="blocksBets"></div>
+          </div>
+          <div class="blocks-difficulty-box">
+            <strong data-i18n="blocks_difficulty">Difficulty</strong>
+            <div class="blocks-difficulty-row" id="blocksDifficulty"></div>
+          </div>
+          <button class="btn btn-primary blocks-action-btn" type="button" id="blocksAction">START</button>
+          <button class="btn btn-outline btn-sm blocks-forfeit-btn" type="button" id="blocksForfeit" hidden data-i18n="blocks_forfeit">FORFEIT</button>
+        </aside>
+      </section>
+    </div>
+  </main>
+
+  <div class="blocks-controls-overlay" id="blocksControlsOverlay" aria-hidden="true">
+    <div class="blocks-controls-modal" role="dialog" aria-modal="true" aria-labelledby="blocksControlsTitle">
+      <p class="label" data-i18n="blocks_controls_label">Controls</p>
+      <h2 id="blocksControlsTitle" data-i18n="blocks_controls_title">Before you start</h2>
+      <p class="blocks-controls-copy" data-i18n="blocks_controls_sub">Use keyboard controls to play faster and cash out in time.</p>
+      <div class="blocks-controls-grid">
+        <div class="blocks-control-row">
+          <span class="blocks-keycap">A</span><span class="blocks-keycap">D</span><span class="blocks-keycap">&larr;</span><span class="blocks-keycap">&rarr;</span>
+          <strong data-i18n="blocks_controls_move">Move</strong>
+        </div>
+        <div class="blocks-control-row">
+          <span class="blocks-keycap">W</span><span class="blocks-keycap">&uarr;</span>
+          <strong data-i18n="blocks_controls_rotate">Rotate</strong>
+        </div>
+        <div class="blocks-control-row">
+          <span class="blocks-keycap">S</span><span class="blocks-keycap">&darr;</span>
+          <strong data-i18n="blocks_controls_soft">Soft drop</strong>
+        </div>
+        <div class="blocks-control-row">
+          <span class="blocks-keycap wide">Space</span>
+          <strong data-i18n="blocks_controls_hard">Hard drop</strong>
+        </div>
+        <div class="blocks-control-row accent">
+          <span class="blocks-keycap">C</span>
+          <strong data-i18n="blocks_controls_cashout">CASHOUT</strong>
+        </div>
+      </div>
+      <label class="blocks-controls-skip">
+        <input type="checkbox" id="blocksControlsSkip"/>
+        <span data-i18n="blocks_controls_skip">Do not show again</span>
+      </label>
+      <div class="blocks-controls-actions">
+        <button class="btn btn-outline" type="button" data-blocks-controls="cancel" data-i18n="confirm_cancel">confirm_cancel</button>
+        <button class="btn btn-primary" type="button" data-blocks-controls="start" data-i18n="blocks_controls_start">START ROUND</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toasts" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="../js/config/app-domain.js?v=ux-trust-v1"></script>
+  <script src="../js/config/runtime.js?v=infra-v1"></script>
+  <script src="../js/core/constants.js?v=optimization-v2"></script>
+  <script src="../js/core/store.js?v=vip-click-batch-v1"></script>
+  <script src="../js/core/ui.js?v=optimization-v2"></script>
+  <script src="../js/core/auth.js?v=optimization-v2"></script>
+  <script src="../js/games/neon-pyramids.js?v=optimization-v2"></script>
+  <script src="../js/core/bootstrap.js?v=offline-i18n-v1"></script>
+</body>
+</html>

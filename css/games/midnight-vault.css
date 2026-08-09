@@ -1,0 +1,120 @@
+/* Bambiku Midnight Vault - generated from the former monolithic stylesheet. */
+
+.plinko-page.page-shell{background:radial-gradient(circle at 50% 0%,rgba(27,78,126,.18),transparent 34%),radial-gradient(circle at 9% 24%,rgba(107,126,145,.07),transparent 28%),linear-gradient(180deg,#04060b 0%,#030408 62%,#060708 100%)}
+
+.plinko-page .container{max-width:1360px}
+
+.plinko-page .page-head{margin-bottom:26px}
+
+.plinko-page .label{color:#9cc9e8}
+
+.plinko-layout{display:grid;grid-template-columns:minmax(760px,1fr) 356px;gap:22px;align-items:start}
+
+.plinko-stage,.plinko-panel{border:1px solid rgba(156,201,232,.14);border-radius:18px;background:linear-gradient(180deg,#101722,#070a10 58%,#050609);box-shadow:0 34px 70px rgba(0,0,0,.44),inset 0 1px 0 rgba(255,255,255,.055),inset 0 0 0 1px rgba(156,201,232,.035);overflow:hidden}
+
+.plinko-stage{position:relative;padding:18px;overflow:hidden}
+
+.plinko-stage::before,.plinko-panel::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(90deg,transparent 0 10%,rgba(101,151,187,.035) 10.2% 10.6%,transparent 10.8% 42%,rgba(184,205,222,.025) 42.2% 42.55%,transparent 42.8% 78%,rgba(101,151,187,.03) 78.2% 78.5%,transparent 78.8%),repeating-linear-gradient(90deg,rgba(184,205,222,.026) 0 1px,transparent 1px 58px),repeating-linear-gradient(0deg,rgba(184,205,222,.018) 0 1px,transparent 1px 46px);opacity:.66}
+
+.plinko-stage::after,.plinko-panel::after{content:'';position:absolute;inset:-18%;z-index:0;pointer-events:none;background:linear-gradient(108deg,transparent 0 36%,rgba(222,237,247,.105) 43%,rgba(112,148,178,.055) 48%,transparent 58%);opacity:.48;mix-blend-mode:screen;animation:plinkoVaultScan 13s cubic-bezier(.45,0,.2,1) infinite alternate}
+
+.plinko-stage>*,.plinko-panel>*{position:relative;z-index:1}
+
+.plinko-stage.is-dropping .plinko-board-shell{border-color:rgba(156,201,232,.42);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),inset 0 -24px 44px rgba(0,0,0,.36),0 24px 48px rgba(0,0,0,.34),0 0 28px rgba(80,145,190,.12)}
+
+.plinko-stage.is-win .plinko-board-shell{border-color:rgba(184,205,222,.56);box-shadow:inset 0 0 52px rgba(115,156,190,.09),0 0 34px rgba(115,156,190,.14),0 24px 48px rgba(0,0,0,.34);animation:plinkoCanvasWin .72s ease-out}
+
+.plinko-stage.is-loss .plinko-board-shell{border-color:rgba(150,73,65,.5);box-shadow:inset 0 0 46px rgba(150,73,65,.07),0 0 24px rgba(150,73,65,.1),0 24px 48px rgba(0,0,0,.34);animation:plinkoCanvasLoss .42s ease-out}
+
+.plinko-stage.is-push .plinko-board-shell{border-color:rgba(120,151,177,.34)}
+
+.plinko-board-shell{position:relative;z-index:1;padding:14px;border-radius:18px;border:1px solid rgba(156,201,232,.24);background:linear-gradient(180deg,#20232a,#0c1018 20%,#05070c 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -24px 44px rgba(0,0,0,.36),0 24px 48px rgba(0,0,0,.34);transition:border-color .25s ease,box-shadow .25s ease}
+
+.plinko-board{position:relative;height:616px;border-radius:14px;border:1px solid rgba(94,132,163,.25);background:#050914;box-shadow:inset 0 0 0 1px rgba(255,255,255,.025),inset 0 0 64px rgba(0,0,0,.52);overflow:hidden}
+
+.plinko-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+.plinko-panel{position:sticky;top:92px;padding:18px;display:grid;gap:12px;border-color:rgba(156,201,232,.16);background:linear-gradient(180deg,#111722,#080b11 64%,#050609)}
+
+.plinko-panel .balance-card{min-height:98px;margin-bottom:0;border-color:rgba(184,205,222,.18);background:radial-gradient(circle at 82% 18%,rgba(156,201,232,.12),transparent 38%),radial-gradient(circle at 18% 0,rgba(107,137,164,.08),transparent 34%),linear-gradient(180deg,#111820,#080a0f);box-shadow:inset 0 1px 0 rgba(255,255,255,.055),inset 0 0 0 1px rgba(184,205,222,.03),0 14px 28px rgba(0,0,0,.22)}
+
+.plinko-panel .balance-card strong{color:#cbd8e3;text-shadow:0 0 22px rgba(115,156,190,.18)}
+
+.plinko-panel .balance-card span{color:#8fa3b7}
+
+.plinko-control-box,.plinko-panel .slot-bet-box{width:100%;min-width:0;border:1px solid rgba(156,201,232,.1);border-radius:14px;background:linear-gradient(180deg,rgba(20,27,37,.76),rgba(7,10,16,.86));padding:12px;display:grid;gap:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.035)}
+
+.plinko-control-box[hidden]{display:none!important}
+
+.plinko-control-box>strong,.plinko-panel .slot-bet-box>strong{font-size:13px}
+
+.plinko-panel .chip-row{grid-template-columns:repeat(4,var(--bet-chip-size));justify-content:center;gap:var(--bet-chip-gap);margin-bottom:0}
+
+.plinko-panel .chip-btn{border-color:#8da3b6;background:rgba(141,163,182,.08);color:#d4e1ec;box-shadow:none}
+
+.plinko-panel .chip-btn.selected{border:2px dashed #d9e6f0;background:radial-gradient(circle at 34% 25%,rgba(255,255,255,.34),transparent 30%),linear-gradient(145deg,#dbe8f2,#a8bfd1 58%,#6f879b);color:#05080d;box-shadow:0 0 0 4px rgba(184,205,222,.18),0 10px 22px rgba(0,0,0,.24),inset 0 0 0 3px rgba(9,15,22,.34),inset 0 0 0 8px rgba(236,247,255,.28)}
+
+.plinko-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+
+.plinko-option{min-height:36px;border:1px solid rgba(156,201,232,.12);border-radius:10px;background:#080b12;color:#b9c7d5;font-family:var(--font);font-weight:900;cursor:pointer}
+
+.plinko-option:hover{border-color:rgba(156,201,232,.3)}
+
+.plinko-option.selected{border-color:rgba(184,205,222,.82);background:linear-gradient(180deg,rgba(184,205,222,.15),rgba(92,116,138,.08));color:#dce8f2;box-shadow:0 0 0 3px rgba(184,205,222,.055)}
+
+.plinko-drop-btn{height:62px;border-radius:18px;background:#b8cdde;color:#04070c;font-size:15px;font-weight:950;letter-spacing:0;text-transform:uppercase;box-shadow:0 16px 34px rgba(79,112,141,.18),inset 0 1px 0 rgba(255,255,255,.28)}
+
+.plinko-drop-btn:hover{background:#c8d8e6}
+
+.plinko-drop-btn:disabled{opacity:.68;cursor:not-allowed}
+
+.plinko-result{position:relative;z-index:1;margin:16px auto 0;width:max-content;max-width:100%;padding:10px 18px;border:1px solid rgba(156,201,232,.14);border-radius:999px;background:rgba(3,5,9,.58);color:#aeb8c7;font-weight:900;text-align:center}
+
+.plinko-result.win{border-color:rgba(184,205,222,.52);color:#dce8f2;box-shadow:0 0 22px rgba(115,156,190,.12)}
+
+.plinko-result.loss{border-color:rgba(150,73,65,.52);color:#d98f86;box-shadow:0 0 18px rgba(150,73,65,.1)}
+
+.plinko-result.push{border-color:rgba(120,151,177,.3);color:#cdd8e6}
+
+.plinko-recent{position:relative;z-index:1;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px;min-height:26px}
+
+.plinko-recent-item{padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);font-size:12px;font-weight:900}
+
+.plinko-recent-item.win{border-color:rgba(184,205,222,.38);color:#dce8f2;background:rgba(184,205,222,.075)}
+
+.plinko-recent-item.loss{border-color:rgba(150,73,65,.32);color:#d98f86;background:rgba(150,73,65,.07)}
+
+.plinko-recent-item.push{color:#cdd8e6}
+
+
+
+.roulette-layout{grid-template-columns:minmax(0,1fr) 360px}
+
+.holdem-layout{grid-template-columns:minmax(0,1fr) 360px}
+
+.plinko-layout{grid-template-columns:minmax(760px,1fr) 360px}
+
+.roulette-panel,.slot-panel,.crash-panel,.mines-panel,.blocks-panel,.holdem-panel,.plinko-panel{width:100%;box-sizing:border-box}
+
+.roulette-panel .balance-card,.slot-panel .balance-card,.crash-panel .balance-card,.mines-panel .balance-card,.blocks-panel .balance-card,.holdem-panel .balance-card,.plinko-panel .balance-card{min-height:112px;padding:20px}
+
+.roulette-panel .balance-card strong,.slot-panel .balance-card strong,.crash-panel .balance-card strong,.mines-panel .balance-card strong,.blocks-panel .balance-card strong,.holdem-panel .balance-card strong,.plinko-panel .balance-card strong{font-size:clamp(28px,2.2vw,35px)}
+
+.roulette-panel .slot-bet-box,.slot-panel .slot-bet-box,.crash-panel .slot-bet-box,.mines-panel .slot-bet-box,.blocks-panel .slot-bet-box,.holdem-panel .slot-bet-box,.plinko-panel .slot-bet-box,.plinko-control-box{padding:16px}
+
+.roulette-spin-btn,.slot-spin-btn,.plinko-drop-btn{min-height:56px}
+
+.crash-action-btn,.mines-action-btn,.blocks-action-btn{min-height:104px}
+
+@keyframes plinkoCanvasWin{0%{filter:brightness(1)}45%{filter:brightness(1.14)}100%{filter:brightness(1)}}
+
+@keyframes plinkoCanvasLoss{0%,100%{transform:translateX(0)}35%{transform:translateX(-3px)}70%{transform:translateX(2px)}}
+
+@keyframes plinkoVaultScan{0%{transform:translate3d(-18%,-4%,0) rotate(-3deg);opacity:.28}42%{opacity:.58}100%{transform:translate3d(18%,5%,0) rotate(3deg);opacity:.38}}
+
+@media (max-width:1180px){.plinko-layout{grid-template-columns:1fr}.plinko-board{height:560px}.plinko-panel{position:relative;top:auto;order:2}.plinko-stage{order:1}.plinko-panel .chip-row{justify-content:start}}
+
+@media (max-width:720px){.plinko-stage{padding:12px}.plinko-board-shell{padding:10px}.plinko-board{height:500px}.plinko-options{grid-template-columns:repeat(3,minmax(0,1fr))}.plinko-panel .chip-row{grid-template-columns:repeat(4,minmax(50px,58px));gap:6px}.plinko-panel .chip-btn{width:100%;font-size:9.5px}}
+
+@media (prefers-reduced-motion:reduce){.plinko-stage::after,.plinko-panel::after,.plinko-stage,.plinko-board-shell{animation:none!important;transition:none!important}}
+

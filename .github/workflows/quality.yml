@@ -1,0 +1,37 @@
+name: Quality
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: windows-latest
+    env:
+      BAMBIKU_DATABASE_URL: sqlite:///bambiku-ci.db
+      BAMBIKU_SECRET_KEY: ci-only-secret-key-change-me
+      BAMBIKU_ADMIN_EMAILS: admin@example.com
+      BAMBIKU_GOOGLE_CLIENT_ID: ""
+      BAMBIKU_GOOGLE_CLIENT_SECRET: ""
+      BAMBIKU_RUN_MIGRATIONS_ON_STARTUP: "true"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: python -m pip install -r requirements.txt
+
+      - name: Run quality gate
+        shell: pwsh
+        run: ./scripts/quality.ps1

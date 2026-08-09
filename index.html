@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Bambiku Casino</title>
+  <meta name="description" content="Bambiku Casino - eight distinct worlds of fortune, risk, skill, and midnight ritual."/>
+  <link rel="stylesheet" href="css/style.css?v=account-onboarding-v1"/>
+  <link rel="icon" href="data:,"/>
+</head>
+<body data-page="home" data-page-root="home">
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="#hero" class="logo"><span class="dot"></span>Bambi<span>ku</span></a>
+        <ul class="nav-links">
+          <li><a href="#games" data-route="games" data-i18n="nav_games">Games</a></li>
+          <li><a href="#bonuses" data-route="bonuses" data-i18n="nav_bonuses">Bonuses</a></li>
+          <li><a href="#vip" data-route="vip" data-i18n="nav_vip">VIP</a></li>
+        </ul>
+        <div class="nav-actions">
+          <div class="lang-switch">
+            <button class="lang-btn active" type="button" data-lang="ru">RU</button>
+            <button class="lang-btn" type="button" data-lang="en">EN</button>
+          </div>
+          <div class="nav-auth" data-auth-nav></div>
+          <button class="nav-burger" id="navBurger" type="button" aria-label="Menu" aria-controls="mobNav" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mob-nav" id="mobNav" aria-hidden="true">
+    <a href="#games" data-route="games" data-i18n="nav_games">Games</a>
+    <a href="#bonuses" data-route="bonuses" data-i18n="nav_bonuses">Bonuses</a>
+    <a href="#vip" data-route="vip" data-i18n="nav_vip">VIP</a>
+    <a href="pages/profile.html" data-route="profile" data-i18n="nav_profile">Profile</a>
+    <a href="pages/deposit.html" data-route="deposit" data-i18n="nav_deposit">Cashier</a>
+  </div>
+
+  <section id="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge" id="heroBackendBadge" aria-live="polite">
+          <span class="hero-badge-prefix" data-i18n="hero_house_label">ДОМ //</span>
+          <span class="dot"></span>
+          <span id="heroBackendStatus">ДОМ ПРОСЫПАЕТСЯ</span>
+          <span class="hero-separator" id="heroLiveSeparator" hidden>-</span>
+          <span id="liveCount" hidden></span>
+          <span id="heroPlayersLabel" data-i18n="hero_players" hidden>platform status</span>
+        </div>
+
+        <h1 class="hero-title">
+          <span data-i18n="hero_title_1">Play Smarter.</span><br>
+          <span data-i18n="hero_title_2">Win</span>
+          <em data-i18n="hero_title_em">Bigger.</em>
+        </h1>
+
+        <p class="hero-sub" data-i18n="hero_sub">Beyond Bambiku's doors, the wheel remembers every wager, the jade grove whispers of fortune, and fate favors those who know when to stop.</p>
+
+        <div class="hero-actions" id="heroActions"></div>
+
+        <div class="hero-diagnostics" aria-label="Bambiku house diagnostics">
+          <button class="hero-diagnostic is-kawaui" id="heroKawauiDiagnostic" type="button" data-hero-lore="kawaui" aria-expanded="false" aria-controls="heroLoreConsole">
+            <span class="hero-diagnostic-label">KAWAUI // SIGNAL</span>
+            <strong id="heroKawauiState">ЖИВ</strong>
+          </button>
+          <button class="hero-diagnostic is-entity" type="button" data-hero-lore="entity" aria-expanded="false" aria-controls="heroLoreConsole">
+            <span class="hero-diagnostic-label" data-i18n="hero_entity_status_label">СТАТУС</span>
+            <strong data-i18n="hero_entity_status_value">ВЫСШЕЕ СУЩЕСТВО</strong>
+          </button>
+          <button class="hero-diagnostic is-condition" id="heroConditionDiagnostic" type="button" data-hero-lore="condition" aria-expanded="false" aria-controls="heroLoreConsole">
+            <span class="hero-diagnostic-label" data-i18n="hero_entity_condition_label">СОСТОЯНИЕ</span>
+            <strong id="heroEntityCondition">ПСИХИЧЕСКИ НЕСТАБИЛЕН</strong>
+          </button>
+          <button class="hero-diagnostic is-protocol" id="heroProtocolDiagnostic" type="button" data-hero-lore="protocol" aria-expanded="false" aria-controls="heroLoreConsole">
+            <span class="hero-diagnostic-label" data-i18n="hero_protocol_label">ПРОТОКОЛ</span>
+            <strong id="heroProtocolState">ПАКТ АКТИВЕН</strong>
+          </button>
+          <div class="hero-lore-console" id="heroLoreConsole" aria-live="polite">
+            <div class="hero-lore-sensor" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="hero-lore-copy">
+              <span id="heroLoreLabel">KAWAUI // RECORD</span>
+              <strong id="heroLoreTitle"></strong>
+              <p id="heroLoreText"></p>
+            </div>
+            <button class="hero-new-signal" id="heroNewSignal" type="button" data-i18n="hero_lore_new_signal">НОВЫЙ СИГНАЛ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker"><div class="ticker-inner"></div></div>
+
+  <section id="games" class="bg-alt">
+    <div class="container">
+      <div class="home-section-head reveal">
+        <div class="home-section-rail">
+          <p class="home-section-status"><span></span><b data-i18n="section_label_games">Casino Floor</b></p>
+          <span class="home-section-code" data-i18n="section_code_games">FLOOR // 08 WORLDS</span>
+        </div>
+        <div class="home-section-main">
+          <div class="home-section-copy">
+            <h2 class="h2" data-i18n="section_title_games">Choose Your Game</h2>
+            <p class="sub" data-i18n="section_sub_games">From classic slots to live dealer tables — every game is certified fair.</p>
+          </div>
+          <div class="home-section-mark"><span data-i18n="section_mark_games">WORLDS</span><strong>08</strong></div>
+        </div>
+      </div>
+      <div class="tabs game-category-switch reveal d1" data-active="slots" role="tablist" aria-label="Game categories">
+        <button class="tab-btn active" type="button" data-tab="slots" role="tab" aria-selected="true">
+          <span class="tab-symbol" aria-hidden="true">▦</span>
+          <span class="tab-copy"><b data-i18n="tab_slots">Слоты</b><small data-i18n="tab_slots_meta">РИСК // МИРЫ</small></span>
+        </button>
+        <button class="tab-btn" type="button" data-tab="table" role="tab" aria-selected="false">
+          <span class="tab-symbol" aria-hidden="true">♠</span>
+          <span class="tab-copy"><b data-i18n="tab_table">Настольные</b><small data-i18n="tab_table_meta">СУКНО // РЕШЕНИЯ</small></span>
+        </button>
+      </div>
+      <div class="games-grid" id="gamesGrid"></div>
+    </div>
+  </section>
+
+  <section id="bonuses">
+    <div class="container">
+      <div class="home-section-head reveal">
+        <div class="home-section-rail">
+          <p class="home-section-status"><span></span><b data-i18n="section_label_bonuses">Promotions</b></p>
+          <span class="home-section-code" data-i18n="section_code_bonuses">REWARDS // ACTIVE</span>
+        </div>
+        <div class="home-section-main">
+          <div class="home-section-copy">
+            <h2 class="h2" data-i18n="section_title_bonuses">Bonuses &amp; Offers</h2>
+            <p class="sub" data-i18n="section_sub_bonuses">Real rewards, fair wagering requirements, no hidden traps.</p>
+          </div>
+          <div class="home-section-mark"><span data-i18n="section_mark_bonuses">CODES</span><strong>02</strong></div>
+        </div>
+      </div>
+      <div class="bonuses-grid reveal d1" id="bonusesGrid"></div>
+    </div>
+  </section>
+
+  <section id="vip" class="bg-alt">
+    <div class="container">
+      <div class="home-section-head reveal">
+        <div class="home-section-rail">
+          <p class="home-section-status"><span></span><b data-i18n="section_label_vip">Loyalty Program</b></p>
+          <span class="home-section-code" data-i18n="section_code_vip">LOYALTY // FOUR RANKS</span>
+        </div>
+        <div class="home-section-main">
+          <div class="home-section-copy">
+            <h2 class="h2" data-i18n="section_title_vip">VIP Club</h2>
+            <p class="sub" data-i18n="section_sub_vip">Every bet earns points. Every point unlocks more. Rise through the ranks.</p>
+          </div>
+          <div class="home-section-mark"><span data-i18n="section_mark_vip">RANKS</span><strong>04</strong></div>
+        </div>
+      </div>
+      <div class="vip-grid reveal d1" id="vipGrid"></div>
+    </div>
+  </section>
+
+  <footer id="footer">
+    <div class="container">
+      <div class="footer-system-line">
+        <span class="footer-system-status"><i></i><b data-i18n="footer_system_label">АРХИВ ДОМА ПОДКЛЮЧЕН</b></span>
+        <span data-i18n="footer_system_code">KAWAUI // НИЖНИЙ КОНТУР</span>
+      </div>
+      <div class="footer-grid">
+        <div>
+          <div class="f-brand">Bambi<span>ku</span></div>
+          <p class="f-desc" data-i18n="footer_desc">Ночной дом Bambiku связывает восемь миров, один баланс и решения Кавая. Здесь ничего не забывается.</p>
+        </div>
+
+        <div>
+          <div class="f-col-title" data-i18n="footer_casino">МИРЫ</div>
+          <ul class="f-links">
+            <li><a href="#games" data-route="games" data-i18n="footer_slots">Игровые миры</a></li>
+            <li><a href="#games" data-route="games" data-i18n="footer_table">Настольный зал</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="f-col-title" data-i18n="footer_account">ЛИЧНЫЙ КОНТУР</div>
+          <ul class="f-links">
+            <li data-footer-auth-link><a href="#" data-modal="register" data-i18n="footer_register">Register</a></li>
+            <li data-footer-auth-link><a href="#" data-modal="login" data-i18n="footer_login">Login</a></li>
+            <li><a href="pages/profile.html" data-route="profile" data-i18n="footer_profile">Профиль</a></li>
+            <li><a href="pages/deposit.html" data-route="deposit" data-i18n="footer_deposit">Касса</a></li>
+            <li><a href="pages/deposit.html?mode=withdraw" data-route="withdraw" data-i18n="footer_withdraw">Выводы</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="f-col-title" data-i18n="footer_support">АРХИВ ДОМА</div>
+          <ul class="f-links">
+            <li><a href="pages/help.html" data-route="help" data-i18n="footer_help">База знаний</a></li>
+            <li><a class="footer-link-soon" href="pages/responsible.html" data-route="responsible"><span data-i18n="footer_responsible">Контроль игры</span><b data-i18n="trust_soon">СКОРО</b></a></li>
+            <li><a href="pages/privacy.html" data-route="privacy" data-i18n="footer_privacy">Приватность</a></li>
+            <li><a href="pages/terms.html" data-route="terms" data-i18n="footer_terms">Великий пакт</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span data-i18n="footer_signature">© 2026 BAMBIKU · СОЗДАНО KAWAUI STUDIO</span>
+        <span data-i18n="footer_node">HOUSE ARCHIVE // AP-08</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="overlay" id="modalOverlay">
+    <div class="modal auth-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalSub">
+      <button class="modal-close" type="button" data-modal-close aria-label="Close">x</button>
+      <div class="modal-logo" id="modalTitle">Bambi<span>ku</span></div>
+      <p class="modal-sub" id="modalSub" data-i18n="modal_sub_login">Welcome back! Sign in to your account.</p>
+
+      <div class="m-tabs">
+        <button class="m-tab active" type="button" data-tab="login" data-i18n="modal_tab_login">Sign In</button>
+        <button class="m-tab" type="button" data-tab="register" data-i18n="modal_tab_register">Register</button>
+      </div>
+
+      <div id="loginFormWrap">
+        <form id="loginForm" novalidate>
+          <div class="f-group">
+            <label class="f-label" for="loginEmail" data-i18n="form_email">Email Address</label>
+            <input class="f-input" id="loginEmail" type="email" data-i18n-ph="form_email_ph" placeholder="you@example.com" autocomplete="email"/>
+            <span class="f-error" id="loginEmailErr" role="alert"></span>
+          </div>
+          <div class="f-group">
+            <label class="f-label" for="loginPass" data-i18n="form_pass">Password</label>
+            <input class="f-input" id="loginPass" type="password" data-i18n-ph="form_pass_ph" placeholder="Your password" autocomplete="current-password"/>
+            <span class="f-error" id="loginPassErr" role="alert"></span>
+          </div>
+          <a href="#" class="f-forgot" data-i18n="form_forgot">Forgot password?</a>
+          <button type="submit" class="btn btn-primary f-submit" data-i18n="form_submit_login">Sign In</button>
+          <div class="f-divider" data-i18n="form_or">or continue with</div>
+          <div class="f-socials" data-social-providers></div>
+        </form>
+      </div>
+
+      <div id="registerFormWrap" hidden>
+        <form id="registerForm" novalidate>
+          <div class="register-social-head">
+            <p data-i18n="register_oauth_hint">Google or Telegram will fill in available account details.</p>
+          </div>
+          <div class="f-socials" data-social-providers></div>
+
+          <div class="register-steps" aria-label="Registration progress">
+            <button class="register-step active" type="button" data-register-jump="1"><span>01</span><strong data-i18n="register_step_account">Account</strong></button>
+            <button class="register-step" type="button" data-register-jump="2" disabled><span>02</span><strong data-i18n="register_step_personal">Identity</strong></button>
+            <button class="register-step" type="button" data-register-jump="3" disabled><span>03</span><strong data-i18n="register_step_optional">Optional</strong></button>
+            <button class="register-step" type="button" data-register-jump="4" disabled><span>04</span><strong data-i18n="register_step_review">Review</strong></button>
+          </div>
+
+          <section class="register-panel active" data-register-step="1">
+            <div class="register-panel-head"><span data-i18n="register_step_1_label">Account access</span><strong data-i18n="register_step_1_title">Create your secure login</strong></div>
+            <div class="register-form-grid">
+              <div class="f-group"><label class="f-label" for="regFirstName" data-i18n="profile_first_name">First Name</label><input class="f-input" id="regFirstName" type="text" autocomplete="given-name"/><span class="f-error" id="regFirstNameErr" role="alert"></span></div>
+              <div class="f-group"><label class="f-label" for="regLastName" data-i18n="profile_last_name">Last Name</label><input class="f-input" id="regLastName" type="text" autocomplete="family-name"/><span class="f-error" id="regLastNameErr" role="alert"></span></div>
+              <div class="f-group"><label class="f-label" for="regEmail" data-i18n="form_email">Email Address</label><input class="f-input" id="regEmail" type="email" data-i18n-ph="form_email_ph" placeholder="you@example.com" autocomplete="email"/><span class="f-error" id="regEmailErr" role="alert"></span></div>
+              <div class="f-group"><label class="f-label" for="regPass" data-i18n="form_pass">Password</label><input class="f-input" id="regPass" type="password" data-i18n-ph="form_pass_new_ph" placeholder="Min. 8 characters" autocomplete="new-password"/><span class="f-error" id="regPassErr" role="alert"></span></div>
+            </div>
+          </section>
+
+          <section class="register-panel" data-register-step="2" hidden>
+            <div class="register-panel-head"><span data-i18n="register_step_2_label">Personal details</span><strong data-i18n="register_step_2_title">Tell us who owns the account</strong></div>
+            <div class="register-form-grid">
+              <div class="f-group"><label class="f-label" for="regDob" data-i18n="profile_dob">Date of Birth</label><input class="f-input" id="regDob" type="date" autocomplete="bday"/><span class="f-error" id="regDobErr" role="alert"></span></div>
+              <div class="f-group"><label class="f-label" for="regCountry" data-i18n="profile_country">Country</label><input class="f-input" id="regCountry" type="text" autocomplete="country-name"/><span class="f-error" id="regCountryErr" role="alert"></span></div>
+            </div>
+            <p class="register-note" data-i18n="register_age_note">You must be at least 18 years old. Details can be corrected later in your profile.</p>
+          </section>
+
+          <section class="register-panel" data-register-step="3" hidden>
+            <div class="register-panel-head"><span data-i18n="register_optional_label">Optional setup</span><strong data-i18n="register_optional_title">You can finish these later</strong></div>
+            <div class="f-group"><label class="f-label" for="regPhone" data-i18n="profile_phone">Phone</label><input class="f-input" id="regPhone" type="tel" autocomplete="tel" placeholder="+48 000 000 000"/><span class="register-field-hint" data-i18n="register_phone_hint">Optional. We will remind you in the profile without limiting the account.</span></div>
+            <label class="register-kyc-choice"><input type="checkbox" id="regKycOptIn"/><span><strong data-i18n="register_kyc_title">Start KYC after registration</strong><small data-i18n="register_kyc_hint">KYC is optional for now and does not restrict games, cashier, or profile access.</small></span></label>
+          </section>
+
+          <section class="register-panel" data-register-step="4" hidden>
+            <div class="register-panel-head"><span data-i18n="register_review_label">Final check</span><strong data-i18n="register_review_title">Everything looks right?</strong></div>
+            <div class="register-review">
+              <div><span data-i18n="register_review_owner">Account owner</span><strong id="regReviewName">-</strong></div>
+              <div><span data-i18n="form_email">Email Address</span><strong id="regReviewEmail">-</strong></div>
+              <div><span data-i18n="profile_dob">Date of Birth</span><strong id="regReviewDob">-</strong></div>
+              <div><span data-i18n="register_review_optional">Optional data</span><strong id="regReviewOptional">-</strong></div>
+            </div>
+            <p class="f-footer" data-i18n-html="form_terms">By registering you agree to our <a href='pages/terms.html' target='_blank' rel='noopener noreferrer'>Terms</a> and confirm you are 18+</p>
+          </section>
+
+          <div class="register-actions">
+            <button type="button" class="btn btn-outline" data-register-back hidden data-i18n="register_back">Back</button>
+            <button type="button" class="btn btn-primary" data-register-next data-i18n="register_continue">Continue</button>
+            <button type="submit" class="btn btn-primary" data-register-submit hidden data-i18n="form_submit_register">Create Account</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="toasts" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="cookie-banner" id="cookieBanner">
+    <div class="cookie-inner">
+      <div class="cookie-icon">18+</div>
+      <div class="cookie-text">
+        <strong class="cookie-title" data-i18n="cookie_title">We use cookies</strong>
+        <p class="cookie-sub" data-i18n-html="cookie_sub">This site uses cookies. By using it you confirm you are <strong>18+</strong> and agree to our <a href='{{privacyUrl}}'>Privacy Policy</a>.</p>
+      </div>
+      <div class="cookie-actions">
+        <button class="btn btn-outline btn-sm" type="button" data-cookie-choice="essential" data-i18n="cookie_decline">Essential Only</button>
+        <button class="btn btn-primary btn-sm" type="button" data-cookie-choice="all" data-i18n="cookie_accept">Accept All</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config/app-domain.js?v=home-finish-v1"></script>
+  <script src="js/config/runtime.js?v=infra-v1"></script>
+  <script src="js/core/constants.js?v=kawaui-terminal-v3"></script>
+  <script src="js/core/store.js?v=account-onboarding-v1"></script>
+  <script src="js/core/ui.js?v=optimization-v2"></script>
+  <script src="js/core/auth.js?v=account-onboarding-v1"></script>
+  <script src="js/core/bootstrap.js?v=offline-i18n-v1"></script>
+</body>
+</html>

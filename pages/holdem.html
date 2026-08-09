@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Bambiku Casino</title>
+  <link rel="stylesheet" href="../css/style.css?v=inner-page-grid-v1"/>
+  <link rel="icon" href="data:,"/>
+</head>
+<body data-page="holdem" data-page-root="holdem">
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="../index.html" class="logo" data-route="home"><span class="dot"></span>Bambi<span>ku</span></a>
+        <ul class="nav-links">
+          <li><a href="../index.html#games" data-route="games" data-i18n="nav_games">Games</a></li>
+          <li><a href="../index.html#bonuses" data-route="bonuses" data-i18n="nav_bonuses">Bonuses</a></li>
+          <li><a href="../index.html#vip" data-route="vip" data-i18n="nav_vip">VIP</a></li>
+        </ul>
+        <div class="nav-actions">
+          <div class="lang-switch">
+            <button class="lang-btn active" type="button" data-lang="ru">RU</button>
+            <button class="lang-btn" type="button" data-lang="en">EN</button>
+          </div>
+          <div class="nav-auth" data-auth-nav>
+            <a href="deposit.html" class="btn btn-primary btn-sm" data-route="deposit" data-i18n="nav_deposit">Cashier</a>
+            <a href="profile.html" class="btn btn-outline btn-sm" data-route="profile" data-i18n="nav_profile">Profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell game-page holdem-page">
+    <div class="container">
+      <header class="page-head game-head game-command-head" data-system="TH-01 // 2+5">
+        <div class="game-command-copy">
+          <div class="game-command-kicker"><i aria-hidden="true"></i><span data-i18n="holdem_lore_status">THE DEALER KNOWS YOUR TELL</span><b>TH-01</b></div>
+          <p class="label" data-i18n="holdem_label">holdem_label</p>
+          <h1 class="page-title" data-i18n="holdem_title">holdem_title</h1>
+          <p class="page-sub" data-i18n="holdem_sub">holdem_sub</p>
+          <div class="game-command-meta" aria-label="Texas Hold'em parameters">
+            <span><small data-i18n="holdem_lore_1_label">ANTE</small><strong data-i18n="holdem_lore_1_value">OPENS THE DOOR</strong></span>
+            <span><small data-i18n="holdem_lore_2_label">FLOP</small><strong data-i18n="holdem_lore_2_value">CHANGES FATE</strong></span>
+            <span><small data-i18n="holdem_lore_3_label">RIVER</small><strong data-i18n="holdem_lore_3_value">TELLS THE TRUTH</strong></span>
+          </div>
+        </div>
+        <a href="../index.html#games" class="btn btn-outline game-command-back" data-route="games" data-i18n="roulette_back">Back to Games</a>
+      </header>
+
+      <section class="holdem-layout game-console-layout">
+        <div class="holdem-table-shell game-console-stage" id="holdemTableShell">
+          <div class="holdem-table-felt">
+            <div class="holdem-seat dealer-seat">
+              <span class="holdem-seat-label" data-i18n="holdem_dealer">holdem_dealer</span>
+              <div class="holdem-cards" id="holdemDealerCards"></div>
+              <small id="holdemDealerHand"></small>
+            </div>
+
+            <div class="holdem-community">
+              <span class="holdem-seat-label" data-i18n="holdem_board">holdem_board</span>
+              <div class="holdem-cards community-cards" id="holdemCommunityCards"></div>
+              <div class="holdem-pot" id="holdemPot">Pot &euro;0.00</div>
+            </div>
+
+            <div class="holdem-seat player-seat">
+              <span class="holdem-seat-label" data-i18n="holdem_player">holdem_player</span>
+              <div class="holdem-cards" id="holdemPlayerCards"></div>
+              <small id="holdemPlayerHand"></small>
+            </div>
+          </div>
+          <div class="holdem-result" id="holdemResult" data-i18n="holdem_waiting">holdem_waiting</div>
+          <div class="holdem-recent" id="holdemRecent"></div>
+        </div>
+
+        <aside class="holdem-panel game-console-panel">
+          <div class="balance-card">
+            <span data-i18n="cashier_your_balance">Your Balance</span>
+            <strong id="holdem-balance">&euro;0</strong>
+          </div>
+          <div class="holdem-info-grid">
+            <div><span data-i18n="holdem_ante">holdem_ante</span><strong id="holdemAnte">&euro;5.00</strong></div>
+            <div><span data-i18n="holdem_call">holdem_call</span><strong id="holdemCall">&euro;10.00</strong></div>
+          </div>
+          <div class="slot-bet-box">
+            <strong data-i18n="holdem_ante">holdem_ante</strong>
+            <div class="chip-row" id="holdemBets"></div>
+          </div>
+          <div class="holdem-actions">
+            <button class="btn btn-primary holdem-main-btn" type="button" id="holdemStart">START</button>
+            <button class="btn btn-primary holdem-call-btn" type="button" id="holdemCallBtn" hidden>CALL 2x</button>
+            <button class="btn btn-outline holdem-fold-btn" type="button" id="holdemFoldBtn" hidden>FOLD</button>
+          </div>
+          <button class="btn btn-outline holdem-rules-btn" type="button" id="holdemRulesOpen" data-i18n="holdem_rules_button">holdem_rules_button</button>
+        </aside>
+      </section>
+    </div>
+  </main>
+
+  <div class="holdem-rules-overlay" id="holdemRulesOverlay" aria-hidden="true">
+    <div class="holdem-rules-modal" role="dialog" aria-modal="true" aria-labelledby="holdemRulesTitle">
+      <p class="label" data-i18n="holdem_label">holdem_label</p>
+      <h2 id="holdemRulesTitle" data-i18n="holdem_rules_title">holdem_rules_title</h2>
+      <p class="holdem-rules-copy" data-i18n="holdem_rules_copy">holdem_rules_copy</p>
+      <div class="holdem-rules-list">
+        <div><strong data-i18n="holdem_rules_ante_title">holdem_rules_ante_title</strong><p data-i18n="holdem_rules_ante_copy">holdem_rules_ante_copy</p></div>
+        <div><strong data-i18n="holdem_rules_call_title">holdem_rules_call_title</strong><p data-i18n="holdem_rules_call_copy">holdem_rules_call_copy</p></div>
+        <div><strong data-i18n="holdem_rules_fold_title">holdem_rules_fold_title</strong><p data-i18n="holdem_rules_fold_copy">holdem_rules_fold_copy</p></div>
+        <div><strong data-i18n="holdem_rules_dealer_title">holdem_rules_dealer_title</strong><p data-i18n="holdem_rules_dealer_copy">holdem_rules_dealer_copy</p></div>
+        <div><strong data-i18n="holdem_rules_compare_title">holdem_rules_compare_title</strong><p data-i18n="holdem_rules_compare_copy">holdem_rules_compare_copy</p></div>
+      </div>
+      <section class="holdem-rank-gallery" aria-labelledby="holdemRankTitle">
+        <h3 id="holdemRankTitle" data-i18n="holdem_rules_rank_title">holdem_rules_rank_title</h3>
+        <div class="holdem-rank-grid" id="holdemRankGrid"></div>
+      </section>
+      <button class="btn btn-primary holdem-rules-close" type="button" data-holdem-rules-close data-i18n="vip_clicker_close">Close</button>
+    </div>
+  </div>
+
+  <div class="toasts" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="../js/config/app-domain.js?v=ux-trust-v1"></script>
+  <script src="../js/config/runtime.js?v=infra-v1"></script>
+  <script src="../js/core/constants.js?v=optimization-v2"></script>
+  <script src="../js/core/store.js?v=vip-click-batch-v1"></script>
+  <script src="../js/core/ui.js?v=optimization-v2"></script>
+  <script src="../js/core/auth.js?v=optimization-v2"></script>
+  <script src="../js/games/texas-holdem.js?v=optimization-v2"></script>
+  <script src="../js/core/bootstrap.js?v=offline-i18n-v1"></script>
+</body>
+</html>

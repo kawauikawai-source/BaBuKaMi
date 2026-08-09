@@ -1,0 +1,325 @@
+{
+  "slots": [
+    {
+      "id": 1,
+      "slug": "dragons-fortune",
+      "url": "pages/crash.html?id=dragons-fortune&v=kawaui-fortune-rtp96-v1",
+      "name_ru": "Удача Кавая",
+      "name_en": "Kawaui Fortune",
+      "rtp": "96.0%",
+      "volatility_ru": "Высокая",
+      "volatility_en": "High",
+      "tag": "HOT",
+      "emoji": "✨",
+      "players": 1243
+    },
+    {
+      "id": 2,
+      "slug": "neon-pyramids",
+      "url": "pages/blocks.html?id=neon-pyramids&v=neon-pyramids-pressure-v1",
+      "name_ru": "Неоновые Пирамиды",
+      "name_en": "Neon Pyramids",
+      "type_ru": "Skill Game",
+      "type_en": "Skill Game",
+      "volatility_ru": "Растущая",
+      "volatility_en": "Rising",
+      "tag": "NEW",
+      "emoji": "🔺",
+      "players": 876
+    },
+    {
+      "id": 3,
+      "slug": "lucky-bamboo",
+      "url": "pages/slot.html?id=lucky-bamboo&v=lucky-bamboo-rtp96-v1",
+      "name_ru": "Счастливый Бамбук",
+      "name_en": "Lucky Bamboo",
+      "rtp": "96.3%",
+      "volatility_ru": "Средняя",
+      "volatility_en": "Medium",
+      "tag": "TOP",
+      "emoji": "🎋",
+      "players": 2109
+    },
+    {
+      "id": 4,
+      "slug": "solar-wilds",
+      "url": "pages/mines.html?id=solar-wilds&v=eclipse-hunt-recent-v1",
+      "name_ru": "Охота Затмения",
+      "name_en": "Eclipse Hunt",
+      "rtp": "96.0%",
+      "volatility_ru": "Высокая",
+      "volatility_en": "High",
+      "tag": "",
+      "emoji": "\u2600\ufe0f",
+      "players": 654
+    },
+    {
+      "id": 5,
+      "slug": "midnight-vault",
+      "url": "pages/plinko.html?id=midnight-vault&v=midnight-vault-panel-v1",
+      "name_ru": "Полночное Хранилище",
+      "name_en": "Midnight Vault",
+      "rtp": "96.0%",
+      "volatility_ru": "Средняя",
+      "volatility_en": "Medium",
+      "tag": "HOT",
+      "emoji": "🌙",
+      "players": 1891
+    },
+    {
+      "id": 6,
+      "slug": "arctic-protocol",
+      "url": "pages/survival.html?id=arctic-protocol&v=arctic-protocol-command-v5",
+      "name_ru": "Арктический Протокол",
+      "name_en": "Arctic Protocol",
+      "type_ru": "Игра на выживание",
+      "type_en": "Survival Skill Game",
+      "tag": "NEW",
+      "emoji": "❄️",
+      "players": 432
+    },
+    {
+      "id": 11,
+      "slug": "black-tide-protocol",
+      "name_ru": "Протокол Чёрного Прилива",
+      "name_en": "Black Tide Protocol",
+      "type_ru": "Сюжетное выживание",
+      "type_en": "Narrative Survival",
+      "tag": "SOON",
+      "emoji": "Ω",
+      "future": true,
+      "players": 0
+    },
+    {
+      "id": 12,
+      "slug": "last-signal",
+      "name_ru": "Последний Сигнал",
+      "name_en": "Last Signal",
+      "type_ru": "Космический протокол",
+      "type_en": "Space Protocol",
+      "tag": "SOON",
+      "emoji": "∆",
+      "future": true,
+      "players": 0
+    },
+    {
+      "id": 13,
+      "slug": "sunless-city",
+      "name_ru": "Город Без Солнца",
+      "name_en": "Sunless City",
+      "type_ru": "Сюжетная экспедиция",
+      "type_en": "Narrative Expedition",
+      "tag": "SOON",
+      "emoji": "◉",
+      "future": true,
+      "players": 0
+    },
+    {
+      "id": 14,
+      "slug": "chamber-zero",
+      "name_ru": "Нулевая Палата",
+      "name_en": "Chamber Zero",
+      "type_ru": "Психологический протокол",
+      "type_en": "Psychological Protocol",
+      "tag": "SOON",
+      "emoji": "0",
+      "future": true,
+      "players": 0
+    }
+  ],
+  "table": [
+    {
+      "id": 7,
+      "slug": "european-roulette",
+      "url": "pages/game.html?id=european-roulette&v=roulette-advanced-panel-smooth-v1",
+      "name_ru": "Европейская Рулетка",
+      "name_en": "European Roulette",
+      "type_ru": "Рулетка",
+      "type_en": "Roulette",
+      "tag": "LIVE",
+      "emoji": "🎡",
+      "players": 88
+    },
+    {
+      "id": 8,
+      "slug": "texas-holdem",
+      "url": "pages/holdem.html?id=texas-holdem&v=texas-holdem-canvas-v2",
+      "name_ru": "Техасский Холдем",
+      "name_en": "Texas Hold'em",
+      "type_ru": "Покер",
+      "type_en": "Poker",
+      "tag": "NEW",
+      "emoji": "♠️",
+      "players": 144
+    },
+    {
+      "id": 9,
+      "slug": "blackjack-pro",
+      "name_ru": "Блэкджек Про",
+      "name_en": "Blackjack Pro",
+      "type_ru": "Блэкджек",
+      "type_en": "Blackjack",
+      "tag": "TOP",
+      "emoji": "🃏",
+      "players": 213
+    },
+    {
+      "id": 10,
+      "slug": "baccarat-vip",
+      "name_ru": "Баккара VIP",
+      "name_en": "Baccarat VIP",
+      "type_ru": "Баккара",
+      "type_en": "Baccarat",
+      "tag": "VIP",
+      "emoji": "💎",
+      "players": 67
+    },
+    {
+      "id": 15,
+      "slug": "midnight-dealer",
+      "name_ru": "Дилер Полуночи",
+      "name_en": "Midnight Dealer",
+      "type_ru": "Сюжетная карточная игра",
+      "type_en": "Narrative Card Game",
+      "tag": "SOON",
+      "emoji": "♣",
+      "future": true,
+      "players": 0
+    }
+  ],
+  "bonuses": [
+    {
+      "id": 1,
+      "title_ru": "Промокод новичка €80",
+      "title_en": "New Player Promo €80",
+      "amount": "KAWAUI",
+      "desc_ru": "Откройте кассу — код уже будет введён и готов к проверке.",
+      "desc_en": "Open the cashier with the code already filled in and ready to check.",
+      "badge_ru": "НОВЫМ ИГРОКАМ",
+      "badge_en": "NEW PLAYERS",
+      "icon": "✦",
+      "promo_code": "KAWAUI"
+    },
+    {
+      "id": 2,
+      "title_ru": "Промокод новичка €100",
+      "title_en": "New Player Promo €100",
+      "amount": "KAWAUI2",
+      "desc_ru": "Второй стартовый код — переход сразу откроет промо-режим кассы.",
+      "desc_en": "A second starter code that opens the cashier directly in promo mode.",
+      "badge_ru": "НОВЫМ ИГРОКАМ",
+      "badge_en": "NEW PLAYERS",
+      "icon": "◆",
+      "promo_code": "KAWAUI2"
+    },
+    {
+      "id": 3,
+      "title_ru": "Привилегии VIP",
+      "title_en": "VIP Privileges",
+      "amount": "4 УРОВНЯ",
+      "desc_ru": "Кэшбек, комиссия, скорость вывода и лимиты улучшаются вместе с вашим уровнем.",
+      "desc_en": "Cashback, fees, withdrawal speed, and limits improve with your tier.",
+      "badge_ru": "ПО УРОВНЮ",
+      "badge_en": "BY TIER",
+      "icon": "◇"
+    },
+    {
+      "id": 4,
+      "title_ru": "Центр миссий",
+      "title_en": "Mission Center",
+      "amount": "СКОРО",
+      "desc_ru": "Ежедневные и недельные задания, серии решений и отдельные награды появятся здесь.",
+      "desc_en": "Daily and weekly objectives, decision streaks, and dedicated rewards will appear here.",
+      "badge_ru": "В РАЗРАБОТКЕ",
+      "badge_en": "IN DEVELOPMENT",
+      "icon": "▦",
+      "future": true
+    }
+  ],
+  "vip_tiers": [
+    {
+      "level": 1,
+      "name": "Bronze",
+      "points_ru": "0-999 очков",
+      "points_en": "0-999 pts",
+      "perks_ru": [
+        "Базовые лимиты кассы",
+        "Комиссия вывода 50%",
+        "Вывод до 24 часов"
+      ],
+      "perks_en": [
+        "Base cashier limits",
+        "50% withdrawal fee",
+        "Withdrawals within 24 hours"
+      ],
+      "color": "#cd7f32",
+      "fill": 18
+    },
+    {
+      "level": 2,
+      "name": "Silver",
+      "points_ru": "1 000-4 999 очков",
+      "points_en": "1,000-4,999 pts",
+      "perks_ru": [
+        "Кэшбек 5%",
+        "Комиссия вывода 30%",
+        "Вывод до 12 часов",
+        "Персональный менеджер"
+      ],
+      "perks_en": [
+        "5% cashback",
+        "30% withdrawal fee",
+        "Withdrawals within 12 hours",
+        "Personal Manager"
+      ],
+      "color": "#a8a9ad",
+      "fill": 44
+    },
+    {
+      "level": 3,
+      "name": "Gold",
+      "points_ru": "5 000-19 999 очков",
+      "points_en": "5,000-19,999 pts",
+      "perks_ru": [
+        "Кэшбек 10%",
+        "Комиссия вывода 15%",
+        "Вывод до 4 часов",
+        "Повышенные лимиты"
+      ],
+      "perks_en": [
+        "10% cashback",
+        "15% withdrawal fee",
+        "Withdrawals within 4 hours",
+        "Higher limits"
+      ],
+      "color": "#d4af37",
+      "fill": 71
+    },
+    {
+      "level": 4,
+      "name": "Platinum",
+      "points_ru": "20 000+ очков",
+      "points_en": "20,000+ pts",
+      "perks_ru": [
+        "Кэшбек 15%",
+        "Комиссия вывода 5%",
+        "Вывод до 1 часа",
+        "Персональный менеджер"
+      ],
+      "perks_en": [
+        "15% cashback",
+        "5% withdrawal fee",
+        "Withdrawals within 1 hour",
+        "Personal Manager"
+      ],
+      "color": "#e5e4e2",
+      "fill": 100
+    }
+  ],
+  "stats": {
+    "players_online": 0,
+    "jackpot_start": 0,
+    "games_count": 5,
+    "payout_rate": 0
+  }
+}

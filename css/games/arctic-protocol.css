@@ -1,0 +1,2658 @@
+/* Bambiku Arctic Protocol - generated from the former monolithic stylesheet. */
+
+/* Arctic Protocol */
+
+body[data-page="survival"] {
+
+  --bg: #05080d;
+
+  --bg-2: #08111a;
+
+  --bg-3: #0d1822;
+
+  --bg-card: #09121b;
+
+  --border: rgba(143, 194, 211, .11);
+
+  --border-h: rgba(91, 215, 236, .38);
+
+  --accent: #5bd7ec;
+
+  --accent-dim: rgba(91, 215, 236, .1);
+
+  --accent-glow: rgba(91, 215, 236, .25);
+
+  --text-2: #9aafbc;
+
+  --text-3: #647d8c;
+
+  --survival-ice: #a9d8e9;
+
+  --survival-cyan: #5bd7ec;
+
+  --survival-green: #57d7b3;
+
+  --survival-amber: #e5b968;
+
+  --survival-red: #ff625f;
+
+  --survival-metal: #111923;
+
+  background:
+
+    linear-gradient(rgba(18, 30, 40, .16) 1px, transparent 1px),
+
+    linear-gradient(90deg, rgba(18, 30, 40, .16) 1px, transparent 1px),
+
+    #05080d;
+
+  background-size: 56px 56px;
+
+}
+
+
+
+body[data-page="survival"] #navbar {
+
+  padding: 14px 0;
+
+  border-color: rgba(121, 184, 205, .11);
+
+  background:
+
+    linear-gradient(90deg, rgba(91, 215, 236, .035), transparent 30%),
+
+    rgba(4, 8, 13, .88);
+
+  backdrop-filter: blur(20px);
+
+  box-shadow: 0 12px 38px rgba(0, 0, 0, .25);
+
+}
+
+
+
+body[data-page="survival"] #navbar::after {
+
+  content: "";
+
+  position: absolute;
+
+  right: 0;
+
+  bottom: -1px;
+
+  left: 0;
+
+  height: 1px;
+
+  background: linear-gradient(90deg, transparent 4%, rgba(91, 215, 236, .42) 22%, rgba(91, 215, 236, .06) 58%, transparent 94%);
+
+  opacity: .42;
+
+}
+
+
+
+body[data-page="survival"] #navbar .container {
+
+  max-width: 1500px;
+
+}
+
+
+
+body[data-page="survival"] #navbar.scrolled {
+
+  padding: 11px 0;
+
+  background: rgba(4, 8, 13, .96);
+
+  border-color: rgba(91, 215, 236, .18);
+
+  box-shadow: 0 14px 38px rgba(0, 0, 0, .38), 0 0 24px rgba(91, 215, 236, .045);
+
+}
+
+
+
+body[data-page="survival"] #navbar .logo {
+
+  color: #e5f1f5;
+
+  text-shadow: 0 0 18px rgba(91, 215, 236, .08);
+
+}
+
+
+
+body[data-page="survival"] #navbar .logo span,
+
+body[data-page="survival"] #navbar .nav-balance {
+
+  color: var(--survival-cyan);
+
+}
+
+
+
+body[data-page="survival"] #navbar .nav-balance {
+
+  border: 1px solid rgba(91, 215, 236, .12);
+
+  background: rgba(91, 215, 236, .045);
+
+}
+
+
+
+body[data-page="survival"] #navbar .nav-user-link,
+
+body[data-page="survival"] #navbar .lang-switch,
+
+body[data-page="survival"] #navbar .audio-toggle {
+
+  border-color: rgba(135, 188, 206, .2);
+
+  background: rgba(8, 17, 25, .82);
+
+}
+
+
+
+body[data-page="survival"] #navbar .nav-user-link {
+
+  color: #cbdce3;
+
+}
+
+
+
+body[data-page="survival"] #navbar .nav-user-link:hover,
+
+body[data-page="survival"] #navbar .audio-toggle:hover {
+
+  border-color: rgba(91, 215, 236, .46);
+
+  color: #e9f7fa;
+
+  background: rgba(18, 44, 55, .72);
+
+}
+
+
+
+.survival-page .label,
+
+.survival-page .page-title span {
+
+  color: var(--survival-cyan);
+
+}
+
+
+
+.survival-page .container {
+
+  max-width: 1500px;
+
+}
+
+
+
+.survival-command-head {
+
+  position: relative;
+
+  align-items: stretch;
+
+  min-height: 196px;
+
+  margin-bottom: 24px;
+
+  padding: 26px 30px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(142, 201, 221, .2);
+
+  border-radius: 8px;
+
+  background:
+
+    linear-gradient(90deg, rgba(91, 215, 236, .08), transparent 42%),
+
+    repeating-linear-gradient(90deg, transparent 0 72px, rgba(147, 205, 224, .025) 73px),
+
+    rgba(7, 13, 20, .9);
+
+  box-shadow: inset 0 0 38px rgba(44, 134, 164, .045);
+
+}
+
+
+
+.survival-command-head::before {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0 auto 0 0;
+
+  width: 3px;
+
+  background: var(--survival-cyan);
+
+  box-shadow: 0 0 20px rgba(91, 215, 236, .54);
+
+}
+
+
+
+.survival-command-head::after {
+
+  content: "ARCTIC PROTOCOL // CONTROL HEADER";
+
+  position: absolute;
+
+  top: 17px;
+
+  right: 28px;
+
+  color: rgba(128, 173, 188, .18);
+
+  font-size: 9px;
+
+  font-weight: 900;
+
+}
+
+
+
+.survival-command-copy {
+
+  position: relative;
+
+  z-index: 1;
+
+  display: grid;
+
+  align-content: start;
+
+  width: min(820px, 100%);
+
+}
+
+
+
+.survival-command-kicker {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  color: #8ba6b5;
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+}
+
+
+
+.survival-command-kicker i {
+
+  width: 7px;
+
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: var(--survival-green);
+
+  box-shadow: 0 0 13px rgba(87, 215, 179, .82);
+
+}
+
+
+
+.survival-command-kicker b {
+
+  padding-left: 9px;
+
+  border-left: 1px solid rgba(143, 194, 211, .22);
+
+  color: var(--survival-cyan);
+
+  font-size: 10px;
+
+}
+
+
+
+.survival-command-head .page-title {
+
+  margin: 10px 0 0;
+
+  color: #eef7fa;
+
+  font-size: clamp(34px, 4vw, 54px);
+
+  line-height: 1;
+
+}
+
+
+
+.survival-command-head .page-sub {
+
+  max-width: 720px;
+
+  margin: 9px 0 0;
+
+  color: #93a9b7;
+
+}
+
+
+
+.survival-command-meta {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  margin-top: 19px;
+
+}
+
+
+
+.survival-command-meta > span {
+
+  display: grid;
+
+  grid-template-columns: auto auto;
+
+  align-items: center;
+
+  gap: 11px;
+
+  min-width: 160px;
+
+  padding: 8px 11px;
+
+  border-left: 2px solid rgba(91, 215, 236, .42);
+
+  background: rgba(92, 147, 166, .055);
+
+}
+
+
+
+.survival-command-meta small {
+
+  color: #617c8c;
+
+  font-size: 8px;
+
+  font-weight: 900;
+
+}
+
+
+
+.survival-command-meta strong {
+
+  color: #d9edf3;
+
+  font-size: 12px;
+
+}
+
+
+
+.survival-command-back {
+
+  position: relative;
+
+  z-index: 1;
+
+  align-self: flex-end;
+
+  border-color: rgba(135, 188, 206, .28);
+
+  background: rgba(7, 14, 21, .58);
+
+  color: #c9dce3;
+
+}
+
+
+
+.survival-layout {
+
+  display: grid;
+
+  grid-template-columns: minmax(860px, 1fr) 336px;
+
+  align-items: start;
+
+  gap: 22px;
+
+  padding: 0;
+
+}
+
+
+
+.survival-stage,
+
+.survival-panel {
+
+  min-width: 0;
+
+}
+
+
+
+.survival-bunker {
+
+  position: relative;
+
+  min-height: 690px;
+
+  overflow: hidden;
+
+  isolation: isolate;
+
+  border: 1px solid rgba(169, 216, 233, .28);
+
+  border-radius: 8px;
+
+  background: #071019 url("../assets/images/arctic-protocol-bunker.webp") center/cover no-repeat;
+
+  box-shadow:
+
+    0 26px 70px rgba(0, 0, 0, .46),
+
+    inset 0 0 0 1px rgba(255, 255, 255, .035);
+
+}
+
+
+
+.survival-bunker::before {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: -1;
+
+  background:
+
+    linear-gradient(180deg, rgba(2, 7, 12, .2), rgba(2, 6, 10, .82)),
+
+    radial-gradient(circle at 50% 43%, rgba(5, 15, 22, .08), rgba(2, 6, 10, .7) 76%);
+
+}
+
+
+
+.survival-bunker::after {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 12px;
+
+  z-index: 5;
+
+  pointer-events: none;
+
+  border: 1px solid rgba(123, 207, 232, .17);
+
+  border-radius: 5px;
+
+  box-shadow: inset 0 0 42px rgba(4, 14, 22, .72);
+
+}
+
+
+
+.survival-atmosphere,
+
+.survival-frost,
+
+.survival-emergency {
+
+  position: absolute;
+
+  inset: 0;
+
+  pointer-events: none;
+
+}
+
+
+
+.survival-atmosphere {
+
+  z-index: -1;
+
+  opacity: .6;
+
+  background:
+
+    linear-gradient(108deg, transparent 20%, rgba(91, 215, 236, .07) 42%, transparent 58%),
+
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(159, 222, 238, .016) 4px);
+
+  background-size: 180% 100%, 100% 4px;
+
+  animation: survival-scan 12s ease-in-out infinite;
+
+}
+
+
+
+.survival-frost {
+
+  z-index: 4;
+
+  opacity: .08;
+
+  transition: opacity .7s ease;
+
+  background:
+
+    radial-gradient(ellipse at 0 0, rgba(212, 242, 249, .44), transparent 29%),
+
+    radial-gradient(ellipse at 100% 0, rgba(212, 242, 249, .34), transparent 31%),
+
+    radial-gradient(ellipse at 0 100%, rgba(149, 207, 224, .22), transparent 25%),
+
+    radial-gradient(ellipse at 100% 100%, rgba(149, 207, 224, .2), transparent 25%);
+
+  mix-blend-mode: screen;
+
+}
+
+
+
+.survival-emergency {
+
+  z-index: 3;
+
+  opacity: 0;
+
+  background: rgba(167, 18, 24, .2);
+
+}
+
+
+
+.survival-stage.stage-2 .survival-frost { opacity: .12; }
+
+.survival-stage.stage-3 .survival-frost { opacity: .17; }
+
+.survival-stage.stage-4 .survival-frost { opacity: .22; }
+
+.survival-stage.stage-5 .survival-frost { opacity: .28; }
+
+.survival-stage.stage-6 .survival-frost { opacity: .34; }
+
+
+
+.survival-stage.is-loss .survival-emergency {
+
+  opacity: .16;
+
+  animation: survival-emergency .7s ease-out 1;
+
+}
+
+
+
+.survival-stage.is-loss .survival-bunker {
+
+  border-color: rgba(151, 83, 84, .42);
+
+  box-shadow: 0 22px 70px rgba(0, 0, 0, .46), inset 0 0 58px rgba(52, 14, 18, .08);
+
+}
+
+
+
+.survival-stage.is-win .survival-bunker {
+
+  border-color: rgba(87, 215, 179, .68);
+
+  box-shadow: 0 22px 70px rgba(7, 72, 65, .36), inset 0 0 90px rgba(51, 183, 159, .16);
+
+}
+
+
+
+.survival-hud {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 18px;
+
+  position: relative;
+
+  z-index: 2;
+
+  padding: 25px 30px 0;
+
+  color: #9bb1c2;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 0;
+
+  text-transform: uppercase;
+
+}
+
+
+
+.survival-system {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+}
+
+
+
+.survival-system i {
+
+  width: 7px;
+
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: var(--survival-cyan);
+
+  box-shadow: 0 0 14px rgba(91, 215, 236, .9);
+
+}
+
+
+
+.survival-terminal {
+
+  position: relative;
+
+  z-index: 2;
+
+  width: min(980px, calc(100% - 56px));
+
+  min-height: 556px;
+
+  margin: 34px auto 68px;
+
+  padding: 26px;
+
+  border: 1px solid rgba(157, 210, 226, .25);
+
+  border-radius: 6px;
+
+  background: rgba(5, 11, 17, .86);
+
+  box-shadow:
+
+    0 20px 45px rgba(0, 0, 0, .42),
+
+    inset 0 0 0 1px rgba(255, 255, 255, .025);
+
+  backdrop-filter: blur(14px);
+
+}
+
+
+
+.survival-terminal.is-phase-entering > :not(.survival-briefing-nav) {
+
+  animation: survival-terminal-content-in .4s cubic-bezier(.18, .72, .2, 1) both;
+
+}
+
+
+
+.survival-briefing-nav {
+
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 7px;
+
+  margin-bottom: 20px;
+
+  padding-bottom: 16px;
+
+  border-bottom: 1px solid rgba(164, 210, 225, .12);
+
+}
+
+
+
+.survival-briefing-nav button {
+
+  display: grid;
+
+  grid-template-columns: 28px minmax(0, 1fr);
+
+  align-items: center;
+
+  gap: 8px;
+
+  min-width: 0;
+
+  min-height: 42px;
+
+  padding: 7px 10px;
+
+  border: 1px solid rgba(135, 173, 188, .13);
+
+  border-radius: 5px;
+
+  color: #667b8a;
+
+  background: rgba(7, 14, 21, .58);
+
+  font: inherit;
+
+  text-align: left;
+
+  transition:
+
+    color .42s ease,
+
+    border-color .42s ease,
+
+    background-color .42s ease,
+
+    box-shadow .42s ease,
+
+    transform .42s ease;
+
+}
+
+
+
+.survival-briefing-nav button span {
+
+  display: grid;
+
+  place-items: center;
+
+  width: 28px;
+
+  height: 28px;
+
+  border: 1px solid rgba(135, 173, 188, .14);
+
+  color: #607989;
+
+  font-size: 9px;
+
+  font-weight: 900;
+
+}
+
+
+
+.survival-briefing-nav button strong {
+
+  overflow: hidden;
+
+  font-size: 10px;
+
+  line-height: 1.2;
+
+  text-overflow: ellipsis;
+
+  text-transform: uppercase;
+
+  white-space: nowrap;
+
+}
+
+
+
+.survival-briefing-nav button.is-reached {
+
+  color: #a9bbc6;
+
+  cursor: pointer;
+
+}
+
+
+
+.survival-briefing-nav button.active {
+
+  color: #e9f6fa;
+
+  border-color: rgba(91, 215, 236, .48);
+
+  background: rgba(20, 55, 68, .42);
+
+  box-shadow: inset 0 -2px 0 rgba(91, 215, 236, .72);
+
+  transform: translateY(-1px);
+
+}
+
+
+
+.survival-briefing-nav button.active span {
+
+  border-color: rgba(91, 215, 236, .58);
+
+  color: var(--survival-cyan);
+
+}
+
+
+
+.survival-cause {
+
+  display: grid;
+
+  align-content: center;
+
+  min-height: 250px;
+
+  padding: 28px clamp(8px, 4vw, 42px);
+
+  border-left: 2px solid rgba(91, 215, 236, .66);
+
+  background:
+
+    linear-gradient(90deg, rgba(91, 215, 236, .075), transparent 65%),
+
+    rgba(7, 14, 21, .48);
+
+  animation: survival-view-enter .38s cubic-bezier(.18, .72, .2, 1) both;
+
+}
+
+
+
+.survival-cause[hidden] {
+
+  display: none;
+
+}
+
+
+
+.survival-cause > span,
+
+.survival-question-heading > span,
+
+.survival-resolution-kicker,
+
+.survival-objective > span {
+
+  display: block;
+
+  color: var(--survival-cyan);
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: 0;
+
+  text-transform: uppercase;
+
+}
+
+
+
+.survival-cause strong {
+
+  display: block;
+
+  margin-top: 7px;
+
+  color: #eff7fa;
+
+  font-size: clamp(25px, 3vw, 34px);
+
+  line-height: 1.15;
+
+}
+
+
+
+.survival-cause p {
+
+  max-width: 680px;
+
+  margin: 8px 0 0;
+
+  color: #9eb0bd;
+
+  font-size: 14px;
+
+  line-height: 1.65;
+
+}
+
+
+
+.survival-progress {
+
+  display: grid;
+
+  grid-template-columns: auto minmax(90px, 1fr) 58px;
+
+  align-items: center;
+
+  gap: 16px;
+
+  padding: 17px 0 0;
+
+}
+
+
+
+.survival-progress > div:first-child {
+
+  min-width: 80px;
+
+}
+
+
+
+.survival-progress span {
+
+  display: block;
+
+  color: #7f94a4;
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+}
+
+
+
+.survival-progress strong {
+
+  display: block;
+
+  margin-top: 3px;
+
+  color: #eaf4f8;
+
+  font-size: 15px;
+
+}
+
+
+
+.survival-stage-track {
+
+  height: 3px;
+
+  overflow: hidden;
+
+  background: rgba(145, 184, 198, .14);
+
+}
+
+
+
+.survival-stage-track i {
+
+  display: block;
+
+  width: 0;
+
+  height: 100%;
+
+  background: var(--survival-cyan);
+
+  box-shadow: 0 0 12px rgba(91, 215, 236, .72);
+
+  transition: width .7s cubic-bezier(.2, .72, .2, 1);
+
+}
+
+
+
+.survival-timer {
+
+  --timer-progress: 1;
+
+  display: grid;
+
+  place-items: center;
+
+  width: 54px;
+
+  height: 54px;
+
+  border-radius: 50%;
+
+  background:
+
+    radial-gradient(circle, #0a121b 58%, transparent 60%),
+
+    conic-gradient(var(--survival-cyan) calc(var(--timer-progress) * 1turn), rgba(123, 159, 174, .18) 0);
+
+  box-shadow: inset 0 0 0 1px rgba(174, 220, 233, .12);
+
+}
+
+
+
+.survival-timer span {
+
+  color: #eaf7fb;
+
+  font-size: 17px;
+
+}
+
+
+
+.survival-timer.is-warning {
+
+  background:
+
+    radial-gradient(circle, #150e0d 58%, transparent 60%),
+
+    conic-gradient(var(--survival-amber) calc(var(--timer-progress) * 1turn), rgba(148, 98, 54, .18) 0);
+
+  box-shadow: 0 0 20px rgba(229, 185, 104, .2);
+
+}
+
+
+
+.survival-timer.is-expired {
+
+  background: #3e1719;
+
+  box-shadow: 0 0 24px rgba(255, 98, 95, .34);
+
+}
+
+
+
+.survival-question[hidden],
+
+.survival-resolution[hidden],
+
+.survival-death-screen[hidden],
+
+.survival-result[hidden],
+
+.survival-briefing-footer[hidden],
+
+.survival-timer[hidden],
+
+.survival-choices[hidden] {
+
+  display: none;
+
+}
+
+
+
+.survival-question {
+
+  padding: 21px 22px 0;
+
+  border-left: 2px solid rgba(91, 215, 236, .46);
+
+  background: linear-gradient(90deg, rgba(91, 215, 236, .05), transparent 62%);
+
+  animation: survival-view-enter .38s cubic-bezier(.18, .72, .2, 1) both;
+
+}
+
+
+
+.survival-question.is-dossier {
+
+  min-height: 250px;
+
+  padding-top: 27px;
+
+}
+
+
+
+.survival-question-heading h2,
+
+.survival-resolution h2 {
+
+  margin: 6px 0 0;
+
+  color: #f3f8fa;
+
+  font-size: 22px;
+
+  line-height: 1.2;
+
+}
+
+
+
+.survival-question-heading p,
+
+.survival-resolution p {
+
+  margin: 9px 0 0;
+
+  color: #b3c2cc;
+
+  font-size: 14px;
+
+  line-height: 1.55;
+
+}
+
+
+
+.survival-parameters {
+
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 8px;
+
+  margin: 17px 0;
+
+}
+
+
+
+.survival-parameters > div {
+
+  min-width: 0;
+
+  padding: 10px 11px;
+
+  border-left: 2px solid rgba(91, 215, 236, .58);
+
+  background: rgba(115, 164, 181, .075);
+
+  animation: survival-data-enter .36s cubic-bezier(.18, .72, .2, 1) both;
+
+}
+
+
+
+.survival-parameters > div:nth-child(2) { animation-delay: 45ms; }
+
+.survival-parameters > div:nth-child(3) { animation-delay: 90ms; }
+
+
+
+.survival-parameters span {
+
+  display: block;
+
+  color: #6f8798;
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  text-transform: uppercase;
+
+}
+
+
+
+.survival-parameters strong {
+
+  display: block;
+
+  margin-top: 4px;
+
+  overflow-wrap: anywhere;
+
+  color: #d7e6ec;
+
+  font-size: 11px;
+
+  line-height: 1.3;
+
+  transition: color .24s ease, opacity .18s ease, transform .24s ease, text-shadow .24s ease;
+
+}
+
+
+
+.survival-parameters > div.has-resolution {
+
+  transition: border-color .3s ease, background .3s ease, box-shadow .3s ease;
+
+}
+
+
+
+.survival-parameters > div.has-resolution.is-changing {
+
+  border-color: rgba(91, 215, 236, .95);
+
+  background: rgba(28, 101, 113, .18);
+
+  box-shadow: inset 12px 0 22px -20px rgba(91, 215, 236, .9);
+
+}
+
+
+
+.survival-parameters > div.has-resolution.is-changing strong {
+
+  color: #8feeff;
+
+  transform: translateY(-1px);
+
+  text-shadow: 0 0 14px rgba(91, 215, 236, .46);
+
+}
+
+
+
+.survival-parameters > div.has-resolution.is-text-changing strong {
+
+  opacity: .18;
+
+  transform: translateY(-3px);
+
+}
+
+
+
+.survival-parameters > div.has-resolution.is-metric-running strong {
+
+  font-variant-numeric: tabular-nums;
+
+}
+
+
+
+.survival-parameters > div.has-resolution.is-resolved {
+
+  border-color: rgba(87, 215, 179, .9);
+
+  background: rgba(28, 105, 87, .18);
+
+}
+
+
+
+.survival-parameters > div.has-resolution.is-resolved strong {
+
+  color: #76e7c7;
+
+  text-shadow: 0 0 12px rgba(87, 215, 179, .24);
+
+}
+
+
+
+.survival-question.has-parameter-resolution .survival-resolution {
+
+  animation-delay: .8s;
+
+  animation-fill-mode: both;
+
+}
+
+
+
+.survival-choices {
+
+  display: grid;
+
+  gap: 8px;
+
+  padding-bottom: 4px;
+
+}
+
+
+
+.survival-choices button {
+
+  display: grid;
+
+  grid-template-columns: 38px minmax(0, 1fr);
+
+  align-items: center;
+
+  min-height: 52px;
+
+  width: 100%;
+
+  padding: 7px 14px 7px 8px;
+
+  border: 1px solid rgba(145, 190, 205, .2);
+
+  border-radius: 5px;
+
+  background: rgba(9, 18, 27, .9);
+
+  color: #e2edf1;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition: border-color .18s ease, background .18s ease, transform .18s ease;
+
+  animation: survival-choice-enter .4s cubic-bezier(.18, .72, .2, 1) both;
+
+}
+
+
+
+.survival-choices button:nth-child(2) { animation-delay: 55ms; }
+
+.survival-choices button:nth-child(3) { animation-delay: 110ms; }
+
+
+
+.survival-choices button:hover:not(:disabled) {
+
+  transform: translateX(3px);
+
+  border-color: rgba(91, 215, 236, .68);
+
+  background: rgba(24, 57, 70, .72);
+
+}
+
+
+
+.survival-choices button:disabled {
+
+  cursor: default;
+
+}
+
+
+
+.survival-choices button > span {
+
+  display: grid;
+
+  place-items: center;
+
+  width: 30px;
+
+  height: 30px;
+
+  border: 1px solid rgba(91, 215, 236, .25);
+
+  color: var(--survival-cyan);
+
+  font-size: 10px;
+
+}
+
+
+
+.survival-choices button strong {
+
+  min-width: 0;
+
+  font-size: 12px;
+
+  line-height: 1.35;
+
+}
+
+
+
+.survival-choices button.is-correct {
+
+  border-color: rgba(87, 215, 179, .72);
+
+  background: rgba(26, 94, 78, .28);
+
+}
+
+
+
+.survival-choices button.is-wrong {
+
+  border-color: rgba(255, 98, 95, .72);
+
+  background: rgba(113, 28, 31, .28);
+
+}
+
+
+
+.survival-resolution {
+
+  margin-top: 15px;
+
+  padding: 15px 17px;
+
+  border-left: 3px solid var(--survival-green);
+
+  background: rgba(31, 100, 84, .16);
+
+  animation: survival-view-enter .68s cubic-bezier(.16, .78, .2, 1) both;
+
+}
+
+
+
+.survival-briefing-footer {
+
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) auto;
+
+  align-items: center;
+
+  gap: 18px;
+
+  margin-top: 18px;
+
+  padding-top: 16px;
+
+  border-top: 1px solid rgba(164, 210, 225, .12);
+
+}
+
+
+
+.survival-briefing-footer p {
+
+  margin: 0;
+
+  color: #768d9c;
+
+  font-size: 11px;
+
+}
+
+
+
+.survival-briefing-action {
+
+  min-width: 240px;
+
+  min-height: 46px;
+
+  border: 1px solid rgba(91, 215, 236, .55);
+
+  border-radius: 5px;
+
+  color: #dff7fc;
+
+  background: rgba(20, 66, 81, .72);
+
+  font-size: 11px;
+
+  font-weight: 900;
+
+  text-transform: uppercase;
+
+}
+
+
+
+.survival-briefing-action:hover:not(:disabled) {
+
+  border-color: var(--survival-cyan);
+
+  background: rgba(29, 91, 108, .78);
+
+}
+
+
+
+.survival-stage.is-loss .survival-resolution {
+
+  border-left-color: var(--survival-red);
+
+  background: rgba(112, 24, 29, .2);
+
+}
+
+
+
+.survival-stage.is-loss .survival-resolution-kicker {
+
+  color: #ff8d89;
+
+}
+
+
+
+.survival-death-screen {
+
+  display: grid;
+
+  grid-template-columns: 148px minmax(0, 1fr);
+
+  align-items: center;
+
+  gap: 24px 32px;
+
+  min-height: 430px;
+
+  padding: 34px clamp(24px, 5vw, 52px);
+
+  border: 1px solid rgba(151, 83, 84, .28);
+
+  border-radius: 7px;
+
+  background:
+
+    linear-gradient(90deg, rgba(77, 21, 27, .12), transparent 42%),
+
+    rgba(5, 11, 17, .82);
+
+  box-shadow: inset 0 0 48px rgba(0, 0, 0, .34);
+
+  animation: survival-death-arrive .48s cubic-bezier(.2, .75, .2, 1) both;
+
+}
+
+
+
+.survival-death-signal {
+
+  position: relative;
+
+  display: grid;
+
+  place-items: center;
+
+  width: 136px;
+
+  height: 136px;
+
+  border: 1px solid rgba(174, 210, 220, .22);
+
+  border-radius: 50%;
+
+  background:
+
+    radial-gradient(circle, rgba(122, 36, 43, .16) 0 42%, transparent 44%),
+
+    rgba(7, 14, 20, .88);
+
+  color: #d8e1e3;
+
+  box-shadow:
+
+    inset 0 0 0 9px rgba(153, 77, 80, .04),
+
+    0 0 0 1px rgba(151, 83, 84, .12),
+
+    0 0 30px rgba(108, 31, 37, .12);
+
+}
+
+
+
+.survival-death-signal::before,
+
+.survival-death-signal::after {
+
+  content: '';
+
+  position: absolute;
+
+  background: rgba(174, 210, 220, .22);
+
+}
+
+
+
+.survival-death-signal::before {
+
+  width: 170px;
+
+  height: 1px;
+
+}
+
+
+
+.survival-death-signal::after {
+
+  width: 1px;
+
+  height: 170px;
+
+}
+
+
+
+.survival-death-signal span {
+
+  position: relative;
+
+  z-index: 1;
+
+  font-size: 66px;
+
+  line-height: 1;
+
+  text-shadow: 0 0 18px rgba(219, 232, 235, .14);
+
+}
+
+
+
+.survival-death-heading > span,
+
+.survival-death-report article > span {
+
+  display: block;
+
+  color: #b96a6d;
+
+  font-size: 9px;
+
+  font-weight: 900;
+
+  text-transform: uppercase;
+
+}
+
+
+
+.survival-death-heading h2 {
+
+  margin: 7px 0 0;
+
+  color: #edf3f4;
+
+  font-size: clamp(32px, 5vw, 52px);
+
+  line-height: 1;
+
+}
+
+
+
+.survival-death-heading p {
+
+  margin: 11px 0 0;
+
+  color: #8397a3;
+
+  font-size: 12px;
+
+}
+
+
+
+.survival-death-report {
+
+  grid-column: 1 / -1;
+
+  display: grid;
+
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.35fr);
+
+  gap: 10px;
+
+}
+
+
+
+.survival-death-report article {
+
+  min-width: 0;
+
+  padding: 15px 16px;
+
+  border-left: 2px solid rgba(137, 177, 190, .34);
+
+  background: rgba(111, 151, 164, .055);
+
+}
+
+
+
+.survival-death-report .survival-death-cause {
+
+  border-left-color: rgba(191, 75, 78, .72);
+
+  background: rgba(94, 25, 30, .12);
+
+}
+
+
+
+.survival-death-report article:nth-child(3) {
+
+  grid-column: 1 / -1;
+
+}
+
+
+
+.survival-death-report article > strong {
+
+  display: block;
+
+  margin-top: 6px;
+
+  color: #d9e4e8;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  line-height: 1.5;
+
+}
+
+
+
+.survival-stage.is-loss .survival-briefing-nav,
+
+.survival-stage.is-loss .survival-progress {
+
+  display: none;
+
+}
+
+
+
+.survival-stage.is-loss .survival-terminal {
+
+  display: grid;
+
+  align-content: center;
+
+}
+
+
+
+.survival-result {
+
+  position: absolute;
+
+  z-index: 6;
+
+  bottom: 23px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  min-width: 170px;
+
+  padding: 9px 18px;
+
+  border: 1px solid rgba(143, 194, 211, .32);
+
+  border-radius: 999px;
+
+  background: rgba(4, 9, 14, .9);
+
+  color: #dce9ee;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  text-align: center;
+
+}
+
+
+
+.survival-result.win {
+
+  border-color: rgba(87, 215, 179, .7);
+
+  color: #8cf0d4;
+
+  box-shadow: 0 0 24px rgba(66, 205, 168, .2);
+
+}
+
+
+
+.survival-result.loss {
+
+  border-color: rgba(255, 98, 95, .64);
+
+  color: #ff9692;
+
+  box-shadow: 0 0 22px rgba(255, 72, 72, .16);
+
+}
+
+
+
+.survival-panel {
+
+  position: sticky;
+
+  top: 92px;
+
+  display: grid;
+
+  gap: 12px;
+
+  width: 336px;
+
+  padding: 12px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(169, 216, 233, .2);
+
+  border-radius: 8px;
+
+  background: rgba(10, 16, 23, .94);
+
+  box-shadow: 0 20px 55px rgba(0, 0, 0, .34);
+
+}
+
+
+
+.survival-panel .balance-card,
+
+.survival-panel .slot-bet-box,
+
+.survival-objective {
+
+  padding: 17px;
+
+  border: 1px solid rgba(145, 190, 205, .16);
+
+  border-radius: 6px;
+
+  background: rgba(12, 21, 30, .82);
+
+}
+
+
+
+.survival-panel .balance-card,
+
+.survival-panel .slot-bet-box {
+
+  width: 100%;
+
+  min-width: 0;
+
+  margin: 0;
+
+}
+
+
+
+.survival-panel .balance-card strong {
+
+  color: var(--survival-ice);
+
+}
+
+
+
+.survival-panel .chip-row {
+
+  display: grid;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 6px;
+
+  width: 100%;
+
+  margin-top: 13px;
+
+}
+
+
+
+.survival-panel .chip-btn {
+
+  width: var(--bet-chip-size);
+
+  min-width: 0;
+
+  max-width: var(--bet-chip-size);
+
+  height: var(--bet-chip-size);
+
+}
+
+
+
+.survival-panel .chip-btn.active {
+
+  color: #000;
+
+  border-color: var(--gold);
+
+  background: var(--gold);
+
+  box-shadow: 0 0 0 4px var(--gold-dim);
+
+}
+
+
+
+.survival-objective {
+
+  text-align: center;
+
+}
+
+
+
+.survival-objective strong {
+
+  display: block;
+
+  margin-top: 8px;
+
+  color: var(--survival-cyan);
+
+  font-size: 34px;
+
+}
+
+
+
+.survival-objective p {
+
+  margin: 3px 0 0;
+
+  color: #9db2c0;
+
+  font-size: 13px;
+
+}
+
+
+
+.survival-action {
+
+  min-height: 58px;
+
+  border-color: #acd5e3;
+
+  background: #acd5e3;
+
+  color: #071015;
+
+  font-size: 14px;
+
+}
+
+
+
+.survival-action:hover:not(:disabled) {
+
+  border-color: #cce7ef;
+
+  background: #cce7ef;
+
+}
+
+
+
+.survival-action[hidden] {
+
+  display: none;
+
+}
+
+
+
+@keyframes survival-scan {
+
+  0%, 100% { background-position: 100% 0, 0 0; opacity: .42; }
+
+  50% { background-position: 0 0, 0 0; opacity: .7; }
+
+}
+
+
+
+@keyframes survival-emergency {
+
+  0%, 100% { opacity: .05; }
+
+  50% { opacity: .22; }
+
+}
+
+
+
+@keyframes survival-death-arrive {
+
+  from { opacity: 0; transform: translateY(8px) scale(.992); }
+
+  to { opacity: 1; transform: translateY(0) scale(1); }
+
+}
+
+
+
+@keyframes survival-view-enter {
+
+  from { opacity: .25; transform: translateY(6px); }
+
+  to { opacity: 1; transform: translateY(0); }
+
+}
+
+
+
+@keyframes survival-data-enter {
+
+  from { opacity: 0; transform: translateY(6px); }
+
+  to { opacity: 1; transform: translateY(0); }
+
+}
+
+
+
+@keyframes survival-choice-enter {
+
+  from { opacity: 0; transform: translateX(12px); }
+
+  to { opacity: 1; transform: translateX(0); }
+
+}
+
+
+
+@keyframes survival-terminal-content-in {
+
+  from { opacity: .28; transform: translateY(5px); }
+
+  to { opacity: 1; transform: translateY(0); }
+
+}
+
+
+
+.game-rules-overlay[data-game-rules-page="survival"] {
+
+  background: rgba(2, 6, 10, .84);
+
+  backdrop-filter: blur(14px);
+
+}
+
+
+
+.game-rules-overlay[data-game-rules-page="survival"] .game-rules-modal {
+
+  position: relative;
+
+  width: min(940px, 100%);
+
+  padding: 28px;
+
+  overflow: hidden auto;
+
+  border: 1px solid rgba(118, 199, 224, .34);
+
+  border-radius: 8px;
+
+  background:
+
+    linear-gradient(90deg, rgba(91, 215, 236, .07), transparent 38%),
+
+    repeating-linear-gradient(0deg, transparent 0 33px, rgba(146, 205, 224, .025) 34px),
+
+    #071019;
+
+  box-shadow:
+
+    0 34px 90px rgba(0, 0, 0, .66),
+
+    inset 0 0 55px rgba(44, 134, 164, .055);
+
+}
+
+
+
+.game-rules-overlay[data-game-rules-page="survival"] .game-rules-modal::before {
+
+  content: "AP-06 // SURVIVAL ARCHIVE";
+
+  display: block;
+
+  margin-bottom: 12px;
+
+  color: var(--survival-cyan);
+
+  font-size: 9px;
+
+  font-weight: 900;
+
+}
+
+
+
+.game-rules-overlay[data-game-rules-page="survival"] .admin-section-head {
+
+  padding-bottom: 18px;
+
+  border-bottom: 1px solid rgba(135, 188, 206, .16);
+
+}
+
+
+
+.game-rules-overlay[data-game-rules-page="survival"] .label {
+
+  color: #688595;
+
+}
+
+
+
+.game-rules-overlay[data-game-rules-page="survival"] h2 {
+
+  color: #edf7fa;
+
+  font-size: 30px;
+
+}
+
+
+
+.game-rules-overlay[data-game-rules-page="survival"] [data-game-rules-close] {
+
+  border-color: rgba(135, 188, 206, .3);
+
+  color: #cbe0e7;
+
+}
+
+
+
+.game-rules-overlay[data-game-rules-page="survival"] .game-rules-intro {
+
+  max-width: 760px;
+
+  margin: 18px 0;
+
+  color: #9db1bd;
+
+}
+
+
+
+.game-rules-overlay[data-game-rules-page="survival"] .game-rules-list {
+
+  counter-reset: survival-rule;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+}
+
+
+
+.game-rules-overlay[data-game-rules-page="survival"] .game-rule-row {
+
+  counter-increment: survival-rule;
+
+  position: relative;
+
+  min-height: 132px;
+
+  padding: 18px 18px 18px 62px;
+
+  border-color: rgba(135, 188, 206, .18);
+
+  border-radius: 5px;
+
+  background: rgba(9, 20, 29, .78);
+
+}
+
+
+
+.game-rules-overlay[data-game-rules-page="survival"] .game-rule-row::before {
+
+  content: "0" counter(survival-rule);
+
+  position: absolute;
+
+  top: 18px;
+
+  left: 17px;
+
+  display: grid;
+
+  place-items: center;
+
+  width: 30px;
+
+  height: 30px;
+
+  border: 1px solid rgba(91, 215, 236, .3);
+
+  color: var(--survival-cyan);
+
+  font-size: 9px;
+
+  font-weight: 900;
+
+}
+
+
+
+.game-rules-overlay[data-game-rules-page="survival"] .game-rule-row span {
+
+  color: #d7e9ef;
+
+}
+
+
+
+.game-rules-overlay[data-game-rules-page="survival"] .game-rule-row p {
+
+  color: #829aa8;
+
+  line-height: 1.55;
+
+}
+
+
+
+@media (max-width: 1240px) {
+
+  .survival-command-head {
+
+    min-height: 0;
+
+  }
+
+
+
+  .survival-layout {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+
+  .survival-panel {
+
+    position: static;
+
+    width: 100%;
+
+    grid-template-columns: minmax(220px, 1fr) minmax(300px, 1.3fr) minmax(180px, .8fr);
+
+    align-items: stretch;
+
+  }
+
+
+
+  .survival-action,
+
+  .survival-panel .game-rules-open {
+
+    grid-column: span 1;
+
+  }
+
+}
+
+
+
+@media (max-width: 760px) {
+
+  .survival-command-head {
+
+    padding: 22px 19px;
+
+  }
+
+
+
+  .survival-command-head::after {
+
+    display: none;
+
+  }
+
+
+
+  .survival-command-meta {
+
+    display: grid;
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+
+  .survival-command-meta > span {
+
+    width: 100%;
+
+  }
+
+
+
+  .game-rules-overlay[data-game-rules-page="survival"] .game-rules-modal {
+
+    padding: 20px 16px;
+
+  }
+
+
+
+  .game-rules-overlay[data-game-rules-page="survival"] .game-rules-list {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+
+  .survival-bunker {
+
+    min-height: 720px;
+
+  }
+
+
+
+  .survival-hud {
+
+    align-items: flex-start;
+
+    padding: 20px 20px 0;
+
+    font-size: 9px;
+
+  }
+
+
+
+  .survival-terminal {
+
+    width: calc(100% - 28px);
+
+    min-height: 0;
+
+    margin: 24px auto 68px;
+
+    padding: 17px;
+
+  }
+
+
+
+  .survival-briefing-nav {
+
+    gap: 5px;
+
+  }
+
+
+
+  .survival-briefing-nav button {
+
+    grid-template-columns: 24px minmax(0, 1fr);
+
+    padding: 6px;
+
+  }
+
+
+
+  .survival-briefing-nav button span {
+
+    width: 24px;
+
+    height: 24px;
+
+  }
+
+
+
+  .survival-progress {
+
+    grid-template-columns: auto 1fr 48px;
+
+    gap: 10px;
+
+  }
+
+
+
+  .survival-timer {
+
+    width: 46px;
+
+    height: 46px;
+
+  }
+
+
+
+  .survival-parameters {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+
+  .survival-question,
+
+  .survival-question.is-dossier {
+
+    min-height: 0;
+
+    padding: 18px 12px 0;
+
+  }
+
+
+
+  .survival-briefing-footer {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+
+  .survival-briefing-action {
+
+    width: 100%;
+
+    min-width: 0;
+
+  }
+
+
+
+  .survival-panel {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+
+  .survival-panel .chip-row {
+
+    justify-content: center;
+
+  }
+
+
+
+  .survival-death-screen {
+
+    grid-template-columns: 1fr;
+
+    justify-items: center;
+
+    min-height: 0;
+
+    padding: 28px 18px;
+
+    text-align: center;
+
+  }
+
+
+
+  .survival-death-signal {
+
+    width: 104px;
+
+    height: 104px;
+
+  }
+
+
+
+  .survival-death-signal::before {
+
+    width: 132px;
+
+  }
+
+
+
+  .survival-death-signal::after {
+
+    height: 132px;
+
+  }
+
+
+
+  .survival-death-signal span {
+
+    font-size: 50px;
+
+  }
+
+
+
+  .survival-death-report {
+
+    grid-template-columns: 1fr;
+
+    width: 100%;
+
+    text-align: left;
+
+  }
+
+
+
+  .survival-death-report .survival-death-cause {
+
+    grid-column: auto;
+
+  }
+
+
+
+  .survival-death-report article:nth-child(3) {
+
+    grid-column: auto;
+
+  }
+
+}
+
+
+
+@media (prefers-reduced-motion: reduce) {
+
+  .survival-atmosphere,
+
+  .survival-stage.is-loss .survival-emergency,
+
+  .survival-death-screen,
+
+  .survival-cause,
+
+  .survival-question,
+
+  .survival-resolution,
+
+  .survival-parameters > div,
+
+  .survival-choices button {
+
+    animation: none;
+
+  }
+
+
+
+  .survival-choices button,
+
+  .survival-parameters strong,
+
+  .survival-parameters > div.has-resolution,
+
+  .survival-stage-track i {
+
+    transition: none;
+
+  }
+
+}
+
+
+

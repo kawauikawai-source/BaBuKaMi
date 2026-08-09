@@ -1,0 +1,206 @@
+/* Bambiku help and legal - generated from the former monolithic stylesheet. */
+
+.help-search{display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:22px}
+
+.help-layout{display:grid;grid-template-columns:260px 1fr;gap:22px;align-items:start}
+
+.help-sidebar{padding:18px;position:sticky;top:92px;display:flex;flex-direction:column;gap:8px}
+
+.help-sidebar strong{font-family:var(--font);font-size:12px;text-transform:uppercase;color:var(--text-3);letter-spacing:.08em;margin-bottom:4px}
+
+.help-cat{text-align:left;border-radius:var(--r-sm);padding:11px 12px;color:var(--text-2);font-family:var(--font);font-weight:800}
+
+.help-cat.active,.help-cat:hover{background:var(--accent-dim);color:var(--accent)}
+
+.faq-section{margin-bottom:18px}
+
+.faq-section-title{font-family:var(--font);font-weight:900;margin-bottom:9px;color:var(--accent)}
+
+.faq-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:9px;overflow:hidden}
+
+.faq-q{width:100%;display:flex;justify-content:space-between;gap:12px;text-align:left;padding:15px;color:var(--text);font-family:var(--font);font-weight:800}
+
+.faq-q.open{color:var(--accent)}
+
+.faq-a{display:none;padding:0 15px 15px;color:var(--text-2);font-size:14px;line-height:1.7}
+
+.faq-a.open{display:block}
+
+.no-results{text-align:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:42px;color:var(--text-2)}
+
+.no-results-icon{font-family:var(--font);font-size:28px;color:var(--accent)}
+
+.empty-cell{text-align:center;color:var(--text-3);padding:28px!important}
+
+.contact-panel{padding-top:48px}
+
+.contact-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+
+.contact-card{padding:20px}
+
+.contact-card strong{font-family:var(--font);font-size:18px}
+
+.contact-card p{color:var(--text-2);font-size:14px;margin:8px 0 16px}
+
+.compact-footer{padding-top:34px}
+
+.legal-page article{max-width:780px}
+
+.legal-page article h2{font-family:var(--font);font-size:20px;font-weight:900;margin:34px 0 10px;color:var(--text)}
+
+.legal-page article p{font-size:14px;color:var(--text-2);line-height:1.8;margin-bottom:14px}
+
+.legal-page article a{color:var(--accent)}
+
+/* House archive: shared visual shell for help and trust pages. */
+.trust-page-body{background:#080b0a}
+
+.trust-page.page-shell{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  padding-top:132px;
+  background-color:#080b0a;
+  background-image:
+    linear-gradient(rgba(114,145,132,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(114,145,132,.055) 1px,transparent 1px);
+  background-size:64px 64px;
+}
+
+.trust-page.page-shell::before{
+  content:"";
+  position:absolute;
+  inset:0 0 auto;
+  height:440px;
+  z-index:-1;
+  pointer-events:none;
+  background:radial-gradient(circle at 50% 0,rgba(0,217,139,.09),transparent 66%);
+}
+
+.trust-command-head{
+  min-height:238px;
+  padding:34px 36px;
+  border:1px solid rgba(66,138,109,.42);
+  border-left:3px solid var(--accent);
+  border-radius:6px;
+  background:rgba(10,16,14,.9);
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:32px;
+  box-shadow:0 24px 80px rgba(0,0,0,.24);
+}
+
+.trust-command-copy{max-width:800px}
+.trust-command-head h1,.trust-command-head .page-title{font-size:clamp(40px,5vw,64px);line-height:1;letter-spacing:0;margin:17px 0 15px}
+.trust-command-head .page-sub{max-width:760px;font-size:16px}
+.trust-kicker{display:flex;align-items:center;gap:10px;color:#8ba89b;font:800 11px/1.2 var(--font);letter-spacing:.1em;text-transform:uppercase}
+.trust-kicker i{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px rgba(0,217,139,.6)}
+.trust-home-btn{flex:none;margin-bottom:2px}
+
+.trust-section-nav{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin:16px 0 30px;
+}
+
+.trust-section-link{
+  min-height:58px;
+  border:1px solid var(--border);
+  border-radius:6px;
+  background:rgba(14,17,16,.9);
+  color:var(--text-2);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:0 18px;
+  font:800 13px/1.2 var(--font);
+  transition:border-color .2s ease,color .2s ease,background-color .2s ease;
+}
+
+.trust-section-link:hover,.trust-section-link.active{color:var(--accent);border-color:rgba(0,217,139,.62);background:rgba(0,217,139,.07)}
+.trust-section-link b,.trust-soon-badge,.btn-badge{font:900 9px/1 var(--font);letter-spacing:.08em;color:#d5bd72;border:1px solid rgba(213,189,114,.34);border-radius:999px;padding:5px 7px}
+
+.trust-content-panel,.trust-document,.trust-preview-panel{
+  border:1px solid var(--border);
+  border-radius:6px;
+  background:rgba(13,16,15,.94);
+  box-shadow:0 24px 80px rgba(0,0,0,.18);
+}
+
+.trust-content-panel{padding:28px}
+.trust-content-head{margin-bottom:22px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.trust-content-head .label{margin-bottom:8px}
+.trust-content-head .page-sub{font-size:14px}
+
+.trust-page .help-search{margin-bottom:18px}
+.trust-page .help-sidebar,.trust-page .contact-card{background:#101412;border:1px solid var(--border);border-radius:6px}
+.trust-page .help-cat{border:1px solid transparent}
+.trust-page .help-cat.active,.trust-page .help-cat:hover{border-color:rgba(0,217,139,.25);background:rgba(0,217,139,.075)}
+.trust-page .faq-item{border-radius:5px;background:#0d1110}
+.trust-page .faq-q{min-height:54px;align-items:center}
+.trust-page .faq-a{border-top:1px solid transparent}
+.trust-page .faq-a.open{padding-top:15px;border-color:var(--border)}
+
+.trust-page .contact-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.trust-page .contact-card{display:flex;flex-direction:column;align-items:flex-start;min-height:190px}
+.trust-page .contact-card p{flex:1}
+.trust-page .contact-card.is-coming-soon{border-color:rgba(213,189,114,.26)}
+.trust-page .contact-card .btn{gap:9px}
+
+.trust-document{max-width:none!important;padding:20px 28px 28px}
+.trust-document>.updated{margin:0!important;padding:4px 0 20px;border-bottom:1px solid var(--border)}
+.trust-document section{display:grid;grid-template-columns:58px 1fr;gap:24px;padding:28px 2px;border-bottom:1px solid var(--border)}
+.trust-document section:last-child{border-bottom:0}
+.trust-doc-index{display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(0,217,139,.32);color:var(--accent);font:900 11px/1 var(--font)}
+.legal-page .trust-document section h2{margin:0 0 9px;font-size:20px;letter-spacing:0}
+.legal-page .trust-document section p{max-width:900px;margin:0;line-height:1.75}
+
+.trust-title-line{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.trust-title-line h1{margin-right:0}
+.trust-soon-badge{font-size:10px;padding:7px 9px}
+.trust-preview-panel{padding:34px;display:grid;grid-template-columns:120px minmax(0,1fr);gap:28px}
+.trust-preview-signal{grid-row:1/3;width:112px;height:112px;border:1px solid rgba(0,217,139,.26);display:grid;place-items:center;position:relative}
+.trust-preview-signal::before,.trust-preview-signal::after{content:"";position:absolute;border:1px solid rgba(0,217,139,.18);inset:17px;border-radius:50%}
+.trust-preview-signal::after{inset:35px}
+.trust-preview-signal span{position:absolute;width:5px;height:5px;background:var(--accent);border-radius:50%}
+.trust-preview-signal span:nth-child(1){transform:translate(-22px,-14px)}
+.trust-preview-signal span:nth-child(2){transform:translate(18px,6px)}
+.trust-preview-signal span:nth-child(3){transform:translate(-3px,27px)}
+.trust-preview-copy h2{font:900 30px/1.15 var(--font);margin:7px 0 10px}
+.trust-preview-copy>p:last-child{color:var(--text-2);line-height:1.7}
+.trust-preview-rules{grid-column:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.trust-preview-rules article{min-height:108px;padding:17px;border:1px solid var(--border);background:#0d1110;display:flex;flex-direction:column;gap:12px}
+.trust-preview-rules b{color:var(--accent);font:900 13px/1 var(--font)}
+.trust-preview-rules span{color:var(--text-2);font-size:12px;line-height:1.55}
+
+.trust-compact-footer{border-top:1px solid rgba(65,91,80,.35);background:#090c0b}
+.trust-compact-footer .container{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.trust-compact-footer .footer-legal{max-width:920px;margin:0}
+
+@media(max-width:900px){
+  .trust-command-head{min-height:210px;align-items:flex-start;flex-direction:column}
+  .trust-section-nav{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .trust-page .contact-grid{grid-template-columns:1fr}
+  .trust-preview-rules{grid-template-columns:1fr}
+}
+
+@media(max-width:620px){
+  .trust-page.page-shell{padding-top:100px;background-size:42px 42px}
+  .trust-command-head{padding:26px 20px}
+  .trust-command-head h1,.trust-command-head .page-title{font-size:38px}
+  .trust-home-btn{width:100%}
+  .trust-section-nav{grid-template-columns:1fr}
+  .trust-content-panel{padding:18px}
+  .trust-document{padding:12px 18px 20px}
+  .trust-document section{grid-template-columns:1fr;gap:14px;padding:24px 0}
+  .trust-preview-panel{grid-template-columns:1fr;padding:24px 20px}
+  .trust-preview-signal{grid-row:auto}
+  .trust-preview-rules{grid-column:auto}
+  .trust-compact-footer .container{align-items:flex-start;flex-direction:column}
+}
+
+
+

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Bambiku Casino</title>
+  <style>
+    html,body{background:#080809}
+    body[data-page="deposit"]::before{content:"";position:fixed;inset:0;z-index:10000;pointer-events:none;background:#080809;opacity:0;visibility:hidden;transition:opacity .24s ease,visibility 0s linear .24s}
+    body[data-page="deposit"].is-app-booting::before{opacity:1;visibility:visible;transition:none}
+  </style>
+  <link rel="stylesheet" href="../css/style.css?v=cashier-studio-v1"/>
+  <link rel="icon" href="data:,"/>
+</head>
+<body class="is-app-booting" data-page="deposit" data-page-root="deposit">
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="../index.html" class="logo" data-route="home"><span class="dot"></span>Bambi<span>ku</span></a>
+        <ul class="nav-links">
+          <li><a href="../index.html#games" data-route="games" data-i18n="nav_games">Games</a></li>
+          <li><a href="../index.html#bonuses" data-route="bonuses" data-i18n="nav_bonuses">Bonuses</a></li>
+          <li><a href="../index.html#vip" data-route="vip" data-i18n="nav_vip">VIP</a></li>
+        </ul>
+        <div class="nav-actions">
+          <div class="lang-switch">
+            <button class="lang-btn active" type="button" data-lang="ru">RU</button>
+            <button class="lang-btn" type="button" data-lang="en">EN</button>
+          </div>
+          <div class="nav-auth" data-auth-nav>
+            <a href="profile.html" class="btn btn-outline btn-sm" data-route="profile" data-i18n="nav_profile">Profile</a>
+            <a href="../index.html" class="btn btn-outline btn-sm" data-route="home" data-i18n="nav_home">Home</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell cashier-page">
+    <div class="container">
+      <header class="page-head game-head game-command-head cashier-command-head" data-system="KAWAUI VAULT // ACCOUNT LEDGER">
+        <div class="game-command-copy cashier-command-copy">
+          <div class="game-command-kicker cashier-command-kicker">
+            <i aria-hidden="true"></i>
+            <span data-i18n="cashier_command_status">PERSONAL VAULT ONLINE</span>
+            <b>BK-FUNDS</b>
+          </div>
+          <h1 class="page-title" data-i18n="cashier_title">Deposit &amp; Withdrawal</h1>
+          <p class="page-sub" data-i18n="cashier_sub">Instant deposits. Withdrawal fees, speed and limits depend on your VIP tier.</p>
+          <div class="game-command-meta cashier-command-meta" aria-label="Account ledger status">
+            <span><small data-i18n="cashier_command_account">ACCOUNT</small><strong data-i18n="cashier_command_account_value">PERSONAL</strong></span>
+            <span><small data-i18n="cashier_command_ledger">LEDGER</small><strong data-i18n="cashier_command_ledger_value">RECORDED</strong></span>
+            <span><small data-i18n="cashier_command_currency">CURRENCY</small><strong>EUR</strong></span>
+          </div>
+        </div>
+        <a href="profile.html" class="btn btn-outline game-command-back cashier-command-back" data-route="profile" data-i18n="nav_profile">Profile</a>
+      </header>
+
+      <div class="cashier-layout">
+        <section class="cashier-panel">
+          <div class="cashier-tabs" role="tablist" aria-label="Cashier mode">
+            <button class="cashier-tab active" type="button" data-mode="deposit" data-i18n="cashier_deposit" role="tab" aria-selected="true">Deposit</button>
+            <button class="cashier-tab" type="button" data-mode="withdraw" data-i18n="cashier_withdraw" role="tab" aria-selected="false">Withdraw</button>
+          </div>
+
+          <div class="deposit-section active" id="deposit-form" role="tabpanel">
+            <div id="deposit-main">
+              <div id="deposit-step-one">
+                <div class="cashier-section-head">
+                  <span>01</span>
+                  <h2 data-i18n="cashier_choose_method">Choose Deposit Method</h2>
+                </div>
+                <div class="method-grid" id="depositMethods"></div>
+
+                <div class="f-group cashier-amount-block" id="deposit-amount-group">
+                  <label class="f-label" for="amount-input" data-i18n="cashier_amount">Deposit Amount</label>
+                  <div class="preset-grid" id="presetGrid"></div>
+                  <input class="f-input" type="number" id="amount-input" min="10" max="10000" placeholder="&euro;10"/>
+                </div>
+
+                <div class="f-group" id="promo-fields" hidden>
+                  <label class="f-label" for="promo-input" data-i18n="cashier_promo_code">Promo Code</label>
+                  <input class="f-input promo-code-input" type="text" id="promo-input" maxlength="64" autocomplete="off" autocapitalize="characters" spellcheck="false" data-i18n-ph="cashier_promo_ph" placeholder="Enter promo code"/>
+                  <div class="promo-check-row">
+                    <button class="btn btn-outline btn-sm" type="button" id="promo-preview-btn" data-i18n="cashier_promo_preview">Check code</button>
+                  </div>
+                  <div class="promo-preview-card" id="promo-preview-card" hidden></div>
+                </div>
+
+                <div class="f-group" id="promo-amount-group" hidden>
+                  <label class="f-label" for="promo-amount-input" data-i18n="cashier_promo_amount">Deposit amount for promo</label>
+                  <input class="f-input" type="number" id="promo-amount-input" min="0" step="0.01" data-i18n-ph="cashier_promo_amount_ph" placeholder="20"/>
+                </div>
+
+                <p class="secure-note" data-i18n="cashier_secure">SSL encrypted. Card data is not stored.</p>
+                <button class="btn btn-primary cashier-submit" type="button" id="btn-submit-deposit">Continue</button>
+              </div>
+
+              <div class="card-checkout-step" id="card-checkout-step" hidden>
+                <div class="cashier-section-head card-checkout-head">
+                  <span>02</span>
+                  <div>
+                    <h2 data-i18n="cashier_card_method_title">Choose payment route</h2>
+                    <p data-i18n="cashier_card_method_sub">The amount is fixed. Select a route and verify the details.</p>
+                  </div>
+                </div>
+
+                <div class="card-checkout-amount">
+                  <span data-i18n="cashier_card_amount_locked">Deposit amount</span>
+                  <strong id="card-checkout-amount">&euro;0.00</strong>
+                </div>
+
+                <div class="payment-rail-grid" role="radiogroup" data-i18n-aria="cashier_card_method_title">
+                  <button class="payment-rail selected" type="button" data-payment-rail="sbp" role="radio" aria-checked="true"><b>СБП</b><span data-i18n="cashier_rail_sbp_sub">By phone number</span></button>
+                  <button class="payment-rail" type="button" data-payment-rail="visa" role="radio" aria-checked="false"><b>VISA</b><span data-i18n="cashier_rail_card_sub">Bank card</span></button>
+                  <button class="payment-rail" type="button" data-payment-rail="mastercard" role="radio" aria-checked="false"><b>MASTERCARD</b><span data-i18n="cashier_rail_card_sub">Bank card</span></button>
+                </div>
+
+                <div class="card-route-fields" id="sbp-route-fields">
+                  <div class="form-grid compact">
+                    <div class="f-group">
+                      <label class="f-label" for="sbp-phone" data-i18n="cashier_sbp_phone">Phone number</label>
+                      <input class="f-input" id="sbp-phone" type="tel" inputmode="tel" maxlength="18" autocomplete="tel" placeholder="+7 999 000-00-00"/>
+                    </div>
+                    <div class="f-group">
+                      <label class="f-label" for="sbp-bank" data-i18n="cashier_sbp_bank">Recipient bank</label>
+                      <select class="f-input" id="sbp-bank">
+                        <option value="" data-i18n="cashier_sbp_bank_choose">Choose bank</option>
+                        <option value="sber">Сбер</option>
+                        <option value="tbank">Т-Банк</option>
+                        <option value="alfa">Альфа-Банк</option>
+                        <option value="vtb">ВТБ</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-route-fields" id="bank-card-route-fields" hidden>
+                  <div class="f-group">
+                    <label class="f-label" for="card-num" data-i18n="cashier_card_num">Card Number</label>
+                    <input class="f-input" id="card-num" type="text" inputmode="numeric" maxlength="19" autocomplete="cc-number" placeholder="4242 4242 4242 4242"/>
+                  </div>
+                  <div class="form-grid card-detail-grid">
+                    <div class="f-group">
+                      <label class="f-label" for="card-exp" data-i18n="cashier_expiry">Expiry Date</label>
+                      <input class="f-input" id="card-exp" type="text" inputmode="numeric" maxlength="5" autocomplete="cc-exp" placeholder="12/28"/>
+                    </div>
+                    <div class="f-group">
+                      <label class="f-label" for="card-cvv" data-i18n="cashier_card_cvv">CVV</label>
+                      <input class="f-input" id="card-cvv" type="password" inputmode="numeric" maxlength="3" autocomplete="cc-csc" placeholder="123"/>
+                    </div>
+                  </div>
+                </div>
+
+                <p class="secure-note" data-i18n="cashier_card_demo_note">Details are checked only in this browser and are never sent or stored.</p>
+                <div class="card-checkout-actions">
+                  <button class="btn btn-outline" type="button" id="card-checkout-back" data-i18n="cashier_back">Back</button>
+                  <button class="btn btn-primary" type="button" id="card-checkout-confirm" data-i18n="cashier_card_confirm">Confirm payment</button>
+                </div>
+              </div>
+
+              <div class="card-checkout-step crypto-checkout-step" id="crypto-checkout-step" hidden>
+                <div class="cashier-section-head card-checkout-head">
+                  <span>02</span>
+                  <div>
+                    <h2 data-i18n="cashier_crypto_title">Choose cryptocurrency</h2>
+                    <p data-i18n="cashier_crypto_sub">Select an asset and network, then verify the wallet address.</p>
+                  </div>
+                </div>
+
+                <div class="card-checkout-amount">
+                  <span data-i18n="cashier_card_amount_locked">Deposit amount</span>
+                  <strong id="crypto-checkout-amount">&euro;0.00</strong>
+                </div>
+
+                <div class="crypto-option-label" data-i18n="cashier_crypto_asset">Asset</div>
+                <div class="crypto-asset-grid" id="crypto-asset-grid" role="radiogroup" data-i18n-aria="cashier_crypto_asset">
+                  <button class="crypto-asset selected" type="button" data-crypto-asset="usdt" role="radio" aria-checked="true"><b>USDT</b><span>Tether</span></button>
+                  <button class="crypto-asset" type="button" data-crypto-asset="eth" role="radio" aria-checked="false"><b>ETH</b><span>Ethereum</span></button>
+                  <button class="crypto-asset" type="button" data-crypto-asset="sol" role="radio" aria-checked="false"><b>SOL</b><span>Solana</span></button>
+                  <button class="crypto-asset" type="button" data-crypto-asset="btc" role="radio" aria-checked="false"><b>BTC</b><span>Bitcoin</span></button>
+                </div>
+
+                <div class="crypto-option-label" data-i18n="cashier_crypto_network">Network</div>
+                <div class="crypto-network-grid" id="crypto-network-grid" role="radiogroup" data-i18n-aria="cashier_crypto_network"></div>
+
+                <div class="f-group crypto-address-group">
+                  <label class="f-label" for="crypto-address" data-i18n="cashier_crypto_address">Wallet address</label>
+                  <input class="f-input crypto-address-input" id="crypto-address" type="text" maxlength="96" autocomplete="off" spellcheck="false" placeholder="T..."/>
+                  <small id="crypto-address-hint" data-i18n="cashier_crypto_address_hint">The address must match the selected network.</small>
+                </div>
+
+                <p class="secure-note" data-i18n="cashier_crypto_demo_note">The address is validated only in this browser and is never sent or stored.</p>
+                <div class="card-checkout-actions">
+                  <button class="btn btn-outline" type="button" id="crypto-checkout-back" data-i18n="cashier_back">Back</button>
+                  <button class="btn btn-primary" type="button" id="crypto-checkout-confirm" data-i18n="cashier_crypto_confirm">Verify transfer</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="success-overlay" id="deposit-success">
+              <div class="success-icon">OK</div>
+              <h2 data-i18n="cashier_success_deposit_title">Deposit Successful!</h2>
+              <p data-i18n="cashier_success_deposit_sub">Funds have been credited to your account instantly.</p>
+              <a href="../index.html#games" class="btn btn-primary" data-route="games" data-i18n="cashier_play_now">Play Now</a>
+              <button class="btn btn-outline" type="button" data-cashier-reset="deposit" data-i18n="cashier_new_deposit">New Deposit</button>
+            </div>
+          </div>
+
+          <div class="withdraw-section" id="withdraw-form" role="tabpanel" hidden>
+            <div id="withdraw-main">
+              <div id="withdraw-step-one">
+                <div class="cashier-section-head">
+                  <span>01</span>
+                  <h2 data-i18n="cashier_choose_withdraw">Choose Withdrawal Method</h2>
+                </div>
+                <div class="method-grid" id="withdrawMethods"></div>
+
+                <div class="f-group">
+                  <label class="f-label" for="withdraw-input" data-i18n="cashier_withdraw_amount">Withdrawal Amount</label>
+                  <input class="f-input" type="number" id="withdraw-input" min="180" placeholder="&euro;180"/>
+                </div>
+                <div class="withdraw-preview" id="withdraw-preview">
+                  <div><span data-i18n="cashier_fee_amount">Commission</span><strong id="withdraw-preview-fee">&euro;0.00</strong></div>
+                  <div><span data-i18n="cashier_payout_amount">You receive</span><strong id="withdraw-preview-payout">&euro;0.00</strong></div>
+                </div>
+
+                <button class="btn btn-primary cashier-submit" type="button" id="btn-submit-withdraw" data-i18n="cashier_continue">Continue</button>
+              </div>
+
+              <div class="card-checkout-step" id="withdraw-card-step" hidden>
+                <div class="cashier-section-head card-checkout-head">
+                  <span>02</span>
+                  <div>
+                    <h2 data-i18n="cashier_withdraw_card_title">Card for withdrawal</h2>
+                    <p data-i18n="cashier_withdraw_card_sub">Check the payout amount and recipient details.</p>
+                  </div>
+                </div>
+                <div class="withdraw-checkout-summary">
+                  <div><span data-i18n="cashier_withdraw_requested">Requested</span><strong id="withdraw-card-gross">&euro;0.00</strong></div>
+                  <div><span data-i18n="cashier_payout_amount">You receive</span><strong id="withdraw-card-payout">&euro;0.00</strong></div>
+                </div>
+                <div class="form-grid card-detail-grid">
+                  <div class="f-group">
+                    <label class="f-label" for="withdraw-card-num" data-i18n="cashier_card_num">Card Number</label>
+                    <input class="f-input" id="withdraw-card-num" type="text" inputmode="numeric" maxlength="19" autocomplete="cc-number" placeholder="4242 4242 4242 4242"/>
+                  </div>
+                  <div class="f-group">
+                    <label class="f-label" for="withdraw-card-name" data-i18n="cashier_card_recipient">Recipient name</label>
+                    <input class="f-input" id="withdraw-card-name" type="text" maxlength="64" autocomplete="name" placeholder="KAWAU I"/>
+                  </div>
+                </div>
+                <p class="secure-note" data-i18n="cashier_withdraw_demo_note">Details are checked only in this browser. No withdrawal request will be created.</p>
+                <div class="card-checkout-actions">
+                  <button class="btn btn-outline" type="button" data-withdraw-back data-i18n="cashier_back">Back</button>
+                  <button class="btn btn-primary" type="button" id="withdraw-card-confirm" data-i18n="cashier_withdraw_confirm">Verify withdrawal</button>
+                </div>
+              </div>
+
+              <div class="card-checkout-step crypto-checkout-step" id="withdraw-crypto-step" hidden>
+                <div class="cashier-section-head card-checkout-head">
+                  <span>02</span>
+                  <div>
+                    <h2 data-i18n="cashier_withdraw_crypto_title">Crypto withdrawal</h2>
+                    <p data-i18n="cashier_withdraw_crypto_sub">Choose the receiving asset, network and wallet.</p>
+                  </div>
+                </div>
+                <div class="withdraw-checkout-summary">
+                  <div><span data-i18n="cashier_withdraw_requested">Requested</span><strong id="withdraw-crypto-gross">&euro;0.00</strong></div>
+                  <div><span data-i18n="cashier_payout_amount">You receive</span><strong id="withdraw-crypto-payout">&euro;0.00</strong></div>
+                </div>
+                <div class="crypto-option-label" data-i18n="cashier_crypto_asset">Asset</div>
+                <div class="crypto-asset-grid" role="radiogroup" data-i18n-aria="cashier_crypto_asset">
+                  <button class="crypto-asset selected" type="button" data-withdraw-crypto-asset="usdt" role="radio" aria-checked="true"><b>USDT</b><span>Tether</span></button>
+                  <button class="crypto-asset" type="button" data-withdraw-crypto-asset="eth" role="radio" aria-checked="false"><b>ETH</b><span>Ethereum</span></button>
+                  <button class="crypto-asset" type="button" data-withdraw-crypto-asset="sol" role="radio" aria-checked="false"><b>SOL</b><span>Solana</span></button>
+                  <button class="crypto-asset" type="button" data-withdraw-crypto-asset="btc" role="radio" aria-checked="false"><b>BTC</b><span>Bitcoin</span></button>
+                </div>
+                <div class="crypto-option-label" data-i18n="cashier_crypto_network">Network</div>
+                <div class="crypto-network-grid" id="withdraw-crypto-network-grid" role="radiogroup" data-i18n-aria="cashier_crypto_network"></div>
+                <div class="f-group crypto-address-group">
+                  <label class="f-label" for="withdraw-crypto-address" data-i18n="cashier_crypto_address">Wallet address</label>
+                  <input class="f-input crypto-address-input" id="withdraw-crypto-address" type="text" maxlength="96" autocomplete="off" spellcheck="false" placeholder="T..."/>
+                  <small data-i18n="cashier_crypto_address_hint">The address must match the selected network.</small>
+                </div>
+                <p class="secure-note" data-i18n="cashier_withdraw_demo_note">Details are checked only in this browser. No withdrawal request will be created.</p>
+                <div class="card-checkout-actions">
+                  <button class="btn btn-outline" type="button" data-withdraw-back data-i18n="cashier_back">Back</button>
+                  <button class="btn btn-primary" type="button" id="withdraw-crypto-confirm" data-i18n="cashier_withdraw_confirm">Verify withdrawal</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="success-overlay" id="withdraw-success">
+              <div class="success-icon">OK</div>
+              <h2 data-i18n="cashier_success_withdraw_title">Request Accepted!</h2>
+              <p data-i18n="cashier_success_withdraw_sub">Your request will be processed within your VIP tier timeframe.</p>
+              <p class="withdraw-success-receipt" id="withdraw-success-receipt"></p>
+              <a href="profile.html" class="btn btn-primary" data-route="profile" data-i18n="cashier_to_profile">My Profile</a>
+              <button class="btn btn-outline" type="button" data-cashier-reset="withdraw" data-i18n="cashier_new_withdraw">New Withdrawal</button>
+            </div>
+          </div>
+        </section>
+
+        <aside class="cashier-summary">
+          <div class="balance-card">
+            <div class="cashier-balance-head">
+              <span data-i18n="cashier_your_balance">Your Balance</span>
+              <i aria-hidden="true"></i>
+            </div>
+            <strong id="cashier-balance">&euro;0.00</strong>
+            <small data-i18n="cashier_balance_caption">Available for games and withdrawals</small>
+          </div>
+          <div class="cashier-summary-title" id="cashier-summary-title" data-i18n="cashier_limits_title">Operation limits</div>
+          <div class="info-list">
+            <div><span id="cashier-min-label" data-i18n="cashier_min_deposit">Min. Deposit</span><strong id="cashier-min-deposit-val">&euro;10</strong></div>
+            <div><span id="cashier-max-label" data-i18n="cashier_max_deposit">Max. Deposit</span><strong id="cashier-max-deposit-val">&euro;10 000</strong></div>
+            <div><span data-i18n="cashier_with_time">Withdrawal Time</span><strong id="cashier-with-time-val">24h</strong></div>
+            <div><span data-i18n="cashier_commission">Commission</span><strong id="cashier-commission-val">0%</strong></div>
+          </div>
+          <div class="bonus-hint" data-cashier-bonus-hint data-i18n="cashier_bonus_hint">Starter Boost: 50% from €20, capped at €50.</div>
+          <div class="accepted-box cashier-accepted-box">
+            <span data-i18n="cashier_accepted">We Accept</span>
+            <div class="f-payments" data-payment-tags></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <div class="card-oops-overlay" id="card-oops-overlay" role="dialog" aria-modal="true" aria-labelledby="card-oops-title" hidden>
+    <div class="card-oops-modal">
+      <div class="card-oops-sticker" id="card-oops-sticker" aria-hidden="true"><img src="../assets/images/kawaui-payment-oops.png" alt=""/></div>
+      <span class="card-oops-kicker" data-i18n="cashier_oops_kicker">PAYMENT GATEWAY</span>
+      <h2 id="card-oops-title" data-i18n="cashier_oops_title">Kawaui is sleeping</h2>
+      <p data-i18n="cashier_oops_text">The payment gateway fell asleep with him. No money was charged and your balance did not change.</p>
+      <button class="btn btn-primary" type="button" id="card-oops-close" data-i18n="cashier_oops_close">Got it</button>
+    </div>
+  </div>
+
+  <div class="toasts" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="../js/config/app-domain.js?v=cashier-studio-v1"></script>
+  <script src="../js/config/runtime.js?v=infra-v1"></script>
+  <script src="../js/core/constants.js?v=cashier-studio-v1"></script>
+  <script src="../js/core/store.js?v=cashier-vip-rules-v1"></script>
+  <script src="../js/core/ui.js?v=cashier-vip-rules-v1"></script>
+  <script src="../js/core/auth.js?v=optimization-v2"></script>
+  <script src="../js/pages/cashier.js?v=cashier-studio-v1"></script>
+  <script src="../js/core/bootstrap.js?v=offline-i18n-v1"></script>
+</body>
+</html>

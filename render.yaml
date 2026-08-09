@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: bambiku
+    runtime: python
+    plan: free
+    region: frankfurt
+    autoDeployTrigger: commit
+    buildCommand: pip install -r backend/requirements.txt && python scripts/build_render_site.py
+    startCommand: bash scripts/render-start.sh
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.13
+      - key: BAMBIKU_ENV
+        value: production
+      - key: BAMBIKU_LOG_LEVEL
+        value: INFO
+      - key: BAMBIKU_LOG_FORMAT
+        value: json
+      - key: BAMBIKU_SECRET_KEY
+        generateValue: true
+      - key: BAMBIKU_DATABASE_URL
+        sync: false
+      - key: BAMBIKU_ADMIN_EMAILS
+        sync: false
+      - key: BAMBIKU_RUN_MIGRATIONS_ON_STARTUP
+        value: "false"
+      - key: BAMBIKU_SERVE_FRONTEND
+        value: "true"
+      - key: BAMBIKU_FRONTEND_DIST_DIR
+        value: ../dist
+      - key: BAMBIKU_REFRESH_COOKIE_SECURE
+        value: "true"
+      - key: BAMBIKU_REFRESH_COOKIE_SAMESITE
+        value: lax
+      - key: BAMBIKU_ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "15"
+      - key: BAMBIKU_REFRESH_TOKEN_EXPIRE_DAYS
+        value: "7"

@@ -1,0 +1,645 @@
+/* Bambiku shared game console - generated from the former monolithic stylesheet. */
+
+/* Shared game console */
+
+.game-page > .container {
+
+  max-width: 1500px;
+
+  position: relative;
+
+  z-index: 1;
+
+}
+
+.game-page.page-shell,
+.profile-page.page-shell,
+.cashier-page.page-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+.game-page.page-shell::after,
+.profile-page.page-shell::after,
+.cashier-page.page-shell::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .68;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+}
+
+.profile-page > .container,
+.cashier-page > .container {
+  position: relative;
+  z-index: 1;
+}
+
+@media(max-width:620px){
+  .game-page.page-shell::after,
+  .profile-page.page-shell::after,
+  .cashier-page.page-shell::after{background-size:44px 44px;opacity:.52}
+}
+
+
+
+body[data-page="game"],
+
+body[data-page="holdem"] {
+
+  --game-console-accent: #d4af37;
+
+  --game-console-soft: rgba(212, 175, 55, .09);
+
+  --game-console-faint: rgba(212, 175, 55, .035);
+
+  --game-console-border: rgba(212, 175, 55, .24);
+
+}
+
+
+
+body[data-page="slot"] {
+
+  --game-console-accent: #72c993;
+
+  --game-console-soft: rgba(114, 201, 147, .1);
+
+  --game-console-faint: rgba(114, 201, 147, .035);
+
+  --game-console-border: rgba(114, 201, 147, .24);
+
+}
+
+
+
+body[data-page="crash"] {
+
+  --game-console-accent: #a76bff;
+
+  --game-console-soft: rgba(167, 107, 255, .11);
+
+  --game-console-faint: rgba(167, 107, 255, .04);
+
+  --game-console-border: rgba(167, 107, 255, .28);
+
+}
+
+
+
+body[data-page="mines"] {
+
+  --game-console-accent: #d89b58;
+
+  --game-console-soft: rgba(216, 155, 88, .11);
+
+  --game-console-faint: rgba(216, 155, 88, .04);
+
+  --game-console-border: rgba(216, 155, 88, .27);
+
+}
+
+
+
+body[data-page="blocks"] {
+
+  --game-console-accent: #55f0ff;
+
+  --game-console-soft: rgba(85, 240, 255, .1);
+
+  --game-console-faint: rgba(255, 79, 216, .035);
+
+  --game-console-border: rgba(85, 240, 255, .26);
+
+}
+
+
+
+body[data-page="plinko"] {
+
+  --game-console-accent: #b8cdde;
+
+  --game-console-soft: rgba(184, 205, 222, .095);
+
+  --game-console-faint: rgba(101, 151, 187, .035);
+
+  --game-console-border: rgba(184, 205, 222, .23);
+
+}
+
+
+
+.game-command-head:not(.survival-command-head) {
+
+  position: relative;
+
+  align-items: stretch;
+
+  min-height: 196px;
+
+  margin-bottom: 24px;
+
+  padding: 26px 30px;
+
+  overflow: hidden;
+
+  border: 1px solid var(--game-console-border);
+
+  border-radius: 8px;
+
+  background:
+
+    linear-gradient(90deg, var(--game-console-soft), transparent 44%),
+
+    repeating-linear-gradient(90deg, transparent 0 72px, var(--game-console-faint) 73px),
+
+    rgba(9, 11, 14, .92);
+
+  box-shadow:
+
+    inset 0 0 38px var(--game-console-faint),
+
+    0 18px 52px rgba(0, 0, 0, .22);
+
+}
+
+
+
+.game-command-head:not(.survival-command-head)::before {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0 auto 0 0;
+
+  width: 3px;
+
+  background: var(--game-console-accent);
+
+  box-shadow: 0 0 20px var(--game-console-accent);
+
+}
+
+
+
+.game-command-head:not(.survival-command-head)::after {
+
+  content: attr(data-system);
+
+  position: absolute;
+
+  top: 17px;
+
+  right: 28px;
+
+  color: color-mix(in srgb, var(--game-console-accent) 22%, transparent);
+
+  font-size: 9px;
+
+  font-weight: 900;
+
+  text-transform: uppercase;
+
+}
+
+
+
+.game-command-head:not(.survival-command-head) .game-command-copy {
+
+  position: relative;
+
+  z-index: 1;
+
+  display: grid;
+
+  align-content: start;
+
+  width: min(850px, 100%);
+
+}
+
+
+
+.game-command-head:not(.survival-command-head) .label {
+
+  display: none;
+
+}
+
+
+
+.game-command-kicker {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  color: var(--text-2);
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+}
+
+
+
+.game-command-kicker i {
+
+  width: 7px;
+
+  height: 7px;
+
+  flex: 0 0 7px;
+
+  border-radius: 50%;
+
+  background: var(--game-console-accent, var(--survival-green));
+
+  box-shadow: 0 0 13px var(--game-console-accent, var(--survival-green));
+
+}
+
+
+
+.game-command-kicker b {
+
+  padding-left: 9px;
+
+  border-left: 1px solid var(--game-console-border, rgba(143, 194, 211, .22));
+
+  color: var(--game-console-accent, var(--survival-cyan));
+
+  font-size: 10px;
+
+}
+
+
+
+.game-command-head:not(.survival-command-head) .page-title {
+
+  margin: 10px 0 0;
+
+  color: #f1f1f2;
+
+  font-size: clamp(34px, 4vw, 54px);
+
+  line-height: 1;
+
+}
+
+
+
+.game-command-head:not(.survival-command-head) .page-sub {
+
+  max-width: 740px;
+
+  margin: 9px 0 0;
+
+  color: var(--text-2);
+
+}
+
+
+
+.game-command-meta {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  margin-top: 19px;
+
+}
+
+
+
+.game-command-meta > span {
+
+  display: grid;
+
+  grid-template-columns: auto auto;
+
+  align-items: center;
+
+  gap: 11px;
+
+  min-width: 160px;
+
+  padding: 8px 11px;
+
+  border-left: 2px solid var(--game-console-border, rgba(91, 215, 236, .42));
+
+  background: var(--game-console-faint, rgba(92, 147, 166, .055));
+
+}
+
+
+
+.game-command-meta small {
+
+  color: var(--text-3);
+
+  font-size: 8px;
+
+  font-weight: 900;
+
+}
+
+
+
+.game-command-meta strong {
+
+  color: var(--text);
+
+  font-size: 12px;
+
+}
+
+
+
+.game-command-back {
+
+  position: relative;
+
+  z-index: 1;
+
+  align-self: flex-end;
+
+  border-color: var(--game-console-border, rgba(135, 188, 206, .28));
+
+  background: rgba(7, 10, 14, .58);
+
+}
+
+
+
+.game-console-layout {
+
+  padding: 0;
+
+}
+
+
+
+.game-console-layout:not(.survival-layout) {
+
+  grid-template-columns: minmax(0, 1fr) 336px;
+
+  gap: 22px;
+
+  align-items: start;
+
+}
+
+
+
+.game-console-stage:not(.survival-stage) {
+
+  min-width: 0;
+
+  min-height: 690px;
+
+  padding: 18px;
+
+  border-radius: 8px;
+
+}
+
+
+
+.game-console-panel:not(.survival-panel) {
+
+  position: sticky;
+
+  top: 92px;
+
+  display: grid;
+
+  gap: 12px;
+
+  width: 336px;
+
+  min-width: 0;
+
+  padding: 12px;
+
+  border-radius: 8px;
+
+}
+
+
+
+.game-console-panel:not(.survival-panel) > .balance-card,
+
+.game-console-panel:not(.survival-panel) > .slot-bet-box,
+
+.game-console-panel:not(.survival-panel) > .bet-slip,
+
+.game-console-panel:not(.survival-panel) > .slot-paytable,
+
+.game-console-panel:not(.survival-panel) > .mines-meter,
+
+.game-console-panel:not(.survival-panel) > .blocks-meter,
+
+.game-console-panel:not(.survival-panel) > .blocks-stats,
+
+.game-console-panel:not(.survival-panel) > .blocks-next-box,
+
+.game-console-panel:not(.survival-panel) > .blocks-difficulty-box,
+
+.game-console-panel:not(.survival-panel) > .holdem-info-grid,
+
+.game-console-panel:not(.survival-panel) > .plinko-control-box {
+
+  width: 100%;
+
+  min-width: 0;
+
+  margin: 0;
+
+}
+
+
+
+.game-console-panel:not(.survival-panel) > .balance-card,
+
+.game-console-panel:not(.survival-panel) > .slot-bet-box,
+
+.game-console-panel:not(.survival-panel) > .bet-slip,
+
+.game-console-panel:not(.survival-panel) > .slot-paytable,
+
+.game-console-panel:not(.survival-panel) > .mines-meter,
+
+.game-console-panel:not(.survival-panel) > .blocks-meter,
+
+.game-console-panel:not(.survival-panel) > .blocks-next-box,
+
+.game-console-panel:not(.survival-panel) > .blocks-difficulty-box,
+
+.game-console-panel:not(.survival-panel) > .plinko-control-box {
+
+  padding: 17px;
+
+  border-radius: 6px;
+
+}
+
+
+
+.game-console-panel:not(.survival-panel) > .balance-card {
+
+  min-height: 112px;
+
+}
+
+
+
+.game-console-panel .chip-row {
+
+  grid-template-columns: repeat(4, var(--bet-chip-size));
+
+  justify-content: center;
+
+  gap: var(--bet-chip-gap);
+
+  width: 100%;
+
+}
+
+
+
+.game-console-panel .game-rules-open {
+
+  width: 100%;
+
+  justify-content: center;
+
+  min-height: 46px;
+
+}
+
+
+
+@media (max-width: 1180px) {
+
+  .game-console-layout:not(.survival-layout) {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+
+  .game-console-panel:not(.survival-panel) {
+
+    position: static;
+
+    width: 100%;
+
+  }
+
+}
+
+
+
+@media (max-width: 760px) {
+
+  .game-command-head:not(.survival-command-head) {
+
+    min-height: 0;
+
+    padding: 22px 19px;
+
+  }
+
+
+
+  .game-command-head:not(.survival-command-head)::after {
+
+    display: none;
+
+  }
+
+
+
+  .game-command-head:not(.survival-command-head) .page-title {
+
+    font-size: clamp(32px, 10vw, 44px);
+
+  }
+
+
+
+  .game-command-meta {
+
+    display: grid;
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+
+  .game-command-meta > span {
+
+    width: 100%;
+
+  }
+
+
+
+  .game-command-back {
+
+    width: 100%;
+
+    justify-content: center;
+
+    margin-top: 8px;
+
+  }
+
+
+
+  .game-console-stage:not(.survival-stage) {
+
+    min-height: 0;
+
+    padding: 12px;
+
+  }
+
+
+
+  .game-console-panel:not(.survival-panel) {
+
+    padding: 10px;
+
+  }
+
+
+
+  .game-console-panel .chip-row {
+
+    grid-template-columns: repeat(4, minmax(50px, var(--bet-chip-size)));
+
+    gap: 6px;
+
+  }
+
+}
+
+
+

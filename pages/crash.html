@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Bambiku Casino</title>
+  <link rel="stylesheet" href="../css/style.css?v=inner-page-grid-v1"/>
+  <link rel="icon" href="data:,"/>
+</head>
+<body data-page="crash" data-page-root="crash">
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="../index.html" class="logo" data-route="home"><span class="dot"></span>Bambi<span>ku</span></a>
+        <ul class="nav-links">
+          <li><a href="../index.html#games" data-route="games" data-i18n="nav_games">Games</a></li>
+          <li><a href="../index.html#bonuses" data-route="bonuses" data-i18n="nav_bonuses">Bonuses</a></li>
+          <li><a href="../index.html#vip" data-route="vip" data-i18n="nav_vip">VIP</a></li>
+        </ul>
+        <div class="nav-actions">
+          <div class="lang-switch">
+            <button class="lang-btn active" type="button" data-lang="ru">RU</button>
+            <button class="lang-btn" type="button" data-lang="en">EN</button>
+          </div>
+          <div class="nav-auth" data-auth-nav>
+            <a href="deposit.html" class="btn btn-primary btn-sm" data-route="deposit" data-i18n="nav_deposit">Cashier</a>
+            <a href="profile.html" class="btn btn-outline btn-sm" data-route="profile" data-i18n="nav_profile">Profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell game-page crash-page">
+    <div class="container">
+      <header class="page-head game-head game-command-head" data-system="KF-01 // INF">
+        <div class="game-command-copy">
+          <div class="game-command-kicker"><i aria-hidden="true"></i><span data-i18n="crash_lore_status">FORTUNE NEVER WAITS</span><b>KF-01</b></div>
+          <p class="label" data-i18n="crash_label">Crash game</p>
+          <h1 class="page-title" data-i18n="crash_title">Kawaui Fortune</h1>
+          <p class="page-sub" data-i18n="crash_sub">Follow the multiplier and cash out before the curve crashes.</p>
+          <div class="game-command-meta" aria-label="Kawaui Fortune parameters">
+            <span><small data-i18n="crash_lore_1_label">ASCENT</small><strong data-i18n="crash_lore_1_value">TEMPTS</strong></span>
+            <span><small data-i18n="crash_lore_2_label">COURAGE</small><strong data-i18n="crash_lore_2_value">TAKES PROFIT</strong></span>
+            <span><small data-i18n="crash_lore_3_label">FATE</small><strong data-i18n="crash_lore_3_value">CUTS THE CURVE</strong></span>
+          </div>
+        </div>
+        <a href="../index.html#games" class="btn btn-outline game-command-back" data-route="games" data-i18n="roulette_back">Back to Games</a>
+      </header>
+
+      <section class="crash-layout game-console-layout">
+        <div class="crash-stage game-console-stage">
+          <div class="crash-chart" id="crashChart" aria-live="polite">
+            <svg class="crash-graph" viewBox="0 0 1000 420" role="img" aria-label="Crash multiplier graph">
+              <defs>
+                <linearGradient id="crashLineGradient" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0%" stop-color="#9b5cff"/>
+                  <stop offset="58%" stop-color="#f5c842"/>
+                  <stop offset="100%" stop-color="#d7b4ff"/>
+                </linearGradient>
+                <filter id="crashGlow" x="-20%" y="-30%" width="140%" height="170%">
+                  <feGaussianBlur stdDeviation="5" result="blur"/>
+                  <feMerge>
+                    <feMergeNode in="blur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              <g class="crash-grid" aria-hidden="true">
+                <path d="M80 80H940M80 120H940M80 160H940M80 200H940M80 240H940M80 280H940M80 320H940"/>
+                <path d="M160 48V360M240 48V360M320 48V360M400 48V360M480 48V360M560 48V360M640 48V360M720 48V360M800 48V360M880 48V360M940 48V360"/>
+              </g>
+              <path class="crash-axis" d="M80 44V360H944"/>
+              <path class="crash-fill" id="crashFillPath" d="M80 360 L80 360 L80 360 Z"/>
+              <path class="crash-line" id="crashLinePath" d="M80 360 L80 360"/>
+              <circle class="crash-dot" id="crashDot" cx="80" cy="360" r="11"/>
+            </svg>
+            <div class="crash-multiplier" id="crashMultiplier">1.00x</div>
+            <div class="crash-chart-labels" aria-hidden="true">
+              <span>1x</span>
+              <span>2x</span>
+              <span>5x</span>
+              <span>10x+</span>
+            </div>
+          </div>
+          <div class="crash-result" id="crashResult" data-i18n="crash_waiting">Choose a bet and start a round</div>
+          <div class="crash-recent" id="crashRecent"></div>
+        </div>
+
+        <aside class="crash-panel game-console-panel">
+          <div class="balance-card">
+            <span data-i18n="cashier_your_balance">Your Balance</span>
+            <strong id="crash-balance">&euro;0</strong>
+          </div>
+          <div class="slot-bet-box">
+            <strong data-i18n="crash_bet">Bet</strong>
+            <div class="chip-row" id="crashBets"></div>
+            <button class="btn btn-primary crash-action-btn" type="button" id="crashAction">START</button>
+          </div>
+        </aside>
+      </section>
+    </div>
+  </main>
+
+  <div class="toasts" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="../js/config/app-domain.js?v=ux-trust-v1"></script>
+  <script src="../js/config/runtime.js?v=infra-v1"></script>
+  <script src="../js/core/constants.js?v=optimization-v2"></script>
+  <script src="../js/core/store.js?v=vip-click-batch-v1"></script>
+  <script src="../js/core/ui.js?v=optimization-v2"></script>
+  <script src="../js/core/auth.js?v=optimization-v2"></script>
+  <script src="../js/games/kawaui-fortune.js?v=optimization-v2"></script>
+  <script src="../js/core/bootstrap.js?v=offline-i18n-v1"></script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+/* Bambiku profile - generated from the former monolithic stylesheet. */
+
+/* Profile console: same scale and command language as the game interfaces. */
+
+body[data-page="profile"]{
+
+  --game-console-accent:#00d98b;
+
+  --game-console-soft:rgba(0,217,139,.075);
+
+  --game-console-faint:rgba(0,217,139,.024);
+
+  --game-console-border:rgba(0,217,139,.2);
+
+}
+
+body[data-page="profile"] #navbar{
+
+  background:rgba(8,8,9,.96);
+
+  border-bottom-color:var(--border);
+
+  backdrop-filter:blur(22px);
+
+}
+
+.profile-page.page-shell{
+
+  padding-top:96px;
+
+  background:
+
+    radial-gradient(circle at 12% 8%,rgba(0,217,139,.055),transparent 30%),
+
+    radial-gradient(circle at 88% 16%,rgba(255,255,255,.018),transparent 28%),
+
+    var(--bg);
+
+}
+
+.profile-page .container{max-width:1500px}
+
+.profile-command-head{
+
+  background:
+
+    linear-gradient(90deg,rgba(0,217,139,.07),transparent 46%),
+
+    repeating-linear-gradient(90deg,transparent 0 72px,rgba(0,217,139,.018) 73px),
+
+    rgba(10,10,11,.97)!important;
+
+}
+
+.profile-command-head::before{box-shadow:0 0 18px rgba(0,217,139,.34)!important}
+
+.profile-command-head::after{color:rgba(0,217,139,.22)!important}
+
+.profile-layout{
+
+  grid-template-columns:320px minmax(0,1fr);
+
+  gap:24px;
+
+}
+
+.profile-sidebar{
+
+  min-height:720px;
+
+  padding:28px;
+
+  border-radius:8px;
+
+  background:
+
+    linear-gradient(180deg,rgba(69,151,119,.055),transparent 32%),
+
+    var(--bg-card);
+
+}
+
+.profile-content{
+
+  min-width:0;
+
+  min-height:720px;
+
+  padding:30px;
+
+  border-radius:8px;
+
+  background:
+
+    linear-gradient(180deg,rgba(69,151,119,.035),transparent 26%),
+
+    var(--bg-card);
+
+}
+
+.profile-avatar{width:88px;height:88px}
+
+.profile-name{font-size:22px}
+
+.profile-balance-box{padding:17px}
+
+.profile-balance-val{font-size:31px}
+
+.profile-content .stat-box{min-height:106px;padding:19px}
+
+.profile-content .stat-box-val{font-size:25px}
+
+.profile-section h2{font-size:26px}
+
+.profile-security-section{
+
+  margin-top:34px;
+
+  padding-top:28px;
+
+  border-top:1px solid var(--border);
+
+}
+
+.profile-completion{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:14px 22px;
+  margin:18px 0 26px;
+  padding:18px 20px;
+  border:1px solid var(--border);
+  border-left:2px solid var(--accent);
+  border-radius:8px;
+  background:rgba(0,217,139,.025);
+}
+.profile-completion-copy .label{margin:0 0 4px}
+.profile-completion-copy strong{display:block;font-family:var(--font);font-size:17px}
+.profile-completion-copy p{margin:3px 0 0;color:var(--text-3);font-size:12px}
+.profile-completion-score{text-align:right}
+.profile-completion-score strong{display:block;color:var(--accent);font-family:var(--font);font-size:24px;line-height:1}
+.profile-completion-score span{color:var(--text-3);font-size:10px;text-transform:uppercase}
+.profile-completion-track{grid-column:1/-1;height:5px;overflow:hidden;border-radius:99px;background:var(--bg-3)}
+.profile-completion-track i{display:block;width:0;height:100%;border-radius:inherit;background:var(--accent);transition:width .45s var(--ease)}
+.profile-completion-missing{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:7px}
+.profile-completion-missing span{padding:5px 9px;border:1px solid var(--border);border-radius:5px;color:var(--text-2);font-size:10.5px}
+.profile-completion.is-complete{border-left-color:#65e6b4;background:rgba(101,230,180,.035)}
+
+.profile-security-section h2{margin-bottom:18px}
+
+.profile-history-tabs{
+
+  display:grid;
+
+  grid-template-columns:repeat(6,minmax(0,1fr));
+
+  gap:10px;
+
+  margin-bottom:16px;
+
+}
+
+.profile-history-tab{
+
+  min-width:0;
+
+  min-height:84px;
+
+  padding:14px;
+
+  border:1px solid var(--border);
+
+  border-radius:8px;
+
+  background:var(--bg-2);
+
+  color:var(--text);
+
+  text-align:left;
+
+  transition:border-color var(--dur),background var(--dur),transform var(--dur);
+
+}
+
+.profile-history-tab:hover{border-color:var(--border-h);background:var(--bg-3);transform:translateY(-1px)}
+
+.profile-history-tab.active{border-color:var(--accent);background:rgba(0,217,139,.055)}
+
+.profile-history-tab span{
+
+  display:block;
+
+  overflow:hidden;
+
+  color:var(--text-3);
+
+  font-family:var(--font);
+
+  font-size:10px;
+
+  font-weight:900;
+
+  letter-spacing:.07em;
+
+  text-overflow:ellipsis;
+
+  text-transform:uppercase;
+
+  white-space:nowrap;
+
+}
+
+.profile-history-tab.active span{color:var(--accent)}
+
+.profile-history-tab strong{display:block;margin-top:9px;font-family:var(--font);font-size:23px;font-weight:900}
+
+.profile-history-toolbar{
+
+  display:flex;
+
+  align-items:end;
+
+  justify-content:space-between;
+
+  gap:16px;
+
+  min-height:64px;
+
+  padding:12px 14px;
+
+  border:1px solid var(--border);
+
+  border-bottom:0;
+
+  border-radius:8px 8px 0 0;
+
+  background:rgba(255,255,255,.018);
+
+}
+
+.profile-history-toolbar>div{display:flex;flex-direction:column;gap:3px}
+
+.profile-history-toolbar strong{font-family:var(--font);font-size:16px;font-weight:900}
+
+.profile-history-toolbar>div span{color:var(--text-3);font-size:12px}
+
+.profile-history-game-filter{display:flex;align-items:center;gap:10px;color:var(--text-3);font-size:11px;font-weight:800}
+
+.profile-history-game-filter[hidden]{display:none}
+
+.profile-history-game-filter .f-input{width:220px;height:40px;min-height:40px}
+
+.profile-history-table-wrap{border-radius:0 0 8px 8px}
+
+.profile-history-table-wrap .tx-table{min-width:760px}
+
+.profile-history-status{
+
+  display:inline-flex;
+
+  align-items:center;
+
+  min-height:25px;
+
+  padding:4px 9px;
+
+  border:1px solid var(--border);
+
+  border-radius:999px;
+
+  background:rgba(255,255,255,.035);
+
+  color:var(--text-2);
+
+  font-family:var(--font);
+
+  font-size:10px;
+
+  font-weight:900;
+
+  text-transform:uppercase;
+
+  white-space:nowrap;
+
+}
+
+.profile-history-status.is-completed{border-color:rgba(0,217,139,.24);background:rgba(0,217,139,.08);color:#62e6b5}
+
+.profile-history-status.is-pending,.profile-history-status.is-active{border-color:rgba(245,200,66,.25);background:rgba(245,200,66,.08);color:#f5d56e}
+
+.profile-history-status.is-rejected,.profile-history-status.is-lost{border-color:rgba(255,63,82,.24);background:rgba(255,63,82,.08);color:#ff8894}
+
+.profile-history-more{display:flex;margin:16px auto 0;min-width:180px;justify-content:center}
+
+
+
+@media(max-width:1180px){
+
+  .profile-layout{grid-template-columns:280px minmax(0,1fr)}
+
+  .profile-page .stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+  .profile-history-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}
+
+}
+
+@media(max-width:900px){
+
+  .profile-layout{grid-template-columns:1fr}
+
+  .profile-sidebar{position:static;min-height:0}
+
+  .profile-content{min-height:620px}
+
+  .profile-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+
+  .profile-nav-btn{text-align:center}
+
+}
+
+@media(max-width:620px){
+
+  .profile-page .container{padding:0 14px}
+
+  .profile-sidebar,.profile-content{padding:20px 16px}
+
+  .profile-content{min-height:0}
+
+  .profile-page .stat-grid{grid-template-columns:1fr}
+
+  .profile-nav{grid-template-columns:1fr}
+
+  .profile-history-tabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+  .profile-history-tab{min-height:72px;padding:11px}
+
+  .profile-history-toolbar{align-items:stretch;flex-direction:column}
+
+  .profile-history-game-filter{align-items:stretch;flex-direction:column;gap:5px}
+
+  .profile-history-game-filter .f-input{width:100%}
+
+}
+

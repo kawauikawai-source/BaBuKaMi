@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Bambiku Casino</title>
+  <style>
+    html,body{background:#080809}
+    body[data-page="profile"]::before{content:"";position:fixed;inset:0;z-index:10000;pointer-events:none;background:#080809;opacity:0;visibility:hidden;transition:opacity .24s ease,visibility 0s linear .24s}
+    body[data-page="profile"].is-app-booting::before{opacity:1;visibility:visible;transition:none}
+  </style>
+  <link rel="stylesheet" href="../css/style.css?v=account-onboarding-v1"/>
+  <link rel="icon" href="data:,"/>
+</head>
+<body class="is-app-booting" data-page="profile" data-page-root="profile">
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="../index.html" class="logo" data-route="home"><span class="dot"></span>Bambi<span>ku</span></a>
+        <ul class="nav-links">
+          <li><a href="../index.html#games" data-route="games" data-i18n="nav_games">Games</a></li>
+          <li><a href="../index.html#bonuses" data-route="bonuses" data-i18n="nav_bonuses">Bonuses</a></li>
+          <li><a href="../index.html#vip" data-route="vip" data-i18n="nav_vip">VIP</a></li>
+        </ul>
+        <div class="nav-actions">
+          <div class="lang-switch">
+            <button class="lang-btn active" type="button" data-lang="ru">RU</button>
+            <button class="lang-btn" type="button" data-lang="en">EN</button>
+          </div>
+          <div class="nav-auth" data-auth-nav>
+            <a href="deposit.html" class="btn btn-primary btn-sm" data-route="deposit" data-i18n="nav_deposit">Cashier</a>
+            <a href="../index.html" class="btn btn-outline btn-sm" data-route="home" data-i18n="nav_home">Home</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell profile-page">
+    <div class="container">
+      <header class="page-head game-head game-command-head profile-command-head" data-system="KAWAUI ID // ACCOUNT CORE">
+        <div class="game-command-copy profile-command-copy">
+          <div class="game-command-kicker profile-command-kicker">
+            <i aria-hidden="true"></i>
+            <span data-i18n="profile_command_status">PERSONAL CIRCUIT ONLINE</span>
+            <b>BK-ID</b>
+          </div>
+          <h1 class="page-title" data-i18n="profile_title">My Profile</h1>
+          <p class="page-sub" data-i18n="profile_sub">One account for balance, VIP status and transaction history.</p>
+          <div class="game-command-meta profile-command-meta" aria-label="Account status">
+            <span><small data-i18n="profile_command_identity">IDENTITY</small><strong data-i18n="profile_command_identity_value">KAWAUI ID</strong></span>
+            <span><small data-i18n="profile_command_vault">VAULT</small><strong data-i18n="profile_command_vault_value">PROTECTED</strong></span>
+            <span><small data-i18n="profile_command_access">ACCESS</small><strong data-i18n="profile_command_access_value">VIP ACTIVE</strong></span>
+          </div>
+        </div>
+        <a href="../index.html" class="btn btn-outline game-command-back profile-command-back" data-route="home" data-i18n="nav_home">Home</a>
+      </header>
+
+      <div class="profile-layout">
+        <aside class="profile-sidebar">
+          <div class="profile-avatar">
+            <span id="profile-avatar-badge">Bronze</span>
+          </div>
+          <div class="profile-name" id="profile-name-display">Account</div>
+          <div class="profile-email" id="profile-email-display"></div>
+          <div class="profile-vip" id="profile-vip-display">Bronze VIP</div>
+          <div class="profile-balance-box">
+            <div class="profile-balance-label" data-i18n="profile_balance">Balance</div>
+            <div class="profile-balance-val" id="profile-balance-val">&euro;0.00</div>
+          </div>
+          <a href="deposit.html" class="btn btn-primary profile-wide-btn" data-route="deposit" data-i18n="footer_deposit">Deposit</a>
+          <a href="admin.html" class="btn btn-outline profile-wide-btn profile-admin-link" id="profile-admin-link" data-route="admin" data-i18n="nav_admin" hidden>Admin</a>
+          <a href="../index.html" class="btn btn-outline profile-wide-btn" data-route="home" data-i18n="nav_home">Home</a>
+
+          <div class="profile-nav" role="tablist" aria-label="Profile sections">
+            <button class="profile-nav-btn active" type="button" data-section="overview" role="tab" aria-selected="true">
+              <span class="nav-label" data-i18n="profile_overview">Overview</span>
+            </button>
+            <button class="profile-nav-btn" type="button" data-section="personal" role="tab" aria-selected="false">
+              <span class="nav-label" data-i18n="profile_personal">Personal Info</span>
+            </button>
+            <button class="profile-nav-btn" type="button" data-section="history" role="tab" aria-selected="false">
+              <span class="nav-label" data-i18n="profile_history">History</span>
+            </button>
+          </div>
+        </aside>
+
+        <section class="profile-content">
+          <div class="profile-section active" id="section-overview" role="tabpanel">
+            <h2 data-i18n="profile_overview">Overview</h2>
+            <div class="stat-grid">
+              <div class="stat-box">
+                <div class="stat-box-label" data-i18n="profile_balance">Balance</div>
+                <div class="stat-box-val" id="stat-balance-proxy">See left</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-box-label" data-i18n="profile_games_played">Games Played</div>
+                <div class="stat-box-val" id="stat-games-played">0</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-box-label" data-i18n="profile_total_won">Total Won</div>
+                <div class="stat-box-val accent" id="stat-total-won">&euro;0.00</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-box-label" data-i18n="profile_vip_points">VIP Points</div>
+                <div class="stat-box-val gold" id="stat-vip-points">0</div>
+              </div>
+            </div>
+
+            <div class="vip-progress-section">
+              <div class="section-row">
+                <strong id="profile-vip-progress-label">Progress to Gold</strong>
+                <span id="profile-vip-hint">3,160 points to the next tier</span>
+              </div>
+              <div class="vip-prog-big"><div class="vip-prog-big-fill" id="vip-bar"></div></div>
+            </div>
+            <div class="overview-vip-panel">
+              <div class="section-row">
+                <strong data-i18n="profile_vip_status">VIP Status</strong>
+                <span data-i18n="profile_current_perks">Current perks</span>
+              </div>
+              <div class="vip-tiers-mini" id="profileVipTiers"></div>
+              <button class="btn btn-primary vip-purchase-btn" type="button" id="profile-vip-purchase" data-vip-purchase hidden></button>
+              <div class="perk-box">
+                <strong data-i18n="profile_current_perks">Current perks</strong>
+                <ul class="vip-perks" id="profileCurrentPerks"></ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-section" id="section-personal" role="tabpanel" hidden>
+            <h2 data-i18n="profile_personal">Personal Info</h2>
+            <div class="profile-completion" id="profileCompletion">
+              <div class="profile-completion-copy">
+                <span class="label" data-i18n="profile_completion_label">Profile setup</span>
+                <strong data-i18n="profile_completion_title">Complete your account details</strong>
+                <p id="profileCompletionText" data-i18n="profile_completion_safe">Missing details do not limit your account.</p>
+              </div>
+              <div class="profile-completion-score"><strong id="profileCompletionValue">0%</strong><span data-i18n="profile_completion_done">complete</span></div>
+              <div class="profile-completion-track"><i id="profileCompletionBar"></i></div>
+              <div class="profile-completion-missing" id="profileCompletionMissing"></div>
+            </div>
+            <div class="form-grid">
+              <div class="f-group">
+                <label class="f-label" for="inp-fname" data-i18n="profile_first_name">First Name</label>
+                <input class="f-input" id="inp-fname" type="text"/>
+                <div class="f-error" id="inp-name-err" role="alert"></div>
+              </div>
+              <div class="f-group">
+                <label class="f-label" for="inp-lname" data-i18n="profile_last_name">Last Name</label>
+                <input class="f-input" id="inp-lname" type="text"/>
+              </div>
+              <div class="f-group">
+                <label class="f-label" for="inp-email" data-i18n="form_email">Email Address</label>
+                <input class="f-input" id="inp-email" type="email"/>
+                <div class="f-error" id="inp-email-err" role="alert"></div>
+              </div>
+              <div class="f-group">
+                <label class="f-label" for="inp-phone" data-i18n="profile_phone">Phone</label>
+                <input class="f-input" id="inp-phone" type="tel"/>
+              </div>
+              <div class="f-group">
+                <label class="f-label" for="inp-dob" data-i18n="profile_dob">Date of Birth</label>
+                <input class="f-input" id="inp-dob" type="date"/>
+              </div>
+              <div class="f-group">
+                <label class="f-label" for="inp-country" data-i18n="profile_country">Country</label>
+                <input class="f-input" id="inp-country" type="text"/>
+              </div>
+              <div class="f-group">
+                <label class="f-label" for="inp-currency" data-i18n="profile_currency">Account Currency</label>
+                <input class="f-input muted-input" id="inp-currency" type="text" readonly/>
+              </div>
+            </div>
+            <button class="btn btn-primary" type="button" id="btn-save-personal" data-i18n="profile_save">Save Changes</button>
+            <div class="profile-security-section">
+              <h2 data-i18n="profile_security">Security</h2>
+              <div class="security-list" id="securityRows"></div>
+            </div>
+          </div>
+
+          <div class="profile-section" id="section-history" role="tabpanel" hidden>
+            <h2 data-i18n="profile_history">History</h2>
+            <div class="profile-history-tabs" id="profileHistoryTabs" role="tablist" aria-label="History categories">
+              <button class="profile-history-tab active" type="button" role="tab" aria-selected="true" data-history-filter="all">
+                <span data-i18n="profile_history_all">All</span>
+                <strong id="profile-history-count-all">0</strong>
+              </button>
+              <button class="profile-history-tab" type="button" role="tab" aria-selected="false" data-history-filter="games">
+                <span data-i18n="profile_history_games">Games</span>
+                <strong id="profile-history-count-games">0</strong>
+              </button>
+              <button class="profile-history-tab" type="button" role="tab" aria-selected="false" data-history-filter="deposits">
+                <span data-i18n="profile_history_deposits">Deposits</span>
+                <strong id="profile-history-count-deposits">0</strong>
+              </button>
+              <button class="profile-history-tab" type="button" role="tab" aria-selected="false" data-history-filter="withdrawals">
+                <span data-i18n="profile_history_withdrawals">Withdrawals</span>
+                <strong id="profile-history-count-withdrawals">0</strong>
+              </button>
+              <button class="profile-history-tab" type="button" role="tab" aria-selected="false" data-history-filter="promos">
+                <span data-i18n="profile_history_promos">Promos</span>
+                <strong id="profile-history-count-promos">0</strong>
+              </button>
+              <button class="profile-history-tab" type="button" role="tab" aria-selected="false" data-history-filter="vip">
+                <span data-i18n="profile_history_vip">VIP</span>
+                <strong id="profile-history-count-vip">0</strong>
+              </button>
+            </div>
+            <div class="profile-history-toolbar">
+              <div>
+                <strong id="profile-history-title" data-i18n="profile_history_all">All</strong>
+                <span id="profile-history-meta"></span>
+              </div>
+              <label class="profile-history-game-filter" id="profileHistoryGameFilterWrap" hidden>
+                <span data-i18n="profile_history_game_filter">Game</span>
+                <select class="f-input" id="profileHistoryGameFilter">
+                  <option value="all" data-i18n="profile_history_all_games">All games</option>
+                </select>
+              </label>
+            </div>
+            <div class="table-wrap profile-history-table-wrap">
+              <table class="tx-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="th_date">Date</th>
+                    <th data-i18n="th_type">Type</th>
+                    <th data-i18n="th_description">Game / Description</th>
+                    <th data-i18n="profile_history_status">Status</th>
+                    <th data-i18n="th_amount">Amount</th>
+                  </tr>
+                </thead>
+                <tbody id="historyRows"></tbody>
+              </table>
+            </div>
+            <button class="btn btn-outline profile-history-more" type="button" id="profileHistoryMore" data-i18n="profile_history_show_more" hidden>Show more</button>
+          </div>
+
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <div class="overlay kyc-overlay" id="kycOverlay" aria-hidden="true" hidden>
+    <div class="modal kyc-modal" role="dialog" aria-modal="true" aria-labelledby="kyc-title">
+      <button class="modal-close" type="button" data-kyc-close aria-label="Close">&times;</button>
+      <div class="modal-logo">Bambi<span>ku</span></div>
+      <h2 id="kyc-title" class="kyc-title" data-i18n="kyc_modal_title">KYC Verification</h2>
+      <p class="modal-sub" data-i18n="kyc_modal_sub">Scan this QR code to continue verification.</p>
+      <div class="kyc-qr-frame">
+        <img src="../assets/kyc-qr.gif" alt="KYC QR code" class="kyc-qr"/>
+      </div>
+      <label class="kyc-check">
+        <input type="checkbox" id="kyc-scan-check"/>
+        <span data-i18n="kyc_scan_confirm">I scanned the QR code</span>
+      </label>
+      <div class="kyc-actions">
+        <button class="btn btn-outline" type="button" data-kyc-close data-i18n="kyc_cancel">Cancel</button>
+        <button class="btn btn-primary" type="button" id="kyc-continue" disabled data-i18n="kyc_continue">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toasts" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="../js/config/app-domain.js?v=ux-trust-v1"></script>
+  <script src="../js/config/runtime.js?v=infra-v1"></script>
+  <script src="../js/core/constants.js?v=optimization-v2"></script>
+  <script src="../js/core/store.js?v=account-onboarding-v1"></script>
+  <script src="../js/core/ui.js?v=optimization-v2"></script>
+  <script src="../js/core/auth.js?v=optimization-v2"></script>
+  <script src="../js/pages/profile.js?v=account-onboarding-v1"></script>
+  <script src="../js/core/bootstrap.js?v=offline-i18n-v1"></script>
+</body>
+</html>
