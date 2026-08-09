@@ -22,11 +22,11 @@
 
 .slot-machine.is-win::after{background:radial-gradient(circle at 50% 44%,rgba(166,255,199,.12),transparent 37%,rgba(114,201,147,.07) 60%,transparent 80%),linear-gradient(112deg,transparent 0 17%,rgba(114,201,147,.052) 17% 17.35%,transparent 17.35% 36%,rgba(245,200,66,.02) 36% 36.28%,transparent 36.28% 68%,rgba(114,201,147,.042) 68% 68.28%,transparent 68.28%);opacity:.7;animation:slotWinVeil .9s ease-out both}
 
-.slot-machine.is-loss{border-color:rgba(202,75,67,.4);background:radial-gradient(circle at 50% 40%,rgba(255,103,91,.06),transparent 42%),radial-gradient(circle at 14% 82%,rgba(114,201,147,.08),transparent 34%),linear-gradient(180deg,#10120e,#060806 74%);box-shadow:inset 0 0 0 1px rgba(255,205,174,.035),0 28px 58px rgba(0,0,0,.38),0 0 24px rgba(202,75,67,.08);animation:slotMachineLoss .36s ease-out}
+.slot-machine.is-loss{border-color:rgba(202,75,67,.42);background:radial-gradient(circle at 50% 40%,rgba(255,103,91,.075),transparent 44%),radial-gradient(circle at 14% 82%,rgba(114,201,147,.1),transparent 36%),linear-gradient(180deg,#111611,#0a0d0b 76%);box-shadow:inset 0 0 0 1px rgba(255,205,174,.04),0 28px 58px rgba(0,0,0,.31),0 0 25px rgba(202,75,67,.09);animation:slotMachineLoss .36s ease-out}
 
-.slot-machine.is-loss::before{opacity:.55;filter:saturate(.82) brightness(.9)}
+.slot-machine.is-loss::before{opacity:.62;filter:saturate(.9) brightness(.97)}
 
-.slot-machine.is-loss::after{background:radial-gradient(circle at 50% 50%,transparent 0 50%,rgba(0,0,0,.22) 100%),linear-gradient(180deg,rgba(68,20,16,.04),rgba(0,0,0,.12));opacity:.46;animation:slotLossVeil .45s ease-out both}
+.slot-machine.is-loss::after{background:radial-gradient(circle at 50% 50%,transparent 0 56%,rgba(0,0,0,.13) 100%),linear-gradient(180deg,rgba(68,20,16,.035),rgba(0,0,0,.055));opacity:.3;animation:slotLossVeil .45s ease-out both}
 
 .slot-machine.is-push{border-color:rgba(212,232,220,.16);box-shadow:inset 0 0 0 1px rgba(255,255,255,.035),0 28px 58px rgba(0,0,0,.38),0 0 24px rgba(212,232,220,.045)}
 
@@ -56,9 +56,9 @@
 
 .slot-reels.is-win .slot-cell:not(.is-hit){filter:brightness(.78) saturate(.9)}
 
-.slot-reels.is-loss .slot-cell{filter:brightness(.68) saturate(.82);border-color:rgba(148,76,68,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.04),inset 0 0 18px rgba(0,0,0,.14),0 0 12px rgba(255,63,82,.025);animation:slotLossCascade .72s ease-out both;animation-delay:calc(var(--cell-order,0) * 28ms)}
+.slot-reels.is-loss .slot-cell{filter:brightness(.82) saturate(.9);border-color:rgba(180,82,73,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.055),inset 0 0 14px rgba(0,0,0,.08),0 0 13px rgba(255,63,82,.04);animation:slotLossCascade .72s ease-out both;animation-delay:calc(var(--cell-order,0) * 28ms)}
 
-.slot-reels.is-loss .slot-cell span{filter:grayscale(.08) brightness(.82)}
+.slot-reels.is-loss .slot-cell span{filter:grayscale(.04) brightness(.94)}
 
 .slot-reels.is-push .slot-cell{filter:brightness(.82) saturate(.9)}
 
@@ -190,7 +190,7 @@
 
   from{opacity:0}
 
-  to{opacity:.46}
+  to{opacity:.3}
 
 }
 
@@ -198,9 +198,9 @@
 
   0%{filter:brightness(.95) saturate(1);border-color:rgba(114,201,147,.28);transform:translateY(0)}
 
-  42%{filter:brightness(.48) saturate(.68);border-color:rgba(202,75,67,.26);transform:translateY(1px)}
+  42%{filter:brightness(.68) saturate(.78);border-color:rgba(202,75,67,.3);transform:translateY(1px)}
 
-  100%{filter:brightness(.68) saturate(.82);border-color:rgba(148,76,68,.2);transform:translateY(0)}
+  100%{filter:brightness(.82) saturate(.9);border-color:rgba(180,82,73,.28);transform:translateY(0)}
 
 }
 

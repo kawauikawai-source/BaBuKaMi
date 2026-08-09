@@ -266,7 +266,7 @@ function checkPerformanceBudgets() {
   const maxPageScriptBytes = 420 * 1024;
   const pageScriptBudgetBytes = new Map([
     // Admin loads the shared account schema plus its own data-management modules.
-    ['pages/admin.html', 424 * 1024],
+    ['pages/admin.html', 432 * 1024],
   ]);
   const maxPageScripts = 8;
   const maxPageStylesheets = 3;

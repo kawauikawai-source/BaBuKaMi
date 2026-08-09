@@ -147,6 +147,30 @@ body[data-page="profile"] #navbar{
 
 .profile-security-section h2{margin-bottom:18px}
 
+.profile-manager-access{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:22px;
+  margin-top:14px;
+  padding:17px 18px;
+  border:1px solid rgba(0,217,139,.2);
+  border-left:2px solid var(--accent);
+  border-radius:8px;
+  background:rgba(0,217,139,.035);
+}
+.profile-manager-access[hidden]{display:none}
+.profile-manager-access>div{min-width:0}
+.profile-manager-access span{display:block;margin-bottom:3px;color:var(--accent);font-family:var(--font);font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+.profile-manager-access strong{display:block;font-family:var(--font);font-size:16px;font-weight:900}
+.profile-manager-access p{margin:3px 0 0;color:var(--text-3);font-size:12px;line-height:1.45}
+.profile-manager-access .btn{flex:0 0 auto;justify-content:center;min-width:160px}
+
+@media(max-width:620px){
+  .profile-manager-access{align-items:stretch;flex-direction:column}
+  .profile-manager-access .btn{width:100%}
+}
+
 .profile-history-tabs{
 
   display:grid;

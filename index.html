@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Bambiku Casino</title>
   <meta name="description" content="Bambiku Casino - eight distinct worlds of fortune, risk, skill, and midnight ritual."/>
-  <link rel="stylesheet" href="css/style.css?v=hero-terminal-type-v2"/>
+  <link rel="stylesheet" href="css/style.css?v=site-date-manager-v1"/>
   <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon-bk-512.png?v=1"/>
   <link rel="apple-touch-icon" href="assets/favicon-bk-512.png?v=1"/>
   <meta name="theme-color" content="#00d98b"/>
@@ -272,7 +272,7 @@
           <section class="register-panel" data-register-step="2" hidden>
             <div class="register-panel-head"><span data-i18n="register_step_2_label">Personal details</span><strong data-i18n="register_step_2_title">Tell us who owns the account</strong></div>
             <div class="register-form-grid">
-              <div class="f-group"><label class="f-label" for="regDob" data-i18n="profile_dob">Date of Birth</label><input class="f-input" id="regDob" type="date" autocomplete="bday"/><span class="f-error" id="regDobErr" role="alert"></span></div>
+              <div class="f-group"><label class="f-label" for="regDob" data-i18n="profile_dob">Date of Birth</label><input class="f-input" id="regDob" type="text" inputmode="none" autocomplete="bday" data-site-date-picker data-date-max-age="18" readonly/><span class="f-error" id="regDobErr" role="alert"></span></div>
               <div class="f-group"><label class="f-label" for="regCountry" data-i18n="profile_country">Country</label><input class="f-input" id="regCountry" type="text" autocomplete="country-name"/><span class="f-error" id="regCountryErr" role="alert"></span></div>
             </div>
             <p class="register-note" data-i18n="register_age_note">You must be at least 18 years old. Details can be corrected later in your profile.</p>
@@ -323,10 +323,10 @@
 
   <script src="js/config/app-domain.js?v=home-finish-v1"></script>
   <script src="js/config/runtime.js?v=infra-v1"></script>
-  <script src="js/core/constants.js?v=catalog-soon-v1"></script>
+  <script src="js/core/constants.js?v=site-date-manager-v1"></script>
   <script src="js/core/store.js?v=account-onboarding-v1"></script>
-  <script src="js/core/ui.js?v=catalog-soon-v1"></script>
-  <script src="js/core/auth.js?v=account-onboarding-v1"></script>
+  <script src="js/core/ui.js?v=site-date-manager-v1"></script>
+  <script src="js/core/auth.js?v=site-date-manager-v1"></script>
   <script src="js/core/bootstrap.js?v=offline-i18n-v1"></script>
 </body>
 </html>

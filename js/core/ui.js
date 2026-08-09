@@ -545,6 +545,204 @@
     });
   }
 
+  const datePickerLabels = {
+    ru: {
+      months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+      weekdays: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+      open: 'Открыть календарь'
+    },
+    en: {
+      months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+      weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+      open: 'Open calendar'
+    }
+  };
+  const datePickerState = { input: null, view: null, popover: null };
+
+  function isoDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  function parseIsoDate(value) {
+    const parts = String(value || '').split('-').map(Number);
+    if (parts.length !== 3 || !parts.every(Number.isFinite)) return null;
+    const date = new Date(parts[0], parts[1] - 1, parts[2]);
+    return date.getFullYear() === parts[0] && date.getMonth() === parts[1] - 1 && date.getDate() === parts[2] ? date : null;
+  }
+
+  function datePickerLimits(input) {
+    const today = new Date();
+    const maxAge = Number(input.dataset.dateMaxAge || 0);
+    const calculatedMax = new Date(today.getFullYear() - maxAge, today.getMonth(), today.getDate());
+    const min = parseIsoDate(input.min) || new Date(1900, 0, 1);
+    const max = parseIsoDate(input.max) || calculatedMax;
+    return { min, max };
+  }
+
+  function positionDatePicker() {
+    const input = datePickerState.input;
+    const popover = datePickerState.popover;
+    if (!input || !popover || !popover.classList.contains('is-open')) return;
+    const rect = input.getBoundingClientRect();
+    const width = Math.min(340, global.innerWidth - 24);
+    const height = popover.offsetHeight || 390;
+    const below = rect.bottom + 8;
+    const top = below + height <= global.innerHeight - 12 ? below : Math.max(12, rect.top - height - 8);
+    const left = Math.max(12, Math.min(rect.left, global.innerWidth - width - 12));
+    popover.style.top = `${top}px`;
+    popover.style.left = `${left}px`;
+    popover.style.width = `${width}px`;
+  }
+
+  function renderDatePicker() {
+    const input = datePickerState.input;
+    const popover = datePickerState.popover;
+    if (!input || !popover) return;
+    const lang = readState().lang === 'ru' ? 'ru' : 'en';
+    const labels = datePickerLabels[lang];
+    const limits = datePickerLimits(input);
+    const selected = parseIsoDate(input.value);
+    const view = datePickerState.view || selected || limits.max;
+    const viewYear = view.getFullYear();
+    const viewMonth = view.getMonth();
+    const first = new Date(viewYear, viewMonth, 1);
+    const gridStart = new Date(viewYear, viewMonth, 1 - ((first.getDay() + 6) % 7));
+    const todayIso = isoDate(new Date());
+    const selectedIso = selected ? isoDate(selected) : '';
+    const days = [];
+
+    for (let index = 0; index < 42; index += 1) {
+      const date = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + index);
+      const value = isoDate(date);
+      const outside = date.getMonth() !== viewMonth;
+      const disabled = date < limits.min || date > limits.max;
+      days.push(`<button class="site-date-day${outside ? ' is-muted' : ''}${value === todayIso ? ' is-today' : ''}${value === selectedIso ? ' is-selected' : ''}" type="button" data-site-date-value="${value}"${disabled ? ' disabled' : ''}>${date.getDate()}</button>`);
+    }
+
+    const years = [];
+    for (let year = limits.max.getFullYear(); year >= limits.min.getFullYear(); year -= 1) {
+      years.push(`<option value="${year}"${year === viewYear ? ' selected' : ''}>${year}</option>`);
+    }
+    popover.innerHTML = `
+      <div class="site-date-head">
+        <button class="site-date-nav" type="button" data-site-date-nav="-1" aria-label="Previous month">‹</button>
+        <select class="site-date-select" data-site-date-month aria-label="Month">
+          ${labels.months.map((month, index) => `<option value="${index}"${index === viewMonth ? ' selected' : ''}>${escapeHTML(month)}</option>`).join('')}
+        </select>
+        <select class="site-date-select" data-site-date-year aria-label="Year">${years.join('')}</select>
+        <button class="site-date-nav" type="button" data-site-date-nav="1" aria-label="Next month">›</button>
+      </div>
+      <div class="site-date-week">${labels.weekdays.map(day => `<span>${day}</span>`).join('')}</div>
+      <div class="site-date-grid">${days.join('')}</div>
+      <button class="site-date-clear" type="button" data-site-date-clear>${escapeHTML(t('admin_calendar_clear'))}</button>
+    `;
+    global.requestAnimationFrame(positionDatePicker);
+  }
+
+  function closeDatePicker() {
+    const input = datePickerState.input;
+    datePickerState.popover?.classList.remove('is-open');
+    input?.closest('.site-date-field')?.classList.remove('is-open');
+    datePickerState.input = null;
+    datePickerState.view = null;
+  }
+
+  function openDatePicker(input) {
+    if (!input || input.disabled) return;
+    const limits = datePickerLimits(input);
+    datePickerState.input?.closest('.site-date-field')?.classList.remove('is-open');
+    datePickerState.input = input;
+    datePickerState.view = parseIsoDate(input.value) || limits.max;
+    input.closest('.site-date-field')?.classList.add('is-open');
+    datePickerState.popover.classList.add('is-open');
+    renderDatePicker();
+  }
+
+  function ensureDatePickerPopover() {
+    if (datePickerState.popover) return datePickerState.popover;
+    const popover = document.createElement('div');
+    popover.className = 'site-date-popover';
+    popover.setAttribute('role', 'dialog');
+    popover.setAttribute('aria-label', 'Calendar');
+    document.body.appendChild(popover);
+    datePickerState.popover = popover;
+    document.addEventListener('click', event => {
+      if (!datePickerState.input) return;
+      if (popover.contains(event.target) || event.target.closest('.site-date-field')) return;
+      closeDatePicker();
+    });
+    global.addEventListener('resize', positionDatePicker);
+    document.addEventListener('scroll', positionDatePicker, true);
+    popover.addEventListener('click', event => {
+      const valueButton = event.target.closest('[data-site-date-value]');
+      if (valueButton && datePickerState.input) {
+        datePickerState.input.value = valueButton.dataset.siteDateValue;
+        datePickerState.input.classList.remove('error');
+        datePickerState.input.dispatchEvent(new Event('input', { bubbles: true }));
+        datePickerState.input.dispatchEvent(new Event('change', { bubbles: true }));
+        closeDatePicker();
+        return;
+      }
+      const nav = event.target.closest('[data-site-date-nav]');
+      if (nav && datePickerState.view) {
+        datePickerState.view = new Date(datePickerState.view.getFullYear(), datePickerState.view.getMonth() + Number(nav.dataset.siteDateNav), 1);
+        renderDatePicker();
+        return;
+      }
+      if (event.target.closest('[data-site-date-clear]') && datePickerState.input) {
+        datePickerState.input.value = '';
+        datePickerState.input.dispatchEvent(new Event('input', { bubbles: true }));
+        datePickerState.input.dispatchEvent(new Event('change', { bubbles: true }));
+        closeDatePicker();
+      }
+    });
+    popover.addEventListener('change', event => {
+      if (!datePickerState.view) return;
+      const month = popover.querySelector('[data-site-date-month]');
+      const year = popover.querySelector('[data-site-date-year]');
+      if (event.target === month || event.target === year) {
+        datePickerState.view = new Date(Number(year.value), Number(month.value), 1);
+        renderDatePicker();
+      }
+    });
+    return popover;
+  }
+
+  function initDatePickers(root) {
+    ensureDatePickerPopover();
+    (root || document).querySelectorAll('[data-site-date-picker]').forEach(input => {
+      if (input.dataset.datePickerReady === '1') return;
+      input.dataset.datePickerReady = '1';
+      input.type = 'text';
+      input.readOnly = true;
+      input.placeholder = 'YYYY-MM-DD';
+      const field = document.createElement('div');
+      field.className = 'site-date-field';
+      input.parentNode.insertBefore(field, input);
+      field.appendChild(input);
+      const trigger = document.createElement('button');
+      trigger.className = 'site-date-trigger';
+      trigger.type = 'button';
+      trigger.setAttribute('aria-label', datePickerLabels[readState().lang === 'ru' ? 'ru' : 'en'].open);
+      field.appendChild(trigger);
+      input.addEventListener('click', () => openDatePicker(input));
+      input.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowDown') {
+          event.preventDefault();
+          openDatePicker(input);
+        }
+      });
+      trigger.addEventListener('click', () => openDatePicker(input));
+      document.querySelector(`label[for="${input.id}"]`)?.addEventListener('click', event => {
+        event.preventDefault();
+        openDatePicker(input);
+      });
+    });
+  }
+
   function applyLang(root) {
     const scope = root || document;
     const lang = readState().lang;
@@ -568,6 +766,10 @@
     scope.querySelectorAll('[data-game-rules-open]').forEach(btn => {
       btn.textContent = t('rules_button');
     });
+    scope.querySelectorAll('.site-date-trigger').forEach(button => {
+      button.setAttribute('aria-label', datePickerLabels[lang === 'ru' ? 'ru' : 'en'].open);
+    });
+    if (datePickerState.input) renderDatePicker();
     renderConfiguredBlocks(scope);
     applyRoutes(scope);
     updateAuthNav();
@@ -1150,6 +1352,7 @@
     initScrollSpy();
     initLanguageSwitcher();
     initModal();
+    initDatePickers();
     initAuthGuard();
     initGameRules();
     initCookieBanner();

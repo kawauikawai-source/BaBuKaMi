@@ -215,6 +215,8 @@
       const items = vipData ? (vipData['perks_' + lang] || vipData.perks_en || []) : [];
       perks.innerHTML = items.map(perk => `<li>${ui.escapeHTML(perk)}</li>`).join('');
     }
+    const managerAccess = document.getElementById('profileManagerAccess');
+    if (managerAccess) managerAccess.hidden = tier.level < 2;
   }
 
   function renderSecurity(user) {
@@ -487,6 +489,9 @@
     if (document.body.dataset.page !== 'profile') return;
     initTabs();
     document.getElementById('btn-save-personal')?.addEventListener('click', savePersonal);
+    document.getElementById('profileManagerButton')?.addEventListener('click', () => {
+      ui.showToast(ui.t('profile_manager_coming_soon'));
+    });
     document.getElementById('section-overview')?.addEventListener('click', purchaseVip);
     document.getElementById('profileHistoryTabs')?.addEventListener('click', event => {
       const button = event.target.closest('[data-history-filter]');

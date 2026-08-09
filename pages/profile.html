@@ -9,7 +9,7 @@
     body[data-page="profile"]::before{content:"";position:fixed;inset:0;z-index:10000;pointer-events:none;background:#080809;opacity:0;visibility:hidden;transition:opacity .24s ease,visibility 0s linear .24s}
     body[data-page="profile"].is-app-booting::before{opacity:1;visibility:visible;transition:none}
   </style>
-  <link rel="stylesheet" href="../css/style.css?v=account-onboarding-v1"/>
+  <link rel="stylesheet" href="../css/style.css?v=site-date-manager-v1"/>
   <link rel="icon" type="image/png" sizes="512x512" href="../assets/favicon-bk-512.png?v=1"/>
   <link rel="apple-touch-icon" href="../assets/favicon-bk-512.png?v=1"/>
   <meta name="theme-color" content="#00d98b"/>
@@ -127,6 +127,14 @@
                 <strong data-i18n="profile_current_perks">Current perks</strong>
                 <ul class="vip-perks" id="profileCurrentPerks"></ul>
               </div>
+              <div class="profile-manager-access" id="profileManagerAccess" hidden>
+                <div>
+                  <span data-i18n="profile_manager_channel">VIP support channel</span>
+                  <strong data-i18n="profile_personal_manager">Personal manager</strong>
+                  <p data-i18n="profile_manager_description">A private assistant for account questions, limits and support.</p>
+                </div>
+                <button class="btn btn-outline" type="button" id="profileManagerButton" data-i18n="profile_manager_open">Open manager</button>
+              </div>
             </div>
           </div>
 
@@ -163,7 +171,7 @@
               </div>
               <div class="f-group">
                 <label class="f-label" for="inp-dob" data-i18n="profile_dob">Date of Birth</label>
-                <input class="f-input" id="inp-dob" type="date"/>
+                <input class="f-input" id="inp-dob" type="text" inputmode="none" autocomplete="bday" data-site-date-picker data-date-max-age="18" readonly/>
               </div>
               <div class="f-group">
                 <label class="f-label" for="inp-country" data-i18n="profile_country">Country</label>
@@ -267,11 +275,11 @@
 
   <script src="../js/config/app-domain.js?v=ux-trust-v1"></script>
   <script src="../js/config/runtime.js?v=infra-v1"></script>
-  <script src="../js/core/constants.js?v=optimization-v2"></script>
+  <script src="../js/core/constants.js?v=site-date-manager-v1"></script>
   <script src="../js/core/store.js?v=account-onboarding-v1"></script>
-  <script src="../js/core/ui.js?v=optimization-v2"></script>
-  <script src="../js/core/auth.js?v=optimization-v2"></script>
-  <script src="../js/pages/profile.js?v=account-onboarding-v1"></script>
+  <script src="../js/core/ui.js?v=site-date-manager-v1"></script>
+  <script src="../js/core/auth.js?v=site-date-manager-v1"></script>
+  <script src="../js/pages/profile.js?v=site-date-manager-v1"></script>
   <script src="../js/core/bootstrap.js?v=offline-i18n-v1"></script>
 </body>
 </html>
