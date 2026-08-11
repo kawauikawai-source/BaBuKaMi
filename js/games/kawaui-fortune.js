@@ -11,6 +11,9 @@
   const CRASH_CASHOUT_MIN_MULTIPLIER = 1;
   const CRASH_CHART_MAX_MULTIPLIER = 50;
   const CRASH_GROWTH_SECONDS = 8;
+  const MOBILE_VISUAL_FRAME_MS = global.matchMedia && global.matchMedia('(max-width: 760px)').matches
+    ? 1000 / 30
+    : 0;
   let selectedBet = 5;
   let activeRoundId = null;
   let flying = false;
@@ -29,6 +32,7 @@
   let pendingCashoutVisualMultiplier = null;
   let lastControlPaintAt = 0;
   let pollInFlight = false;
+  let lastVisualFrameAt = 0;
 
   function currentBalance() {
     return Number(store.getDisplayUser().balance || 0);
@@ -135,6 +139,7 @@
   }
 
   function setControls() {
+    document.body.classList.toggle('game-round-active', flying || cashoutLocked);
     const action = document.getElementById('crashAction');
     if (action) {
       const multiplierLocked = flying && !cashoutLocked && multiplierValue(visualMultiplier) < CRASH_CASHOUT_MIN_MULTIPLIER;
@@ -188,7 +193,7 @@
     const drawnProgress = Math.max(0.018, progress);
     const curvePower = 1.58;
     const launchLift = 0.055;
-    const pointCount = 80;
+    const pointCount = MOBILE_VISUAL_FRAME_MS ? 42 : 80;
     const points = [];
     for (let index = 0; index <= pointCount; index += 1) {
       const t = drawnProgress * (index / pointCount);
@@ -248,6 +253,12 @@
   }
 
   function animateVisual(now) {
+    if (MOBILE_VISUAL_FRAME_MS && now - lastVisualFrameAt < MOBILE_VISUAL_FRAME_MS) {
+      visualFrame = global.requestAnimationFrame(animateVisual);
+      return;
+    }
+    lastVisualFrameAt = now;
+
     if (visualStatus === 'active' && activeStartedAtMs && !visualTween) {
       visualMultiplier = liveActiveMultiplier();
       targetMultiplier = visualMultiplier;

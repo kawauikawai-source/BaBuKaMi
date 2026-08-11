@@ -416,6 +416,7 @@
 
   function renderAll() {
     document.body.classList.toggle('blocks-round-active', isActive());
+    document.body.classList.toggle('game-round-active', isActive());
     renderBalance();
     renderBets();
     renderDifficulty();
