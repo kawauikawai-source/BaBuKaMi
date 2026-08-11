@@ -127,6 +127,22 @@ function checkI18nCoverage() {
       }
     }
   }
+
+  const forbiddenRuleTerms = [
+    /\bback-?end\b/i,
+    /\bfront-?end\b/i,
+    /\bserver[- ]side\b/i,
+    /\bapi\b/i,
+    /\u0441\u0435\u0440\u0432\u0435\u0440/i,
+  ];
+  for (const language of languages) {
+    for (const [key, value] of Object.entries(catalog[language])) {
+      if (!key.startsWith('rules_') || typeof value !== 'string') continue;
+      if (forbiddenRuleTerms.some(pattern => pattern.test(value))) {
+        fail(`data/i18n.json: ${language}.${key} contains a technical term in player-facing rules`);
+      }
+    }
+  }
 }
 
 function checkReleaseMarkers() {

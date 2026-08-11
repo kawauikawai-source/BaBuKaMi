@@ -6,6 +6,7 @@
   const ui = B.ui;
 
   const BETS = [5, 10, 25, 100];
+  const LINE_COUNT = 3;
   const SYMBOLS = {
     bamboo: { icon: '🎋', name: 'Bamboo', className: 'bamboo' },
     panda: { icon: '🐼', name: 'Panda', className: 'panda' },
@@ -15,12 +16,12 @@
     jade: { icon: '💎', name: 'Jade', className: 'jade' }
   };
   const PAYTABLE = [
-    ['bamboo', '730x', '160x', '36x'],
-    ['panda', '455x', '110x', '27x'],
-    ['coin', '320x', '82x', '23x'],
-    ['lotus', '205x', '55x', '18x'],
-    ['lantern', '128x', '41x', '14x'],
-    ['jade', '82x', '27x', '9x']
+    ['bamboo', 348, 76, 16],
+    ['panda', 217, 48, 13],
+    ['coin', 153, 39, 11],
+    ['lotus', 98, 26, 9],
+    ['lantern', 61, 20, 7],
+    ['jade', 39, 13, 4]
   ];
   const EMPTY_GRID = [
     ['bamboo', 'panda', 'coin', 'lotus', 'lantern'],
@@ -110,14 +111,18 @@
   function renderPaytable() {
     const mount = document.getElementById('slotPaytable');
     if (!mount) return;
+    const payoutLabel = value => {
+      const effective = Number(value) / LINE_COUNT;
+      return effective.toFixed(Number.isInteger(effective) ? 0 : 2) + 'x';
+    };
     mount.innerHTML = PAYTABLE.map(([id, five, four, three]) => {
       const meta = symbolMeta(id);
       return `
         <div class="slot-pay-row">
           <span class="slot-pay-symbol ${meta.className}">${ui.escapeHTML(meta.icon)}</span>
-          <span>5=${ui.escapeHTML(five)}</span>
-          <span>4=${ui.escapeHTML(four)}</span>
-          <span>3=${ui.escapeHTML(three)}</span>
+          <span>5=${ui.escapeHTML(payoutLabel(five))}</span>
+          <span>4=${ui.escapeHTML(payoutLabel(four))}</span>
+          <span>3=${ui.escapeHTML(payoutLabel(three))}</span>
         </div>
       `;
     }).join('');
@@ -139,6 +144,8 @@
     if (!box) return;
     const net = Number(result.net || 0);
     const totalWin = Math.max(0, Number(result.total_win || 0));
+    const totalBet = Math.max(0, Number(result.total_bet || 0));
+    const payoutMultiplier = totalBet > 0 ? totalWin / totalBet : 0;
     const netLabel = (net > 0 ? '+' : '') + ui.formatMoney(net);
     box.classList.toggle('win', net > 0);
     box.classList.toggle('loss', net < 0);
@@ -146,6 +153,7 @@
     if (totalWin > 0) {
       box.textContent = ui.t('slot_result_win', {
         amount: ui.formatMoney(totalWin),
+        multiplier: payoutMultiplier.toFixed(2),
         lines: result.winning_lines.length,
         net: netLabel
       });
@@ -211,7 +219,10 @@
     B.audio?.play?.(Number(result.net || 0) > 0 ? 'win' : (Number(result.net || 0) < 0 ? 'loss' : 'push'));
     recent.unshift({
       state: resultState(result),
-      label: Number(result.net || 0) > 0 ? '+' + ui.formatMoney(result.net) : ui.formatMoney(result.net)
+      label: Number(result.net || 0) > 0 ? '+' + ui.formatMoney(result.net) : ui.formatMoney(result.net),
+      meta: Number(result.total_win || 0) > 0
+        ? (Number(result.total_win) / Math.max(0.01, Number(result.total_bet))).toFixed(2) + 'x'
+        : ''
     });
     recent = recent.slice(0, 8);
     renderRecent();

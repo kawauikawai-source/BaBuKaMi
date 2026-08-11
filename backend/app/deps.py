@@ -13,8 +13,9 @@ settings = get_settings()
 
 
 def apply_admin_email_role(user: User) -> User:
-    if user.email.lower() in settings.admin_email_set:
-        user.is_admin = True
+    configured_admins = settings.admin_email_set
+    if configured_admins or settings.environment.lower() in {"staging", "production"}:
+        user.is_admin = user.email.lower() in configured_admins
     return user
 
 

@@ -238,7 +238,7 @@
       terms: inner ? 'terms.html' : 'pages/terms.html',
       responsible: inner ? 'responsible.html' : 'pages/responsible.html',
       dataGames: inner ? '../data/games.json?v=catalog-soon-v1' : 'data/games.json?v=catalog-soon-v1',
-      dataI18n: inner ? '../data/i18n.json' : 'data/i18n.json',
+      dataI18n: inner ? '../data/i18n.json?v=20260811-player-rules-v2' : 'data/i18n.json?v=20260811-player-rules-v2',
       css: inner ? '../css/core/base.css' : 'css/core/base.css'
     };
     return (routes[route] || route) + (suffix || '');
@@ -943,6 +943,7 @@
     const config = gameRulePages[page];
     if (!config) return;
     const existing = document.getElementById('holdemRulesOpen');
+    if (page === 'holdem' && existing && document.getElementById('holdemRulesOverlay')) return;
     if (existing) existing.setAttribute('data-game-rules-open', page);
     const panel = document.querySelector('.roulette-panel,.slot-panel,.crash-panel,.mines-panel,.blocks-panel,.plinko-panel,.survival-panel,.holdem-panel');
     if (panel && !panel.querySelector('[data-game-rules-open]')) {
@@ -954,7 +955,7 @@
       panel.appendChild(button);
     }
     document.addEventListener('click', event => {
-      const opener = event.target.closest('[data-game-rules-open],#holdemRulesOpen');
+      const opener = event.target.closest('[data-game-rules-open]');
       if (opener) {
         event.preventDefault();
         event.stopImmediatePropagation();

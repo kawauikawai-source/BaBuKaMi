@@ -23,6 +23,17 @@
     { key: 'holdem_hand_pair', cards: ['KS', 'KH', '9D', '5C', '2S'] },
     { key: 'holdem_hand_high_card', cards: ['AS', 'QD', '9C', '6H', '3S'] }
   ];
+  const HAND_KEYS = [
+    'holdem_hand_high_card',
+    'holdem_hand_pair',
+    'holdem_hand_two_pair',
+    'holdem_hand_trips',
+    'holdem_hand_straight',
+    'holdem_hand_flush',
+    'holdem_hand_full_house',
+    'holdem_hand_quads',
+    'holdem_hand_straight_flush'
+  ];
 
   let selectedAnte = 5;
   let activeRound = null;
@@ -121,7 +132,7 @@
     return Object.assign(clone(source) || {}, overrides || {});
   }
 
-  function renderCards(id, cards, hiddenCount, expectedCount) {
+  function renderCards(id, cards, hiddenCount, expectedCount, bestCards) {
     const mount = document.getElementById(id);
     if (!mount) return;
     const visible = Array.isArray(cards) ? cards : [];
@@ -137,8 +148,77 @@
     });
     mount.innerHTML = visible.map((card, index) => {
       const key = cardKey(id, index, false);
-      return cardHTML(card, false, cardAnimations[key] || '', index);
+      const classes = [cardAnimations[key] || '', bestCards?.has(String(card).toUpperCase()) ? 'is-best' : ''].filter(Boolean).join(' ');
+      return cardHTML(card, false, classes, index);
     }).concat(hidden, placeholders).join('');
+  }
+
+  function cardRank(card) {
+    return '23456789TJQKA'.indexOf(String(card || '').slice(0, 1).toUpperCase()) + 2;
+  }
+
+  function straightHigh(ranks) {
+    const unique = Array.from(new Set(ranks)).sort((a, b) => b - a);
+    if (unique.includes(14)) unique.push(1);
+    for (let index = 0; index <= unique.length - 5; index += 1) {
+      const window = unique.slice(index, index + 5);
+      if (window[0] - window[4] === 4) return window[0] === 5 ? 5 : window[0];
+    }
+    return 0;
+  }
+
+  function evaluateFive(cards) {
+    const ranks = cards.map(cardRank).sort((a, b) => b - a);
+    const suits = cards.map(card => String(card || '').slice(1, 2).toUpperCase());
+    const counts = new Map();
+    ranks.forEach(rank => counts.set(rank, (counts.get(rank) || 0) + 1));
+    const groups = Array.from(counts.entries()).sort((a, b) => b[1] - a[1] || b[0] - a[0]);
+    const flush = new Set(suits).size === 1;
+    const straight = straightHigh(ranks);
+    if (flush && straight) return [8, straight];
+    if (groups[0][1] === 4) return [7, groups[0][0], Math.max(...ranks.filter(rank => rank !== groups[0][0]))];
+    if (groups[0][1] === 3 && groups[1]?.[1] === 2) return [6, groups[0][0], groups[1][0]];
+    if (flush) return [5, ...ranks];
+    if (straight) return [4, straight];
+    if (groups[0][1] === 3) return [3, groups[0][0], ...ranks.filter(rank => rank !== groups[0][0])];
+    const pairs = groups.filter(group => group[1] === 2).map(group => group[0]).sort((a, b) => b - a);
+    if (pairs.length >= 2) return [2, pairs[0], pairs[1], Math.max(...ranks.filter(rank => !pairs.slice(0, 2).includes(rank)))];
+    if (pairs.length === 1) return [1, pairs[0], ...ranks.filter(rank => rank !== pairs[0])];
+    return [0, ...ranks];
+  }
+
+  function compareRankValues(left, right) {
+    const length = Math.max(left.length, right.length);
+    for (let index = 0; index < length; index += 1) {
+      const delta = Number(left[index] || 0) - Number(right[index] || 0);
+      if (delta) return delta;
+    }
+    return 0;
+  }
+
+  function evaluateVisibleHand(cards) {
+    const source = cardsOf(cards).map(card => String(card).toUpperCase());
+    if (source.length < 5) return null;
+    let best = null;
+    for (let a = 0; a < source.length - 4; a += 1) {
+      for (let b = a + 1; b < source.length - 3; b += 1) {
+        for (let c = b + 1; c < source.length - 2; c += 1) {
+          for (let d = c + 1; d < source.length - 1; d += 1) {
+            for (let e = d + 1; e < source.length; e += 1) {
+              const handCards = [source[a], source[b], source[c], source[d], source[e]];
+              const value = evaluateFive(handCards);
+              if (!best || compareRankValues(value, best.value) > 0) best = { value, cards: handCards };
+            }
+          }
+        }
+      }
+    }
+    return best ? { name_key: HAND_KEYS[best.value[0]], rank: best.value[0], cards: best.cards } : null;
+  }
+
+  function visibleHand(round, owner) {
+    if (!round || cardsOf(round.community_cards).length < 5) return round?.[owner + '_hand'] || null;
+    return evaluateVisibleHand(cardsOf(round[owner + '_cards']).concat(cardsOf(round.community_cards))) || round?.[owner + '_hand'] || null;
   }
 
   function handLabel(hand) {
@@ -212,8 +292,8 @@
     if (cls) box.classList.add(cls);
     const vars = {
       amount: money(Math.abs(resultAmount(round))),
-      player: handLabel(round.player_hand),
-      dealer: handLabel(round.dealer_hand)
+      player: handLabel(visibleHand(round, 'player')),
+      dealer: handLabel(visibleHand(round, 'dealer'))
     };
     if (round.outcome === 'dealer_not_qualified') {
       box.textContent = ui.t('holdem_dealer_not_qualified', vars);
@@ -252,11 +332,16 @@
   function renderAll() {
     const round = roundForView();
     const dealerHidden = round ? Number(round.dealer_hidden_count || 0) : 0;
-    renderCards('holdemDealerCards', round ? round.dealer_cards : [], dealerHidden, 2);
-    renderCards('holdemCommunityCards', round ? round.community_cards : [], 0, 5);
-    renderCards('holdemPlayerCards', round ? round.player_cards : [], 0, 2);
-    ui.setText('holdemDealerHand', round && resultVisible && round.dealer_hand ? handLabel(round.dealer_hand) : '');
-    ui.setText('holdemPlayerHand', round && resultVisible && round.player_hand ? handLabel(round.player_hand) : '');
+    const playerHand = round && resultVisible ? visibleHand(round, 'player') : null;
+    const dealerHand = round && resultVisible ? visibleHand(round, 'dealer') : null;
+    const playerBest = new Set(playerHand?.cards || []);
+    const dealerBest = new Set(dealerHand?.cards || []);
+    const boardBest = new Set([...(playerHand?.cards || []), ...(dealerHand?.cards || [])]);
+    renderCards('holdemDealerCards', round ? round.dealer_cards : [], dealerHidden, 2, dealerBest);
+    renderCards('holdemCommunityCards', round ? round.community_cards : [], 0, 5, boardBest);
+    renderCards('holdemPlayerCards', round ? round.player_cards : [], 0, 2, playerBest);
+    ui.setText('holdemDealerHand', dealerHand ? handLabel(dealerHand) : '');
+    ui.setText('holdemPlayerHand', playerHand ? handLabel(playerHand) : '');
     ui.setText('holdemPot', ui.t('holdem_pot', { amount: money(round ? round.total_bet : 0) }));
     renderBalance();
     renderBets();
@@ -516,5 +601,5 @@
     restoreActiveRound();
   }
 
-  B.holdem = { init: initHoldem };
+  B.holdem = { init: initHoldem, evaluateVisibleHand };
 })(window);

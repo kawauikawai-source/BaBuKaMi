@@ -19,6 +19,7 @@ body[data-page="holdem"]{--holdem-felt:#073821;--holdem-felt-2:#0b2218;--holdem-
 .holdem-card small{right:8px;bottom:8px;transform:rotate(180deg)}
 .holdem-card.red{color:#b71f2c}
 .holdem-card.black{color:#101010}
+.holdem-card.is-best{border-color:rgba(245,217,120,.82);box-shadow:0 7px 14px rgba(0,0,0,.28),0 0 0 2px rgba(212,175,55,.22),0 0 20px rgba(212,175,55,.16),inset 0 0 0 1px rgba(0,0,0,.05)}
 .holdem-card.is-hidden{background:radial-gradient(circle at 50% 40%,rgba(212,175,55,.18),transparent 36%),repeating-linear-gradient(45deg,rgba(245,200,66,.18) 0 2px,transparent 2px 8px),linear-gradient(145deg,#101914,#07100b);border-color:rgba(212,175,55,.42);color:#d4af37}
 .holdem-card.is-empty{opacity:.58;background:radial-gradient(circle at 50% 45%,rgba(245,200,66,.075),transparent 58%),rgba(0,0,0,.2);border:1px dashed rgba(245,200,66,.38);box-shadow:inset 0 0 20px rgba(0,0,0,.22),0 0 14px rgba(212,175,55,.045)}
 .holdem-pot{border:1px solid rgba(212,175,55,.38);border-radius:999px;padding:8px 16px;background:rgba(5,10,7,.62);color:#f5d978;font-family:var(--font);font-weight:900;box-shadow:0 0 18px rgba(212,175,55,.08)}

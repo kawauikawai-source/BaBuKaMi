@@ -28,6 +28,7 @@
   let cashoutLocked = false;
   let pendingCashoutVisualMultiplier = null;
   let lastControlPaintAt = 0;
+  let pollInFlight = false;
 
   function currentBalance() {
     return Number(store.getDisplayUser().balance || 0);
@@ -325,9 +326,21 @@
   }
 
   function setActiveVisual(result, snap) {
-    activeStartedAtMs = resolveActiveStartedAtMs(result);
+    const resolvedStartedAt = resolveActiveStartedAtMs(result);
+    if (!activeStartedAtMs) {
+      activeStartedAtMs = resolvedStartedAt;
+    } else {
+      const currentClockMultiplier = liveActiveMultiplier();
+      const resolvedElapsed = Math.max(0, (Date.now() - resolvedStartedAt) / 1000);
+      const resolvedClockMultiplier = CRASH_START_MULTIPLIER * Math.exp(resolvedElapsed / CRASH_GROWTH_SECONDS);
+      // Network responses can arrive late or out of order. The live curve may
+      // correct forward, but it must never rewind in front of the player.
+      if (resolvedClockMultiplier > currentClockMultiplier + 0.02) {
+        activeStartedAtMs = resolvedStartedAt;
+      }
+    }
     visualStatus = 'active';
-    targetMultiplier = liveActiveMultiplier();
+    targetMultiplier = Math.max(visualMultiplier, liveActiveMultiplier());
     if (snap) {
       if (visualFrame) global.cancelAnimationFrame(visualFrame);
       visualFrame = null;
@@ -472,24 +485,31 @@
   }
 
   async function pollRound() {
-    if (!activeRoundId) return;
-    const result = await store.getDragonCrashRound(activeRoundId);
-    if (showStoreError(result)) {
-      stopPolling();
-      stopVisualLoop();
-      flying = false;
-      cashoutPending = false;
-      cashoutLocked = false;
-      activeRoundId = null;
-      setControls();
-      return;
+    if (!activeRoundId || pollInFlight) return;
+    const requestedRoundId = String(activeRoundId);
+    pollInFlight = true;
+    try {
+      const result = await store.getDragonCrashRound(requestedRoundId);
+      if (String(activeRoundId || '') !== requestedRoundId) return;
+      if (showStoreError(result)) {
+        stopPolling();
+        stopVisualLoop();
+        flying = false;
+        cashoutPending = false;
+        cashoutLocked = false;
+        activeRoundId = null;
+        setControls();
+        return;
+      }
+      if (result.status === 'active') {
+        setActiveVisual(result, false);
+        setResultMessage(ui.t('crash_flying'), '');
+        return;
+      }
+      finishRound(result);
+    } finally {
+      pollInFlight = false;
     }
-    if (result.status === 'active') {
-      setActiveVisual(result, false);
-      setResultMessage(ui.t('crash_flying'), '');
-      return;
-    }
-    finishRound(result);
   }
 
   function startPolling() {

@@ -9,18 +9,11 @@ SLOT_TITLE_KEY = "tx_lucky_bamboo_title"
 ALLOWED_BET_CENTS = {500, 1_000, 2_500, 10_000}
 REEL_COUNT = 5
 ROW_COUNT = 3
-LINE_COUNT = 10
+LINE_COUNT = ROW_COUNT
 PAYLINES = [
-    [1, 1, 1, 1, 1],
     [0, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1],
     [2, 2, 2, 2, 2],
-    [0, 1, 2, 1, 0],
-    [2, 1, 0, 1, 2],
-    [0, 0, 1, 2, 2],
-    [2, 2, 1, 0, 0],
-    [1, 0, 0, 0, 1],
-    [1, 2, 2, 2, 1],
-    [0, 1, 1, 1, 2],
 ]
 
 
@@ -33,12 +26,12 @@ class SlotSymbol:
 
 
 SYMBOLS = [
-    SlotSymbol("bamboo", "Bamboo", 6, {3: 36, 4: 160, 5: 730}),
-    SlotSymbol("panda", "Panda", 8, {3: 27, 4: 110, 5: 455}),
-    SlotSymbol("coin", "Coin", 10, {3: 23, 4: 82, 5: 320}),
-    SlotSymbol("lotus", "Lotus", 13, {3: 18, 4: 55, 5: 205}),
-    SlotSymbol("lantern", "Lantern", 16, {3: 14, 4: 41, 5: 128}),
-    SlotSymbol("jade", "Jade", 20, {3: 9, 4: 27, 5: 82}),
+    SlotSymbol("bamboo", "Bamboo", 6, {3: 16, 4: 76, 5: 348}),
+    SlotSymbol("panda", "Panda", 8, {3: 13, 4: 48, 5: 217}),
+    SlotSymbol("coin", "Coin", 10, {3: 11, 4: 39, 5: 153}),
+    SlotSymbol("lotus", "Lotus", 13, {3: 9, 4: 26, 5: 98}),
+    SlotSymbol("lantern", "Lantern", 16, {3: 7, 4: 20, 5: 61}),
+    SlotSymbol("jade", "Jade", 20, {3: 4, 4: 13, 5: 39}),
 ]
 
 RNG = SystemRandom()
@@ -59,38 +52,39 @@ def symbol_by_id(symbol_id: str) -> SlotSymbol:
 
 
 def evaluate_grid(grid: list[list[str]], bet_cents: int) -> tuple[list[dict], int]:
+    if len(grid) != ROW_COUNT or any(len(row) != REEL_COUNT for row in grid):
+        raise ValueError("Invalid slot grid")
+
     winning_lines = []
     total_win_cents = 0
-    line_bet_cents = bet_cents // LINE_COUNT
 
-    for index, line in enumerate(PAYLINES, start=1):
-        first_symbol = grid[line[0]][0]
-        match_count = 1
-        for reel_index in range(1, REEL_COUNT):
-            if grid[line[reel_index]][reel_index] != first_symbol:
-                break
-            match_count += 1
-
-        if match_count < 3:
-            continue
-
-        symbol = symbol_by_id(first_symbol)
-        multiplier = symbol.payouts.get(match_count, 0)
-        if multiplier <= 0:
-            continue
-
-        win_cents = line_bet_cents * multiplier
-        total_win_cents += win_cents
-        winning_lines.append(
-            {
-                "line": index,
-                "symbol": first_symbol,
-                "count": match_count,
-                "multiplier": multiplier,
-                "win_cents": win_cents,
-                "positions": [{"row": line[reel], "reel": reel} for reel in range(match_count)],
-            }
-        )
+    for row_index, row in enumerate(grid):
+        reel_index = 0
+        while reel_index < REEL_COUNT:
+            run_end = reel_index + 1
+            while run_end < REEL_COUNT and row[run_end] == row[reel_index]:
+                run_end += 1
+            match_count = run_end - reel_index
+            if match_count >= 3:
+                symbol = symbol_by_id(row[reel_index])
+                multiplier = symbol.payouts.get(match_count, 0)
+                if multiplier > 0:
+                    win_cents = bet_cents * multiplier // LINE_COUNT
+                    total_win_cents += win_cents
+                    winning_lines.append(
+                        {
+                            "line": row_index + 1,
+                            "symbol": symbol.id,
+                            "count": match_count,
+                            "multiplier": multiplier,
+                            "win_cents": win_cents,
+                            "positions": [
+                                {"row": row_index, "reel": reel}
+                                for reel in range(reel_index, run_end)
+                            ],
+                        }
+                    )
+            reel_index = run_end
 
     return winning_lines, total_win_cents
 

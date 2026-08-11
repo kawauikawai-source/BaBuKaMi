@@ -484,7 +484,7 @@ section{padding:88px 0}
 .register-step.active{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
 .register-step.complete{color:var(--text-2)}
 .register-step:disabled{cursor:default;opacity:.56}
-.register-panel{min-height:224px;animation:register-panel-in .24s var(--ease) both}
+.register-panel{min-height:0;padding:0;animation:register-panel-in .24s var(--ease) both}
 .register-panel-head{display:flex;flex-direction:column;margin-bottom:18px}
 .register-panel-head span{color:var(--accent);font-size:9px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
 .register-panel-head strong{font-family:var(--font);font-size:20px;line-height:1.35}

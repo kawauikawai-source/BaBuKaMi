@@ -254,12 +254,32 @@ class TexasHoldemApiTest(unittest.TestCase):
     def test_holdem_hand_ranking_and_dealer_qualification(self):
         straight_flush = evaluate_best(["AS", "KS", "QS", "JS", "TS", "2C", "3D"])
         full_house = evaluate_best(["AH", "AD", "AC", "KD", "KC", "2S", "3H"])
+        flush_over_pair = evaluate_best(["AS", "2S", "3S", "7S", "9S", "KH", "KD"])
 
         self.assertEqual(straight_flush.name_key, "holdem_hand_straight_flush")
         self.assertEqual(full_house.name_key, "holdem_hand_full_house")
+        self.assertEqual(flush_over_pair.name_key, "holdem_hand_flush")
         self.assertGreater(straight_flush.rank_value, full_house.rank_value)
         self.assertTrue(dealer_qualifies(["4C", "4D", "AS", "KD", "QH", "2D", "3C"]))
         self.assertFalse(dealer_qualifies(["3C", "3D", "AS", "KD", "QH", "2D", "5C"]))
+
+    def test_call_reports_visible_flush_instead_of_hole_card_pair(self):
+        start = self.start_round(
+            {
+                "player_cards": ["AS", "2S"],
+                "dealer_cards": ["KH", "KD"],
+                "community_cards": ["3S", "7S", "9S"],
+                "deck": ["4D", "5C"],
+            }
+        )
+        round_id = start.json()["round_id"]
+        response = self.client.post(f"/api/games/holdem/texas-holdem/rounds/{round_id}/decision", json={"action": "call"})
+        payload = response.json()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(payload["outcome"], "win")
+        self.assertEqual(payload["player_hand"]["name_key"], "holdem_hand_flush")
+        self.assertEqual(payload["dealer_hand"]["name_key"], "holdem_hand_pair")
 
 
 if __name__ == "__main__":
