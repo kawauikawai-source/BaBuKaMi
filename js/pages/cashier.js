@@ -16,6 +16,8 @@
   let selectedWithdrawCryptoAsset = 'usdt';
   let selectedWithdrawCryptoNetwork = 'trc20';
   let oopsContext = 'deposit';
+  let studioBalanceCents = null;
+  let studioBalanceLoading = false;
 
   const cryptoAssets = {
     usdt: {
@@ -68,6 +70,35 @@
 
   function accountName(user) {
     return user.email || user.name || `Kawaui ID #${user.apiId || user.id || '08'}`;
+  }
+
+  function renderStudioBalance() {
+    const balance = document.getElementById('studio-deposit-balance');
+    if (!balance) return;
+    balance.textContent = studioBalanceLoading
+      ? '...'
+      : Number.isFinite(studioBalanceCents)
+        ? ui.formatMoney(studioBalanceCents / 100, 'EUR')
+        : '—';
+  }
+
+  async function loadStudioBalance(force) {
+    if (studioBalanceLoading || (!force && Number.isFinite(studioBalanceCents))) {
+      renderStudioBalance();
+      return;
+    }
+    studioBalanceLoading = true;
+    renderStudioBalance();
+    try {
+      const result = await store.getStudioWallet();
+      if (!result || result.error) return;
+      studioBalanceCents = Number(result.wallet?.balance_cents || 0);
+    } catch (_) {
+      studioBalanceCents = null;
+    } finally {
+      studioBalanceLoading = false;
+      renderStudioBalance();
+    }
   }
 
   function cardNumberPassesLuhn(number) {
@@ -644,6 +675,8 @@
     const value = ui.formatMoney(amount, user.currency);
     setText('studio-deposit-debit', value);
     setText('studio-deposit-credit', value);
+    renderStudioBalance();
+    if (active) loadStudioBalance(false);
   }
 
   function renderStudioTransferSuccess(values) {
@@ -746,7 +779,10 @@
     const studioSuccess = document.getElementById('deposit-success-studio');
     if (regularSuccess) regularSuccess.hidden = studio;
     if (studioSuccess) studioSuccess.hidden = !studio;
-    if (studio) renderStudioDepositSuccess(amount);
+    if (studio) {
+      renderStudioDepositSuccess(amount);
+      await loadStudioBalance(true);
+    }
     ui.showToast(ui.t('toast_deposit_success'));
     showSuccess('deposit');
   }

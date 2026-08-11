@@ -210,6 +210,8 @@ body[data-page="deposit"] #navbar{
   background:var(--border);
 }
 
+#studio-deposit-preview{grid-template-columns:repeat(4,minmax(0,1fr))}
+
 .withdraw-preview > div{
   display:flex;
   align-items:center;
@@ -222,6 +224,7 @@ body[data-page="deposit"] #navbar{
 
 .withdraw-preview span{color:var(--text-3);font-size:12px}
 .withdraw-preview strong{color:var(--text-2);font-size:14px}
+.studio-deposit-balance-cell strong{color:var(--accent)}
 .withdraw-preview.has-amount #withdraw-preview-payout{color:var(--accent);font-size:17px}
 
 
@@ -529,6 +532,7 @@ body[data-page="deposit"] #navbar{
   .crypto-network-grid{grid-template-columns:1fr}
   .crypto-network{min-height:44px}
   .withdraw-checkout-summary{grid-template-columns:1fr}
+  #studio-deposit-preview{grid-template-columns:1fr}
   .card-detail-grid,.card-checkout-actions{grid-template-columns:1fr}
   .card-oops-modal{padding:22px 18px 20px}
   .card-oops-sticker{height:230px}
