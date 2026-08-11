@@ -11,6 +11,7 @@
     const en = B.store.getState().lang === 'en';
     if (item.type === 'soul_sale') return en ? 'Soul sale' : 'Продажа души';
     if (item.type === 'casino_transfer') return en ? 'Casino transfer' : 'Перевод из Casino';
+    if (item.type === 'casino_deposit') return en ? 'Transfer to Casino' : 'Перевод в Casino';
     return item.type;
   }
 
@@ -24,7 +25,7 @@
     root.innerHTML = items.map(item => `
       <div class="studio-wallet-row">
         <span><b>${operationLabel(item)}</b><small>${new Date(item.created_at).toLocaleString()}</small></span>
-        <strong class="${item.status}">${item.status === 'completed' ? '+' : ''}${money(item.net_cents)}</strong>
+        <strong class="${item.status}">${item.status === 'completed' && item.net_cents > 0 ? '+' : ''}${money(item.net_cents)}</strong>
       </div>`).join('');
   }
 

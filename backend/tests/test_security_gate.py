@@ -151,10 +151,10 @@ class SecurityGateTest(unittest.TestCase):
     def test_pending_withdraw_limit_blocks_fourth_request(self):
         self.app.dependency_overrides[get_current_user] = self.override_current_user
         for _ in range(3):
-            response = self.client.post("/api/cashier/withdraw", json={"amount": "180.00", "method_id": "card"})
+            response = self.client.post("/api/cashier/withdraw", json={"amount": "180.00", "method_id": "kawaui-studio"})
             self.assertEqual(response.status_code, 201)
 
-        fourth = self.client.post("/api/cashier/withdraw", json={"amount": "180.00", "method_id": "card"})
+        fourth = self.client.post("/api/cashier/withdraw", json={"amount": "180.00", "method_id": "kawaui-studio"})
         self.assertEqual(fourth.status_code, 409)
         self.assertEqual(fourth.json()["detail"]["code"], "err_withdraw_pending_limit")
         with self.SessionLocal() as db:

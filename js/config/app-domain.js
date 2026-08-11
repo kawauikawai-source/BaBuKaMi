@@ -54,14 +54,14 @@
       hotPreset: 100,
       presets: [20, 50, 100, 200, 500],
       depositMethods: [
-        { id: 'card', label: 'Bank Card', label_ru: 'Банковская карта', label_en: 'Bank Card', icon: 'CARD', requiresCard: true },
-        { id: 'usdt', label: 'Crypto', label_ru: 'Криптовалюта', label_en: 'Crypto', icon: 'CRYPTO', requiresCrypto: true },
+        { id: 'kawaui-studio', label: 'Kawaui Studio', label_ru: 'Kawaui Studio', label_en: 'Kawaui Studio', icon: 'STUDIO' },
+        { id: 'usdt', label: 'Crypto', label_ru: 'Криптовалюта', label_en: 'Crypto', icon: 'CRYPTO', requiresCrypto: true, maintenance: true },
         { id: 'promo', label: 'Promo Code', label_ru: 'Промокод', label_en: 'Promo Code', icon: 'PROMO', requiresCard: false, requiresPromo: true }
       ],
       withdrawMethods: [
-        { id: 'card', label: 'Bank Card', label_ru: 'Банковская карта', label_en: 'Bank Card', icon: 'CARD', requiresCard: true },
-        { id: 'usdt', label: 'Crypto', label_ru: 'Криптовалюта', label_en: 'Crypto', icon: 'CRYPTO', requiresCrypto: true },
-        { id: 'kawaui-studio', label: 'Kawaui Studio', label_ru: 'Kawaui Studio', label_en: 'Kawaui Studio', icon: 'STUDIO' }
+        { id: 'kawaui-studio', label: 'Kawaui Studio', label_ru: 'Kawaui Studio', label_en: 'Kawaui Studio', icon: 'STUDIO' },
+        { id: 'card', label: 'Bank Card', label_ru: 'Банковская карта', label_en: 'Bank Card', icon: 'CARD', requiresCard: true, maintenance: true },
+        { id: 'usdt', label: 'Crypto', label_ru: 'Криптовалюта', label_en: 'Crypto', icon: 'CRYPTO', requiresCrypto: true, maintenance: true }
       ],
       paymentTags: ['CARD', 'USDT', 'PROMO']
     },

@@ -620,26 +620,24 @@ body[data-page="partner"] .studio-navbar{position:fixed;inset:0 0 auto;z-index:1
 .studio-brand b{color:var(--accent)}
 .studio-brand-signal{width:8px;height:8px;background:var(--accent);transform:rotate(45deg)}
 .studio-nav-actions{display:flex;align-items:center;gap:14px}
-.studio-casino-link{min-height:38px;padding:0 16px;border:1px solid var(--border);display:flex;align-items:center;color:var(--text-2);font-size:12px}
-.studio-casino-link:hover{color:var(--text)}
 body[data-page="partner"] .partner-page{padding-top:116px;background-color:#060807;background-image:linear-gradient(rgba(116,148,135,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(116,148,135,.08) 1px,transparent 1px),radial-gradient(circle at 48% 28%,rgba(0,217,139,.07),transparent 38%);background-size:56px 56px,56px 56px,auto}
-body[data-page="partner"] .studio-wallet-panel{position:relative;grid-template-columns:minmax(300px,.82fr) minmax(0,1.18fr);min-height:300px;overflow:hidden;border-color:rgba(106,180,151,.28);background:rgba(7,12,10,.93)}
-.studio-wallet-summary{padding:34px 36px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(106,180,151,.18);background:rgba(0,217,139,.025)}
+body[data-page="partner"] .studio-wallet-panel{position:relative;grid-template-columns:minmax(300px,.82fr) minmax(0,1.18fr);overflow:hidden;border-color:rgba(106,180,151,.28);background:rgba(7,12,10,.93)}
+.studio-wallet-summary{padding:27px 32px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(106,180,151,.18);background:rgba(0,217,139,.025)}
 .studio-wallet-heading{display:flex;justify-content:space-between;gap:16px}
 .studio-wallet-state{color:#6f8a7f;font:700 10px/1 var(--mono);letter-spacing:.08em}
-body[data-page="partner"] .studio-wallet-balance{margin:24px 0 12px;font-size:clamp(44px,5vw,68px);letter-spacing:0;color:#f4f8f6}
-body[data-page="partner"] .studio-wallet-note{min-height:38px;max-width:36ch;font-size:13px;line-height:1.55}
+body[data-page="partner"] .studio-wallet-balance{margin:18px 0 8px;font-size:clamp(44px,5vw,68px);letter-spacing:0;color:#f4f8f6}
+body[data-page="partner"] .studio-wallet-note{max-width:36ch;font-size:13px;line-height:1.55}
 .studio-wallet-note a{color:var(--accent)}
-.studio-wallet-transfer{width:fit-content;min-height:42px;margin-top:25px;padding:0 19px;display:flex;align-items:center;border:1px solid rgba(0,217,139,.38);color:var(--accent);font:800 12px/1 var(--font)}
+.studio-wallet-transfer{width:fit-content;min-height:42px;margin-top:18px;padding:0 19px;display:flex;align-items:center;border:1px solid rgba(0,217,139,.38);color:var(--accent);font:800 12px/1 var(--font)}
 .studio-wallet-transfer:hover{background:var(--accent);border-color:var(--accent);color:#04100b}
-body[data-page="partner"] .studio-wallet-history{padding:32px 36px;min-width:0}
+body[data-page="partner"] .studio-wallet-history{padding:27px 32px;min-width:0}
 body[data-page="partner"] .studio-wallet-history-head{min-height:37px;margin:0;border-bottom:1px solid rgba(106,180,151,.18)}
 body[data-page="partner"] .studio-wallet-history-head h2{font-size:20px}
 body[data-page="partner"] .studio-wallet-history-head span{color:#64776f;font:700 10px/1 var(--mono);letter-spacing:.08em}
 body[data-page="partner"] .studio-wallet-history-list{border:0}
 body[data-page="partner"] .studio-wallet-row{min-height:58px;padding:11px 0}
-body[data-page="partner"] .studio-wallet-empty{padding:24px 0;border-bottom:1px solid rgba(106,180,151,.12)}
-@media(max-width:760px){.studio-nav-inner{width:calc(100% - 28px)}.studio-casino-link{display:none}body[data-page="partner"] .studio-wallet-panel{grid-template-columns:1fr}.studio-wallet-summary{padding:28px 24px;border-right:0;border-bottom:1px solid rgba(106,180,151,.18)}body[data-page="partner"] .studio-wallet-history{padding:26px 24px}}
+body[data-page="partner"] .studio-wallet-empty{padding:18px 0 8px;border-bottom:1px solid rgba(106,180,151,.12)}
+@media(max-width:760px){.studio-nav-inner{width:calc(100% - 28px)}body[data-page="partner"] .studio-wallet-panel{grid-template-columns:1fr}.studio-wallet-summary{padding:28px 24px;border-right:0;border-bottom:1px solid rgba(106,180,151,.18)}body[data-page="partner"] .studio-wallet-history{padding:26px 24px}}
 
 
 

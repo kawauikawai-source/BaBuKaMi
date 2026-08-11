@@ -514,9 +514,10 @@
     const deposit = document.getElementById('depositMethods');
     if (deposit) {
       deposit.innerHTML = C.cashier.depositMethods.map(method => `
-        <button class="method-btn ${method.id === state.cashier.selectedMethod ? 'selected' : ''}" type="button" data-method="${method.id}">
+        <button class="method-btn ${method.id === selectedDepositMethod().id ? 'selected' : ''} ${method.maintenance ? 'is-coming-soon' : ''}" type="button" data-method="${method.id}" ${method.maintenance ? 'disabled aria-disabled="true"' : ''}>
           <span>${ui.escapeHTML(method.icon)}</span>
           <strong>${ui.escapeHTML(ui.methodLabel(method))}</strong>
+          ${method.maintenance ? `<small>${ui.escapeHTML(ui.t('cashier_maintenance'))}</small>` : ''}
         </button>
       `).join('');
     }
@@ -524,10 +525,10 @@
     const withdraw = document.getElementById('withdrawMethods');
     if (withdraw) {
       withdraw.innerHTML = C.cashier.withdrawMethods.map(method => `
-        <button class="method-btn ${method.id === state.cashier.selectedWithdrawMethod ? 'selected' : ''} ${method.comingSoon ? 'is-coming-soon' : ''}" type="button" data-wmethod="${method.id}" ${method.comingSoon ? 'disabled aria-disabled="true"' : ''}>
+        <button class="method-btn ${method.id === state.cashier.selectedWithdrawMethod ? 'selected' : ''} ${method.maintenance || method.comingSoon ? 'is-coming-soon' : ''}" type="button" data-wmethod="${method.id}" ${method.maintenance || method.comingSoon ? 'disabled aria-disabled="true"' : ''}>
           <span>${ui.escapeHTML(method.icon)}</span>
           <strong>${ui.escapeHTML(ui.methodLabel(method))}</strong>
-          ${method.comingSoon ? `<small>${ui.escapeHTML(ui.t('cashier_coming_soon'))}</small>` : ''}
+          ${method.maintenance ? `<small>${ui.escapeHTML(ui.t('cashier_maintenance'))}</small>` : method.comingSoon ? `<small>${ui.escapeHTML(ui.t('cashier_coming_soon'))}</small>` : ''}
         </button>
       `).join('');
     }

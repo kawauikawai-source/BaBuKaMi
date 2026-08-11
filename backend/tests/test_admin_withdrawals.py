@@ -83,7 +83,7 @@ class AdminWithdrawalsApiTest(unittest.TestCase):
 
     def create_withdrawal(self):
         self.current_user_id = self.user_id
-        response = self.client.post("/api/cashier/withdraw", json={"amount": "200.00", "method_id": "card"})
+        response = self.client.post("/api/cashier/withdraw", json={"amount": "200.00", "method_id": "kawaui-studio"})
         self.assertEqual(response.status_code, 201)
         return response.json()["transaction"]["id"]
 
@@ -152,7 +152,7 @@ class AdminWithdrawalsApiTest(unittest.TestCase):
 
     def test_withdraw_idempotency_replays_and_reserves_once(self):
         headers = {"Idempotency-Key": "withdraw-once"}
-        body = {"amount": "200.00", "method_id": "card"}
+        body = {"amount": "200.00", "method_id": "kawaui-studio"}
 
         first = self.client.post("/api/cashier/withdraw", json=body, headers=headers)
         second = self.client.post("/api/cashier/withdraw", json=body, headers=headers)
@@ -167,8 +167,8 @@ class AdminWithdrawalsApiTest(unittest.TestCase):
             self.assertEqual(len(transactions), 1)
 
     def test_vip_cashier_limits_and_commission_are_tier_specific(self):
-        too_small = self.client.post("/api/cashier/withdraw", json={"amount": "179.00", "method_id": "card"})
-        too_large = self.client.post("/api/cashier/withdraw", json={"amount": "501.00", "method_id": "card"})
+        too_small = self.client.post("/api/cashier/withdraw", json={"amount": "179.00", "method_id": "kawaui-studio"})
+        too_large = self.client.post("/api/cashier/withdraw", json={"amount": "501.00", "method_id": "kawaui-studio"})
         self.assertEqual(too_small.status_code, 422)
         self.assertEqual(too_small.json()["detail"]["amount"], "180")
         self.assertEqual(too_large.status_code, 422)
@@ -179,7 +179,7 @@ class AdminWithdrawalsApiTest(unittest.TestCase):
             user.vip_tier = "gold"
             db.commit()
 
-        response = self.client.post("/api/cashier/withdraw", json={"amount": "1000.00", "method_id": "card"})
+        response = self.client.post("/api/cashier/withdraw", json={"amount": "1000.00", "method_id": "kawaui-studio"})
         self.assertEqual(response.status_code, 201)
         transaction = response.json()["transaction"]
         self.assertEqual(transaction["fee_cents"], 15_000)

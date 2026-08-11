@@ -43,9 +43,11 @@ VIP_CASHIER_RULES = {
     },
 }
 
-DEPOSIT_METHODS = {"card", "usdt", "promo"}
+DEPOSIT_METHODS = {"card", "usdt", "promo", "kawaui-studio"}
 CARD_DEPOSIT_METHODS = {"card"}
+SUSPENDED_DEPOSIT_METHODS = {"usdt"}
 WITHDRAW_METHODS = {"card", "usdt", "kawaui-studio"}
+SUSPENDED_WITHDRAW_METHODS = {"card", "usdt"}
 GAME_BET_LIMITS_CENTS = {
     "roulette": (100, 99_999_999),
     # Routes validate that values above the standard EUR 100 chip belong to

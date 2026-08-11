@@ -80,33 +80,25 @@
     } catch (_) {
       session = null;
     }
-    const identity = document.getElementById('identity-control');
     const gate = document.getElementById('appraisal-access');
-    const heroAction = document.getElementById('hero-appraisal-action');
     document.body.classList.toggle('is-authenticated', Boolean(session));
     document.body.classList.toggle('is-guest', !session);
     if (form) form.hidden = !session;
     if (gate) gate.hidden = Boolean(session);
-    if (heroAction) heroAction.href = session ? '#appraisal' : '/auth/login?next_path=%2F%23appraisal';
-    if (!identity) return;
-    identity.replaceChildren();
-    const control = document.createElement(session ? 'button' : 'a');
-    control.id = 'studio-session';
-    control.className = session ? 'identity-logout' : 'identity-login';
     if (session) {
-      control.type = 'button';
-      control.textContent = lang() === 'en' ? 'Sign out' : 'Выйти';
-      control.addEventListener('click', async () => {
-        await fetch('/auth/logout', { method: 'POST' });
-        location.reload();
-      });
       prefillIdentity(session.user);
-    } else {
-      control.href = '/auth/login?next_path=%2F%23appraisal';
-      control.textContent = lang() === 'en' ? 'Create Kawaui ID / Sign in' : 'Создать Kawaui ID / Войти';
     }
-    identity.appendChild(control);
+    renderHeroAction();
     renderAccessCopy();
+  }
+
+  function renderHeroAction() {
+    const heroAction = document.getElementById('hero-appraisal-action');
+    if (!heroAction) return;
+    heroAction.href = session ? '#appraisal' : '/auth/login?next_path=%2F%23appraisal';
+    heroAction.textContent = session
+      ? (lang() === 'en' ? 'Appraise soul' : 'Оценить душу')
+      : (lang() === 'en' ? 'Sign in with Kawaui ID' : 'Войти через Kawaui ID');
   }
 
   function renderAccessCopy() {
@@ -192,8 +184,8 @@
   }
   refreshRate();
   document.addEventListener('bukamiku:language', () => {
+    renderHeroAction();
     renderAccessCopy();
-    loadSession();
   });
   loadSession().then(() => Promise.all([refreshPreview(), loadHistory()]));
 })();

@@ -197,13 +197,13 @@ const I18N = {
     nav_faq: "Вопросы",
     ticker_label: "Курс души сегодня",
 
-    hero_eyebrow: "Договор бессрочного отчуждения нематериального актива",
+    hero_eyebrow: "● БАНК ОНЛАЙН // ДОГОВОР БЕССРОЧНОГО ОТЧУЖДЕНИЯ НЕМАТЕРИАЛЬНОГО АКТИВА",
     hero_title_1: "Продайте душу.",
     hero_title_2: "Получите деньги.",
     hero_title_3: "Без комиссии банка.",
     hero_sub: "Мы оцениваем душу за 90 секунд, переводим деньги мгновенно и забираем всё остальное на себя. Юридически чисто. Морально — нет.",
     hero_cta_eval: "Оценить мою душу",
-    hero_cta_contract: "Читать договор",
+    hero_cta_contract: "Kawaui Studio",
     hero_disclaimer: "* Возврату и обмену душа не подлежит. См. п. 6.6 договора.",
     seal_banner_text: "СДЕЛКА ЗАКЛЮЧЕНА",
 
@@ -320,13 +320,13 @@ const I18N = {
     nav_faq: "FAQ",
     ticker_label: "Soul rate today",
 
-    hero_eyebrow: "Perpetual Intangible Asset Conveyance Agreement",
+    hero_eyebrow: "● BANK ONLINE // PERPETUAL INTANGIBLE ASSET CONVEYANCE AGREEMENT",
     hero_title_1: "Sell your soul.",
     hero_title_2: "Get cash.",
     hero_title_3: "Zero bank fees.",
     hero_sub: "We appraise your soul in 90 seconds, transfer funds instantly, and take care of the rest. Legally sound. Morally not.",
     hero_cta_eval: "Appraise My Soul",
-    hero_cta_contract: "Read Agreement",
+    hero_cta_contract: "Kawaui Studio",
     hero_disclaimer: "* Souls are non-refundable and non-exchangeable. See clause 6.6.",
     seal_banner_text: "DEAL SEALED",
 

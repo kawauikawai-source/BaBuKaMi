@@ -132,6 +132,45 @@ class StudioIntegrationTest(unittest.TestCase):
             self.assertEqual(db.query(StudioTransaction).one().status, "rejected")
             self.assertEqual(db.query(StudioWallet).count(), 0)
 
+    def test_studio_deposit_moves_balance_to_casino_once(self):
+        with self.SessionLocal() as db:
+            db.add(StudioWallet(user_id=self.player_id, currency="EUR", balance_cents=30_000, version=0))
+            db.commit()
+
+        headers = {"Idempotency-Key": "studio-deposit-once"}
+        response = self.client.post(
+            "/api/cashier/deposit",
+            json={"amount": "100.00", "method_id": "kawaui-studio"},
+            headers=headers,
+        )
+        repeated = self.client.post(
+            "/api/cashier/deposit",
+            json={"amount": "100.00", "method_id": "kawaui-studio"},
+            headers=headers,
+        )
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(repeated.status_code, 201)
+        self.assertEqual(response.json()["transaction"]["id"], repeated.json()["transaction"]["id"])
+        self.assertEqual(response.json()["wallet"]["balance_cents"], repeated.json()["wallet"]["balance_cents"])
+
+        with self.SessionLocal() as db:
+            player = db.get(User, self.player_id)
+            wallet = db.query(StudioWallet).filter_by(user_id=self.player_id).one()
+            studio_transaction = db.query(StudioTransaction).one()
+            self.assertEqual(player.balance_cents, 1_010_000)
+            self.assertEqual(wallet.balance_cents, 20_000)
+            self.assertEqual(studio_transaction.type, "casino_deposit")
+            self.assertEqual(studio_transaction.net_cents, -10_000)
+            self.assertEqual(db.query(Transaction).filter_by(method_id="kawaui-studio").count(), 1)
+
+    def test_studio_deposit_rejects_insufficient_studio_balance(self):
+        response = self.client.post(
+            "/api/cashier/deposit",
+            json={"amount": "100.00", "method_id": "kawaui-studio"},
+        )
+        self.assertEqual(response.status_code, 422)
+        self.assertEqual(response.json()["detail"]["code"], "err_studio_insufficient_balance")
+
     def test_three_soul_sales_credit_studio_and_fourth_is_blocked(self):
         headers = self.identity_headers()
         body = {"fatigue": "fresh", "debt": "none", "compromise": "minor"}

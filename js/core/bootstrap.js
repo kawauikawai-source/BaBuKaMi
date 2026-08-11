@@ -91,7 +91,7 @@
   };
   const prefersReducedMotion = global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const apiBaseUrl = (C.api && C.api.baseUrl) || 'http://127.0.0.1:8000/api';
-  const staticCacheVersion = 'offline-i18n-v1';
+  const staticCacheVersion = 'kawaui-id-withdraw-v1';
 
   function rollHeroLoreState() {
     const nextKawaui = pickHeroKawauiState(heroLoreState.kawaui);

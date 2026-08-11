@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BuKaMiKu Bank — оценка нематериальных активов</title>
+<link rel="icon" type="image/png" sizes="512x512" href="favicon-bukamiku-512.png?v=1">
+<link rel="apple-touch-icon" href="favicon-bukamiku-512.png?v=1">
+<meta name="theme-color" content="#ff4b36">
 <link rel="stylesheet" href="styles.css?v=bukamiku-access-v2">
 </head>
 <body>
@@ -35,8 +38,6 @@
           <span class="ticker__label" data-i18n="ticker_label">Курс души сегодня</span>
           <span class="ticker__value" id="soul-rate">— € / шт.</span>
         </div>
-        <a class="studio-link" href="/studio">Kawaui Studio</a>
-        <div class="identity-control" id="identity-control"></div>
       </div>
     </div>
   </header>
@@ -51,7 +52,7 @@
     =========================================================== -->
     <section class="hero">
       <div class="hero__inner">
-        <p class="hero__eyebrow" data-i18n="hero_eyebrow">Договор бессрочного отчуждения нематериального актива</p>
+        <p class="hero__eyebrow" data-i18n="hero_eyebrow">● БАНК ОНЛАЙН // ДОГОВОР БЕССРОЧНОГО ОТЧУЖДЕНИЯ НЕМАТЕРИАЛЬНОГО АКТИВА</p>
         <h1 class="hero__title">
           <span data-i18n="hero_title_1">Продайте душу.</span><br>
           <span data-i18n="hero_title_2">Получите деньги.</span><br>
@@ -63,8 +64,8 @@
         </p>
 
         <div class="hero__cta-group">
-          <a href="/auth/login?next_path=%2F%23appraisal" id="hero-appraisal-action" class="btn btn--primary" data-i18n="hero_cta_eval">Оценить мою душу</a>
-          <a href="#contract" class="btn btn--ghost" data-i18n="hero_cta_contract">Читать договор</a>
+          <a href="/auth/login?next_path=%2F%23appraisal" id="hero-appraisal-action" class="btn btn--primary">Войти через Kawaui ID</a>
+          <a href="/studio" class="btn btn--ghost" data-i18n="hero_cta_contract">Kawaui Studio</a>
         </div>
 
         <p class="hero__disclaimer" data-i18n="hero_disclaimer">
@@ -443,7 +444,7 @@
     </div>
   </footer>
 
-  <script src="script.js?v=bukamiku-access-v2"></script>
-  <script src="studio.js?v=bukamiku-access-v2"></script>
+  <script src="script.js?v=bukamiku-kawaui-id-v3"></script>
+  <script src="studio.js?v=bukamiku-kawaui-id-v3"></script>
 </body>
 </html>

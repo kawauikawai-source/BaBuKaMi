@@ -52,6 +52,92 @@ def create_pending_casino_transfer(
     return studio_transaction
 
 
+def transfer_studio_to_casino(
+    db: Session,
+    *,
+    user: User,
+    amount_cents: int,
+    request: Request | None = None,
+) -> Transaction:
+    if amount_cents <= 0:
+        raise api_error("err_studio_amount_invalid")
+
+    wallet = get_or_create_studio_wallet(db, user)
+    studio_before = int(wallet.balance_cents or 0)
+    update_result = db.execute(
+        update(StudioWallet)
+        .where(StudioWallet.id == wallet.id, StudioWallet.balance_cents >= amount_cents)
+        .values(
+            balance_cents=StudioWallet.balance_cents - amount_cents,
+            version=StudioWallet.version + 1,
+        )
+        .execution_options(synchronize_session=False)
+    )
+    if update_result.rowcount != 1:
+        db.rollback()
+        raise api_error("err_studio_insufficient_balance")
+
+    casino_before = int(user.balance_cents or 0)
+    db.execute(
+        update(User)
+        .where(User.id == user.id)
+        .values(balance_cents=User.balance_cents + amount_cents)
+        .execution_options(synchronize_session=False)
+    )
+    db.flush()
+    db.refresh(wallet)
+    db.refresh(user)
+
+    casino_transaction = Transaction(
+        user_id=user.id,
+        type="deposit",
+        status="completed",
+        amount_cents=amount_cents,
+        currency=user.currency,
+        method_id="kawaui-studio",
+        title_key="tx_deposit_title",
+    )
+    db.add(casino_transaction)
+    db.flush()
+
+    studio_transaction = StudioTransaction(
+        user_id=user.id,
+        casino_transaction_id=casino_transaction.id,
+        source="studio",
+        type="casino_deposit",
+        status="completed",
+        amount_cents=amount_cents,
+        fee_cents=0,
+        net_cents=-amount_cents,
+        currency="EUR",
+        external_ref=f"studio-deposit:{casino_transaction.id}",
+        metadata_json=json.dumps(
+            {"casino_transaction_id": casino_transaction.id},
+            separators=(",", ":"),
+        ),
+    )
+    db.add(studio_transaction)
+    db.flush()
+    add_audit_log(
+        db,
+        action="studio.transfer.to_casino",
+        actor_user=user,
+        target_user=user,
+        amount_cents=amount_cents,
+        before_balance_cents=casino_before,
+        after_balance_cents=int(user.balance_cents or 0),
+        metadata={
+            "transaction_id": casino_transaction.id,
+            "studio_transaction_id": studio_transaction.id,
+            "studio_before_cents": studio_before,
+            "studio_after_cents": int(wallet.balance_cents or 0),
+            "method_id": "kawaui-studio",
+        },
+        request=request,
+    )
+    return casino_transaction
+
+
 def credit_studio_wallet(
     db: Session,
     *,

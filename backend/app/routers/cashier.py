@@ -8,6 +8,8 @@ from app.core.config import get_settings
 from app.core.rate_limit import limiter
 from app.core.money import (
     DEPOSIT_METHODS,
+    SUSPENDED_DEPOSIT_METHODS,
+    SUSPENDED_WITHDRAW_METHODS,
     WITHDRAW_METHODS,
     amount_to_cents,
     cashier_rules_for_tier,
@@ -24,7 +26,7 @@ from app.core.errors import api_error
 from app.services.idempotency import begin_idempotency, complete_idempotency
 from app.services.money import apply_balance_delta
 from app.services.audit import add_audit_log
-from app.services.studio import create_pending_casino_transfer
+from app.services.studio import create_pending_casino_transfer, transfer_studio_to_casino
 from app.services.promos import preview_promo_code, promo_public, redeem_promo_code
 from app.services.abuse import (
     add_abuse_event,
@@ -72,6 +74,8 @@ def deposit(
     method_id = payload.method_id.strip().lower()
     if method_id not in DEPOSIT_METHODS:
         raise api_error("err_payment_method_invalid")
+    if method_id in SUSPENDED_DEPOSIT_METHODS:
+        raise api_error("err_deposit_method_maintenance", status.HTTP_409_CONFLICT)
 
     idem = begin_idempotency(
         db,
@@ -123,18 +127,26 @@ def deposit(
         if amount_cents > rules["deposit_max_cents"]:
             raise limit_error("err_deposit_max", rules["deposit_max_cents"])
 
-    transaction = apply_balance_delta(
-        db,
-        user=user,
-        amount_cents=amount_cents,
-        transaction_type="deposit",
-        method_id=method_id,
-        title_key="tx_deposit_title",
-        title=f"Promo code: {promo_code}" if method_id == "promo" else "",
-        action="cashier.deposit",
-        metadata={"method_id": method_id, "promo_code": promo_code if method_id == "promo" else ""},
-        request=request,
-    )
+    if method_id == "kawaui-studio":
+        transaction = transfer_studio_to_casino(
+            db,
+            user=user,
+            amount_cents=amount_cents,
+            request=request,
+        )
+    else:
+        transaction = apply_balance_delta(
+            db,
+            user=user,
+            amount_cents=amount_cents,
+            transaction_type="deposit",
+            method_id=method_id,
+            title_key="tx_deposit_title",
+            title=f"Promo code: {promo_code}" if method_id == "promo" else "",
+            action="cashier.deposit",
+            metadata={"method_id": method_id, "promo_code": promo_code if method_id == "promo" else ""},
+            request=request,
+        )
     response = CashierResponse(wallet=wallet_response(user), transaction=TransactionPublic.model_validate(transaction))
     complete_idempotency(db, idem, response, transaction_id=transaction.id)
     db.commit()
@@ -159,6 +171,8 @@ def withdraw(
     method_id = payload.method_id.strip().lower()
     if method_id not in WITHDRAW_METHODS:
         raise api_error("err_payment_method_invalid")
+    if method_id in SUSPENDED_WITHDRAW_METHODS:
+        raise api_error("err_withdraw_method_maintenance", status.HTTP_409_CONFLICT)
 
     idem = begin_idempotency(
         db,
