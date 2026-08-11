@@ -3,7 +3,14 @@ from decimal import Decimal
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from app.core.roulette import describe_outcome, evaluate_bet, spin_number
+from app.core.roulette import (
+    BLACK_NUMBERS,
+    RED_NUMBERS,
+    VALID_NUMBERS,
+    describe_outcome,
+    evaluate_bet,
+    spin_number,
+)
 from app.routers.games import aggregate_roulette_bets
 
 
@@ -50,6 +57,50 @@ class RouletteRulesTest(unittest.TestCase):
         for bet_type, selection in bets:
             with self.subTest(bet_type=bet_type, selection=selection):
                 evaluate_bet(bet_type, selection, 100, outcome)
+
+    def test_colors_are_a_complete_standard_european_partition(self):
+        self.assertFalse(RED_NUMBERS & BLACK_NUMBERS)
+        self.assertEqual(RED_NUMBERS | BLACK_NUMBERS | {0}, VALID_NUMBERS)
+        self.assertEqual(len(RED_NUMBERS), 18)
+        self.assertEqual(len(BLACK_NUMBERS), 18)
+        self.assertEqual(describe_outcome(0).color, "green")
+
+    def test_every_standard_bet_has_european_roulette_return(self):
+        # Across all 37 equally likely outcomes every standard bet returns
+        # 36 stake units in total: an exact theoretical RTP of 36/37.
+        bets = [
+            ("straight", "17"),
+            ("split", "17-20"),
+            ("street", "6"),
+            ("corner", "17-18-20-21"),
+            ("six_line", "6"),
+            ("dozen", "2"),
+            ("column", "2"),
+            ("color", "red"),
+            ("parity", "even"),
+            ("range", "high"),
+        ]
+
+        for bet_type, selection in bets:
+            with self.subTest(bet_type=bet_type, selection=selection):
+                total_return_cents = sum(
+                    evaluate_bet(bet_type, selection, 100, describe_outcome(number)).win_cents
+                    for number in range(37)
+                )
+                self.assertEqual(total_return_cents, 3_600)
+
+    def test_zero_loses_every_even_money_bet(self):
+        outcome = describe_outcome(0)
+        for bet_type, selection in (
+            ("color", "red"),
+            ("color", "black"),
+            ("parity", "even"),
+            ("parity", "odd"),
+            ("range", "low"),
+            ("range", "high"),
+        ):
+            with self.subTest(bet_type=bet_type, selection=selection):
+                self.assertFalse(evaluate_bet(bet_type, selection, 100, outcome).won)
 
     def test_duplicate_equivalent_bets_are_aggregated(self):
         evaluated = aggregate_roulette_bets(
