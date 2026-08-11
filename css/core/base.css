@@ -619,8 +619,6 @@ section{padding:88px 0}
   .footer-grid{grid-template-columns:1fr 1fr}
   .nav-links{display:none}
   .nav-burger{display:flex}
-  .nav-auth{display:none!important}
-  .nav-actions{margin-left:auto}
   section{padding:60px 0}
 }
 @media(max-width:620px){
@@ -717,7 +715,8 @@ section{padding:88px 0}
   .register-actions{display:grid;grid-template-columns:1fr 1fr}.register-actions .btn{min-width:0}
   .register-actions .btn:only-child{grid-column:1/-1}
   .page-shell{padding-top:96px}
-  .nav-auth{display:none!important}
+  .nav-auth{display:none}
+  body:not([data-page="home"]) .nav-auth{display:flex}
   .form-grid,.form-grid.compact,.method-grid,.contact-grid,.profile-insight-grid{grid-template-columns:1fr}
   .admin-tabs{display:grid;grid-template-columns:1fr}
   .admin-tab{text-align:center}

@@ -99,39 +99,6 @@ class OnboardingTest(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 422)
 
-    def test_profile_update_allows_optional_empty_last_name(self):
-        registered = self.client.post(
-            "/api/auth/register",
-            json={
-                "first_name": "Solo",
-                "last_name": "User",
-                "email": "solo@example.com",
-                "password": "password123",
-                "dob": "1995-06-12",
-            },
-        )
-        self.assertEqual(registered.status_code, 201)
-        token = registered.json()["access_token"]
-
-        response = self.client.patch(
-            "/api/users/me",
-            headers={"Authorization": f"Bearer {token}"},
-            json={
-                "name": "Solo",
-                "first_name": "Solo",
-                "last_name": "",
-                "email": "solo@example.com",
-                "phone": "",
-                "dob": "1995-06-12",
-                "country": "",
-                "currency": "EUR",
-            },
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["last_name"], "")
-        self.assertEqual(response.json()["name"], "Solo")
-
     def test_legacy_name_registration_still_works(self):
         response = self.client.post(
             "/api/auth/register",

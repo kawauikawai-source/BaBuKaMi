@@ -61,11 +61,6 @@ const bundle = sections.join("\n\n")
   .replace(/\n[\t ]*\n+/g, "\n")
   .replace(/([{},;])\n/g, "$1")
   .replace(/\n/g, "")
-  .replace(/\s*([{},;])\s*/g, "$1")
-  .replace(/([;{])([-\w]+)\s*:\s*/g, "$1$2:")
-  .replace(/\s*>\s*/g, ">")
-  .replace(/(^|[^\w.])0(?:px|rem|em|%)(?=$|[^\w])/g, (match, prefix) => `${prefix}0`)
-  .replace(/\b0\.([0-9]+)/g, ".$1")
-  .replace(/;}/g, "}");
+  .replace(/\s*([{},;])\s*/g, "$1");
 fs.writeFileSync(path.join(root, "css/style.css"), banner + bundle, "utf8");
 console.log("Built css/style.css");

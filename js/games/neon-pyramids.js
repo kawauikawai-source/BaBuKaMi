@@ -68,7 +68,6 @@
   let recent = [];
   let nextIntroTimer = 0;
   let lineClearTimer = 0;
-  let boardGesture = null;
 
   function isActive() {
     return Boolean(activeRound && activeRound.status === 'active' && activeRound.current_piece);
@@ -415,7 +414,6 @@
   }
 
   function renderAll() {
-    document.body.classList.toggle('blocks-round-active', isActive());
     renderBalance();
     renderBets();
     renderDifficulty();
@@ -665,76 +663,7 @@
     }
   }
 
-  function gestureCellSize(shell) {
-    const rect = shell.getBoundingClientRect();
-    return {
-      x: Math.max(18, rect.width / WIDTH),
-      y: Math.max(18, rect.height / boardHeight())
-    };
-  }
-
-  function startBoardGesture(event) {
-    if (!isActive() || busy || event.button > 0) return;
-    const shell = event.currentTarget;
-    boardGesture = {
-      pointerId: event.pointerId,
-      startX: event.clientX,
-      startY: event.clientY,
-      lastX: event.clientX,
-      lastY: event.clientY,
-      moved: false,
-      size: gestureCellSize(shell)
-    };
-    shell.setPointerCapture?.(event.pointerId);
-    event.preventDefault();
-  }
-
-  function moveBoardGesture(event) {
-    if (!boardGesture || boardGesture.pointerId !== event.pointerId || !isActive() || busy) return;
-    let dx = event.clientX - boardGesture.lastX;
-    let dy = event.clientY - boardGesture.lastY;
-    const horizontalStep = boardGesture.size.x * .72;
-    const verticalStep = boardGesture.size.y * .9;
-    while (Math.abs(dx) >= horizontalStep) {
-      movePiece(dx > 0 ? 1 : -1);
-      boardGesture.lastX += dx > 0 ? horizontalStep : -horizontalStep;
-      dx = event.clientX - boardGesture.lastX;
-      boardGesture.moved = true;
-    }
-    while (dy >= verticalStep) {
-      softDrop();
-      boardGesture.lastY += verticalStep;
-      dy = event.clientY - boardGesture.lastY;
-      boardGesture.moved = true;
-    }
-    event.preventDefault();
-  }
-
-  function finishBoardGesture(event) {
-    if (!boardGesture || boardGesture.pointerId !== event.pointerId) return;
-    const gesture = boardGesture;
-    boardGesture = null;
-    event.currentTarget.releasePointerCapture?.(event.pointerId);
-    if (!isActive() || busy) return;
-    const totalX = event.clientX - gesture.startX;
-    const totalY = event.clientY - gesture.startY;
-    const distance = Math.hypot(totalX, totalY);
-    if (totalY > gesture.size.y * 2.2 && Math.abs(totalY) > Math.abs(totalX)) {
-      hardDrop();
-    } else if (totalY < -gesture.size.y * 1.25 && Math.abs(totalY) > Math.abs(totalX)) {
-      rotatePiece();
-    } else if (!gesture.moved && distance < 14) {
-      rotatePiece();
-    }
-    event.preventDefault();
-  }
-
   function initBlocks() {
-    const boardShell = document.querySelector('.blocks-board-shell');
-    boardShell?.addEventListener('pointerdown', startBoardGesture);
-    boardShell?.addEventListener('pointermove', moveBoardGesture);
-    boardShell?.addEventListener('pointerup', finishBoardGesture);
-    boardShell?.addEventListener('pointercancel', () => { boardGesture = null; });
     document.addEventListener('click', e => {
       const bet = e.target.closest('[data-blocks-bet]');
       if (bet && !isActive()) {
