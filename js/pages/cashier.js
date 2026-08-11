@@ -61,6 +61,15 @@
     return Number(document.getElementById(inputId)?.value || 0);
   }
 
+  function setText(id, value) {
+    const element = document.getElementById(id);
+    if (element) element.textContent = value;
+  }
+
+  function accountName(user) {
+    return user.email || user.name || `Kawaui ID #${user.apiId || user.id || '08'}`;
+  }
+
   function cardNumberPassesLuhn(number) {
     let sum = 0;
     let doubleDigit = false;
@@ -555,6 +564,7 @@
       const continues = selectedDepositMethod().requiresCard || selectedDepositMethod().requiresCrypto;
       depositButton.textContent = ui.t(continues ? 'cashier_continue' : 'cashier_submit_deposit');
     }
+    renderDepositStudioRoute();
     syncBonusHint();
   }
 
@@ -569,10 +579,6 @@
     const user = store.getDisplayUser();
     const rules = cashierRules(user);
     const withdrawMode = store.getState().cashier.mode === 'withdraw';
-    const setText = (id, value) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = value;
-    };
     setText('cashier-balance', ui.formatMoney(user.balance, user.currency));
     setText('cashier-min-label', ui.t(withdrawMode ? 'cashier_min_withdraw' : 'cashier_min_deposit'));
     setText('cashier-max-label', ui.t(withdrawMode ? 'cashier_max_withdraw' : 'cashier_max_deposit'));
@@ -611,7 +617,7 @@
     const amount = Math.max(0, parseAmount('withdraw-input'));
     const fee = amount * rules.commission / 100;
     const payout = Math.max(0, amount - fee);
-    const account = user.email || user.name || `Kawaui ID #${user.apiId || user.id || '08'}`;
+    const account = accountName(user);
     const preview = document.getElementById('withdraw-preview');
     if (preview) preview.classList.toggle('has-amount', amount > 0);
     const route = document.getElementById('studio-withdraw-route');
@@ -626,13 +632,23 @@
     if (accountValue) accountValue.textContent = account;
   }
 
+  function renderDepositStudioRoute() {
+    const active = selectedDepositMethod().id === 'kawaui-studio';
+    const user = store.getDisplayUser();
+    const amount = Math.max(0, parseAmount('amount-input'));
+    ['studio-deposit-route', 'studio-deposit-preview'].forEach(id => {
+      const element = document.getElementById(id);
+      if (element) element.hidden = !active;
+    });
+    setText('studio-source-account', accountName(user));
+    const value = ui.formatMoney(amount, user.currency);
+    setText('studio-deposit-debit', value);
+    setText('studio-deposit-credit', value);
+  }
+
   function renderStudioTransferSuccess(values) {
     const user = store.getDisplayUser();
-    const account = user.email || user.name || `Kawaui ID #${user.apiId || user.id || '08'}`;
-    const setText = (id, value) => {
-      const element = document.getElementById(id);
-      if (element) element.textContent = value;
-    };
+    const account = accountName(user);
     setText('withdraw-success-account', account);
     setText('withdraw-success-gross', ui.formatMoney(values.amount, user.currency));
     setText('withdraw-success-fee', ui.formatMoney(values.fee, user.currency));
@@ -647,6 +663,12 @@
           : 'kawaui-transfer-smile.png';
       sticker.src = `../assets/images/${file}`;
     }
+  }
+
+  function renderStudioDepositSuccess(amount) {
+    const user = store.getDisplayUser();
+    setText('deposit-success-account', accountName(user));
+    setText('deposit-success-amount', ui.formatMoney(amount, user.currency));
   }
 
   function resetSuccess(kind) {
@@ -719,6 +741,12 @@
 
     const result = await store.deposit(amount, method.id, promoCode);
     if (showStoreError(result)) return;
+    const studio = method.id === 'kawaui-studio';
+    const regularSuccess = document.getElementById('deposit-success-default');
+    const studioSuccess = document.getElementById('deposit-success-studio');
+    if (regularSuccess) regularSuccess.hidden = studio;
+    if (studioSuccess) studioSuccess.hidden = !studio;
+    if (studio) renderStudioDepositSuccess(amount);
     ui.showToast(ui.t('toast_deposit_success'));
     showSuccess('deposit');
   }
@@ -769,7 +797,7 @@
     }
     if (initialParams.get('mode') === 'withdraw') setMode('withdraw');
     if (initialParams.get('method') === 'kawaui-studio') {
-      store.setCashierMethod('withdraw', 'kawaui-studio');
+      store.setCashierMethod(initialParams.get('mode') === 'withdraw' ? 'withdraw' : 'deposit', 'kawaui-studio');
     }
 
     document.addEventListener('click', e => {
@@ -848,6 +876,7 @@
       if (event.key === 'Escape' && !document.getElementById('card-oops-overlay')?.hidden) closeCardOops();
     });
     document.getElementById('btn-submit-withdraw')?.addEventListener('click', submitWithdraw);
+    document.getElementById('amount-input')?.addEventListener('input', renderDepositStudioRoute);
     document.getElementById('withdraw-input')?.addEventListener('input', renderWithdrawPreview);
     initFormatting();
     store.subscribe(() => {

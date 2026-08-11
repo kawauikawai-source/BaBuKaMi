@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from random import SystemRandom
+from secrets import randbelow
 
 
 RED_NUMBERS = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36}
@@ -17,9 +17,6 @@ BET_PAYOUTS = {
     "parity": 1,
     "range": 1,
 }
-
-_random = SystemRandom()
-
 
 @dataclass(frozen=True)
 class RouletteOutcome:
@@ -42,7 +39,8 @@ class EvaluatedBet:
 
 
 def spin_number() -> int:
-    return _random.randrange(37)
+    # Every spin is an independent draw from the operating system CSPRNG.
+    return randbelow(37)
 
 
 def describe_outcome(number: int) -> RouletteOutcome:

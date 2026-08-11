@@ -15,6 +15,15 @@
     return item.type;
   }
 
+  function statusLabel(status) {
+    const en = B.store.getState().lang === 'en';
+    return ({
+      pending: en ? 'Pending' : 'Ожидает',
+      completed: en ? 'Completed' : 'Завершено',
+      rejected: en ? 'Rejected' : 'Отклонено'
+    })[status] || status;
+  }
+
   function renderHistory(items) {
     const root = document.getElementById('studioWalletHistory');
     if (!root) return;
@@ -25,7 +34,7 @@
     root.innerHTML = items.map(item => `
       <div class="studio-wallet-row">
         <span><b>${operationLabel(item)}</b><small>${new Date(item.created_at).toLocaleString()}</small></span>
-        <strong class="${item.status}">${item.status === 'completed' && item.net_cents > 0 ? '+' : ''}${money(item.net_cents)}</strong>
+        <span class="studio-wallet-row-result"><small class="studio-wallet-status ${item.status}">${statusLabel(item.status)}</small><strong class="${item.status}">${item.status === 'completed' && item.net_cents > 0 ? '+' : ''}${money(item.net_cents)}</strong></span>
       </div>`).join('');
   }
 

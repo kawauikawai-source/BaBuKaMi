@@ -1,8 +1,9 @@
 import unittest
 from decimal import Decimal
 from types import SimpleNamespace
+from unittest.mock import patch
 
-from app.core.roulette import describe_outcome, evaluate_bet
+from app.core.roulette import describe_outcome, evaluate_bet, spin_number
 from app.routers.games import aggregate_roulette_bets
 
 
@@ -11,6 +12,11 @@ def request_bet(bet_type: str, selection: str, amount: str = "1.00") -> SimpleNa
 
 
 class RouletteRulesTest(unittest.TestCase):
+    @patch("app.core.roulette.randbelow", return_value=14)
+    def test_spin_uses_independent_secure_draw(self, secure_draw):
+        self.assertEqual(spin_number(), 14)
+        secure_draw.assert_called_once_with(37)
+
     def test_ui_generated_bets_are_accepted_by_backend_rules(self):
         bets = [("straight", str(number)) for number in [0, *range(1, 37)]]
         bets += [
