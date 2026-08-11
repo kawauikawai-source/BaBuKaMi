@@ -17,6 +17,12 @@ BET_PAYOUTS = {
     "parity": 1,
     "range": 1,
 }
+ROULETTE_VIP_TOTAL_BET_LIMITS_CENTS = {
+    "bronze": 10_000,
+    "silver": 15_000,
+    "gold": 25_000,
+    "platinum": 50_000,
+}
 
 @dataclass(frozen=True)
 class RouletteOutcome:
@@ -41,6 +47,15 @@ class EvaluatedBet:
 def spin_number() -> int:
     # Every spin is an independent draw from the operating system CSPRNG.
     return randbelow(37)
+
+
+def roulette_total_bet_limit_cents(vip_tier: str | None, custom_bet_cents: int | None = None) -> int:
+    tier = str(vip_tier or "bronze").strip().lower()
+    tier_limit = ROULETTE_VIP_TOTAL_BET_LIMITS_CENTS.get(
+        tier,
+        ROULETTE_VIP_TOTAL_BET_LIMITS_CENTS["bronze"],
+    )
+    return max(tier_limit, int(custom_bet_cents or 0))
 
 
 def describe_outcome(number: int) -> RouletteOutcome:

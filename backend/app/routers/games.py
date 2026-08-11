@@ -105,7 +105,14 @@ from app.core.survival import (
     resolution_parameter_values,
 )
 from app.core.rate_limit import limiter
-from app.core.roulette import covered_numbers, describe_outcome, evaluate_bet, normalize_bet_type, spin_number
+from app.core.roulette import (
+    covered_numbers,
+    describe_outcome,
+    evaluate_bet,
+    normalize_bet_type,
+    roulette_total_bet_limit_cents,
+    spin_number,
+)
 from app.core.slots import SLOT_GAME_ID, SLOT_METHOD_ID, SLOT_TITLE, SLOT_TITLE_KEY, ALLOWED_BET_CENTS, spin_lucky_bamboo
 from app.core.vip import award_vip_bet_points
 from app.db.session import get_db
@@ -146,7 +153,7 @@ from app.services.audit import add_audit_log
 from app.services.idempotency import begin_idempotency, complete_idempotency
 from app.services.game_control import consume_game_budget
 from app.services.money import apply_game_result, apply_instant_game_result, reserve_bet
-from app.services.manager import is_allowed_manager_bet
+from app.services.manager import effective_custom_bet_cents, is_allowed_manager_bet
 
 
 router = APIRouter(prefix="/games", tags=["games"])
@@ -154,7 +161,6 @@ router = APIRouter(prefix="/games", tags=["games"])
 ROULETTE_GAME_ID = "european-roulette"
 MIN_BET_CENTS = 100
 MAX_BET_CENTS = 99_999_999
-MAX_TOTAL_BET_CENTS = 99_999_999
 NUMBER_GROUP_BETS = {"straight", "split", "corner"}
 NUMBERED_BETS = {"street", "six_line", "dozen", "column"}
 
@@ -226,8 +232,10 @@ def roulette_spin(
     evaluated = aggregate_roulette_bets(payload.bets, outcome)
 
     total_bet_cents = sum(bet.amount_cents for bet in evaluated)
-    if total_bet_cents > MAX_TOTAL_BET_CENTS:
-        raise roulette_error("err_roulette_total_max", MAX_TOTAL_BET_CENTS)
+    custom_bet_cents = effective_custom_bet_cents(db, current_user.id, "roulette")
+    total_bet_limit_cents = roulette_total_bet_limit_cents(current_user.vip_tier, custom_bet_cents)
+    if total_bet_cents > total_bet_limit_cents:
+        raise roulette_error("err_roulette_total_max", total_bet_limit_cents)
 
     total_win_cents = sum(bet.win_cents for bet in evaluated)
     net_cents = total_win_cents - total_bet_cents

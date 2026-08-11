@@ -6,6 +6,7 @@
   const ui = B.ui;
 
   const CHIPS = [5, 10, 25, 100];
+  const VIP_TABLE_LIMITS = Object.freeze({ bronze: 100, silver: 150, gold: 250, platinum: 500 });
   const EUROPEAN_WHEEL = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
   const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
   const RED_NUMBERS = new Set(redNumbers);
@@ -447,8 +448,16 @@
     return Number(store.getDisplayUser().balance || 0);
   }
 
+  function tableLimit() {
+    const tier = String(store.getDisplayUser().vipTier || 'bronze').toLowerCase();
+    const tierLimit = VIP_TABLE_LIMITS[tier] || VIP_TABLE_LIMITS.bronze;
+    return Math.max(tierLimit, ...CHIPS.map(Number).filter(Number.isFinite));
+  }
+
   function availableBetAmount() {
-    return Math.max(0, currentBalance() - totalBet());
+    const availableBalance = currentBalance() - totalBet();
+    const availableAtTable = tableLimit() - totalBet();
+    return Math.max(0, Math.floor(Math.min(availableBalance, availableAtTable) * 100) / 100);
   }
 
   function showStoreError(result) {
@@ -506,9 +515,20 @@
     clearSettlement();
     const key = betKey(type, selection);
     const existing = bets.get(key);
-    const amount = selectedAllIn ? availableBetAmount() : selectedChip;
-    if (amount <= 0) {
-      ui.showToast(ui.t('err_roulette_balance'), 'err');
+    const available = availableBetAmount();
+    const amount = selectedAllIn ? available : selectedChip;
+    if (amount < 1) {
+      const balanceBlocked = currentBalance() - totalBet() < 1;
+      ui.showToast(ui.t(balanceBlocked ? 'err_roulette_balance' : 'err_roulette_total_max', {
+        amount: ui.formatMoney(tableLimit())
+      }), 'err');
+      return;
+    }
+    if (!selectedAllIn && amount > available) {
+      const balanceBlocked = currentBalance() - totalBet() < amount;
+      ui.showToast(ui.t(balanceBlocked ? 'err_roulette_balance' : 'err_roulette_total_max', {
+        amount: ui.formatMoney(tableLimit())
+      }), 'err');
       return;
     }
     bets.set(key, {
@@ -542,13 +562,13 @@
     const mount = document.getElementById('rouletteChips');
     if (!mount) return;
     const allInAmount = availableBetAmount();
-    if (allInAmount <= 0) selectedAllIn = false;
+    if (allInAmount < 1) selectedAllIn = false;
     mount.innerHTML = CHIPS.map(value => `
       <button class="chip-btn ${!selectedAllIn && value === selectedChip ? 'selected' : ''}" type="button" data-chip="${value}">
         ${ui.formatMoney(value)}
       </button>
     `).join('') + `
-      <button class="chip-btn roulette-all-in-chip ${selectedAllIn ? 'selected' : ''}" type="button" data-all-in-chip ${allInAmount <= 0 ? 'disabled' : ''}>
+      <button class="chip-btn roulette-all-in-chip ${selectedAllIn ? 'selected' : ''}" type="button" data-all-in-chip ${allInAmount < 1 ? 'disabled' : ''}>
         <span>${ui.t('roulette_all_in')}</span>
       </button>
     `;

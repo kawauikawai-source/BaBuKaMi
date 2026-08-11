@@ -9,6 +9,7 @@ from app.core.roulette import (
     VALID_NUMBERS,
     describe_outcome,
     evaluate_bet,
+    roulette_total_bet_limit_cents,
     spin_number,
 )
 from app.routers.games import aggregate_roulette_bets
@@ -101,6 +102,14 @@ class RouletteRulesTest(unittest.TestCase):
         ):
             with self.subTest(bet_type=bet_type, selection=selection):
                 self.assertFalse(evaluate_bet(bet_type, selection, 100, outcome).won)
+
+    def test_total_bet_limit_follows_vip_tier_and_manager_override(self):
+        self.assertEqual(roulette_total_bet_limit_cents("bronze"), 10_000)
+        self.assertEqual(roulette_total_bet_limit_cents("silver"), 15_000)
+        self.assertEqual(roulette_total_bet_limit_cents("gold"), 25_000)
+        self.assertEqual(roulette_total_bet_limit_cents("platinum"), 50_000)
+        self.assertEqual(roulette_total_bet_limit_cents("silver", 25_000), 25_000)
+        self.assertEqual(roulette_total_bet_limit_cents("gold", 50_000), 50_000)
 
     def test_duplicate_equivalent_bets_are_aggregated(self):
         evaluated = aggregate_roulette_bets(
