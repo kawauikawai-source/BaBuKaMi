@@ -358,6 +358,101 @@ class TransactionPublic(BaseModel):
         return cents_to_amount(self.payout_cents)
 
 
+class StudioWalletPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    currency: str = "EUR"
+    balance_cents: int = 0
+    version: int = 0
+
+    @computed_field
+    @property
+    def balance(self) -> Decimal:
+        return cents_to_amount(self.balance_cents)
+
+
+class StudioTransactionPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    source: str
+    type: str
+    status: str
+    amount_cents: int
+    fee_cents: int = 0
+    net_cents: int
+    currency: str = "EUR"
+    external_ref: str | None = None
+    created_at: datetime
+    updated_at: datetime
+
+
+class StudioWalletResponse(BaseModel):
+    wallet: StudioWalletPublic
+    recent_transactions: list[StudioTransactionPublic] = Field(default_factory=list)
+
+
+class SoulAppraisalRequest(BaseModel):
+    fatigue: str = Field(default="fresh", max_length=24)
+    debt: str = Field(default="none", max_length=24)
+    compromise: str = Field(default="minor", max_length=24)
+
+
+class SoulAppraisalPreviewPublic(BaseModel):
+    daily_rate_cents: int
+    base_value_cents: int
+    next_sale_number: int
+    decay_bps: int
+    payout_cents: int
+    sales_remaining: int
+
+
+class SoulAppraisalPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    sale_number: int
+    daily_rate_cents: int
+    base_value_cents: int
+    decay_bps: int
+    payout_cents: int
+    contract_version: str
+    studio_transaction_id: int
+    created_at: datetime
+
+
+class SoulAppraisalResponse(BaseModel):
+    appraisal: SoulAppraisalPublic
+    wallet: StudioWalletPublic
+    transaction: StudioTransactionPublic
+
+
+class IdentityTokenRequest(BaseModel):
+    grant_type: str = "authorization_code"
+    code: str
+    redirect_uri: str
+    client_id: str
+    client_secret: str
+    code_verifier: str
+
+
+class IdentityTokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "Bearer"
+    expires_in: int
+    scope: str
+
+
+class IdentityUserInfo(BaseModel):
+    sub: str
+    name: str
+    given_name: str = ""
+    family_name: str = ""
+    email: EmailStr
+    birthdate: str = ""
+    country: str = ""
+
+
 class AdminUserSummary(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -392,11 +487,17 @@ class AdminUserDetail(AdminUserSummary):
     is_admin: bool = False
     created_at: datetime
     last_login_at: datetime | None = None
+    studio_balance_cents: int = 0
 
     @computed_field
     @property
     def total_won(self) -> Decimal:
         return cents_to_amount(self.total_won_cents)
+
+    @computed_field
+    @property
+    def studio_balance(self) -> Decimal:
+        return cents_to_amount(self.studio_balance_cents)
 
 
 class AdminBalanceAdjustRequest(BaseModel):

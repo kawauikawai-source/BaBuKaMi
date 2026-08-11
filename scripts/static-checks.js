@@ -91,7 +91,13 @@ function checkI18nCoverage() {
   }
 
   const usedKeys = new Set();
-  const sourceFiles = walk(root, file => /\.(?:html|js)$/.test(file));
+  // BuKaMiKu is a separate application with its own translation catalog.
+  // Keep the Bambiku catalog check scoped to the central frontend.
+  const sourceFiles = [
+    path.join(root, 'index.html'),
+    ...walk(path.join(root, 'pages'), file => /\.(?:html|js)$/.test(file)),
+    ...walk(path.join(root, 'js'), file => /\.(?:html|js)$/.test(file)),
+  ].filter(file => fs.existsSync(file));
   const htmlKeyPattern = /data-i18n(?:-html|-ph)?\s*=\s*["']([A-Za-z0-9_.:-]+)["']/g;
   const jsKeyPattern = /\b(?:ui\.)?t\(\s*["']([A-Za-z0-9_.:-]+)["']\s*[,)]/g;
   for (const filePath of sourceFiles) {
@@ -285,10 +291,11 @@ function checkPerformanceBudgets() {
     // Game Control adds one isolated terminal stylesheet; other pages keep the shared budget.
     ['pages/responsible.html', 332 * 1024],
   ]);
-  const maxPageScriptBytes = 432 * 1024;
+  // Kawaui Studio adds a small shared identity/wallet client to authenticated pages.
+  const maxPageScriptBytes = 440 * 1024;
   const pageScriptBudgetBytes = new Map([
     // Admin loads the shared account schema plus its own data-management modules.
-    ['pages/admin.html', 476 * 1024],
+    ['pages/admin.html', 484 * 1024],
   ]);
   const maxPageScripts = 8;
   const maxPageStylesheets = 3;

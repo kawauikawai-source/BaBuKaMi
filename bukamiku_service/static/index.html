@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BuKaMiKu Bank — оценка нематериальных активов</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ==========================================================
+       ШАПКА / NAV
+       Фикс-хедер, полупрозрачный, blur. Логотип слева,
+       переключатель языков и статус "курса души" справа
+  =========================================================== -->
+  <header class="header">
+    <div class="header__inner">
+      <div class="logo">BuKa<span class="logo__accent">MiKu</span></div>
+
+      <nav class="nav">
+        <a href="#rates" class="nav__link" data-i18n="nav_rates">Курс</a>
+        <a href="#appraisal" class="nav__link" data-i18n="nav_appraisal">Оценка</a>
+        <a href="#contract" class="nav__link" data-i18n="nav_contract">Договор</a>
+        <a href="#faq" class="nav__link" data-i18n="nav_faq">Вопросы</a>
+      </nav>
+
+      <div class="header__right">
+        <div class="lang-switch" role="group" aria-label="Language selector">
+          <button type="button" class="lang-btn is-active" data-lang="ru">RU</button>
+          <span class="lang-divider">/</span>
+          <button type="button" class="lang-btn" data-lang="en">EN</button>
+        </div>
+
+        <div class="header__ticker">
+          <span class="ticker__label" data-i18n="ticker_label">Курс души сегодня</span>
+          <span class="ticker__value" id="soul-rate">— € / шт.</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ==========================================================
+         HERO
+         Главный тезис страницы. Крупный заголовок, договор-эстетика,
+         "печать" как фирменный элемент (signature element).
+         CTA ведёт к форме оценки души (#appraisal)
+    =========================================================== -->
+    <section class="hero">
+      <div class="hero__inner">
+        <p class="hero__eyebrow" data-i18n="hero_eyebrow">Договор бессрочного отчуждения нематериального актива</p>
+        <h1 class="hero__title">
+          <span data-i18n="hero_title_1">Продайте душу.</span><br>
+          <span data-i18n="hero_title_2">Получите деньги.</span><br>
+          <span class="hero__title-accent" data-i18n="hero_title_3">Без комиссии банка.</span>
+        </h1>
+        <p class="hero__sub" data-i18n="hero_sub">
+          Мы оцениваем душу за 90 секунд, переводим деньги мгновенно
+          и забираем всё остальное на себя. Юридически чисто. Морально — нет.
+        </p>
+
+        <div class="hero__cta-group">
+          <a href="#appraisal" class="btn btn--primary" data-i18n="hero_cta_eval">Оценить мою душу</a>
+          <a href="#contract" class="btn btn--ghost" data-i18n="hero_cta_contract">Читать договор</a>
+        </div>
+
+        <p class="hero__disclaimer" data-i18n="hero_disclaimer">
+          * Возврату и обмену душа не подлежит. См. п. 6.6 договора.
+        </p>
+      </div>
+
+      <!-- Фирменный signature-элемент: минималистичная печать BuKaMiKu с логотипом -->
+      <div class="hero__seal" aria-hidden="true">
+        <div class="minimal-seal">
+          <svg class="minimal-seal__svg" viewBox="0 0 300 300">
+            <defs>
+              <path id="min-seal-text-path" d="M 150, 150 m -126, 0 a 126,126 0 1,1 252,0 a 126,126 0 1,1 -252,0" />
+              <radialGradient id="core-gradient" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(255, 77, 46, 0.15)" />
+                <stop offset="100%" stop-color="rgba(20, 21, 26, 0)" />
+              </radialGradient>
+            </defs>
+
+            <!-- Тонкие минималистичные рамки -->
+            <circle cx="150" cy="150" r="146" class="seal-line seal-line--outer" />
+            <circle cx="150" cy="150" r="136" class="seal-line seal-line--inner" />
+            <circle cx="150" cy="150" r="108" class="seal-line seal-line--dashed" stroke-dasharray="4, 5" />
+            <circle cx="150" cy="150" r="82" class="seal-line seal-line--core-bg" fill="url(#core-gradient)" />
+            <circle cx="150" cy="150" r="80" class="seal-line seal-line--core" />
+
+            <!-- Вращающийся круговой текст -->
+            <g class="seal-text-group">
+              <text class="seal-text-content">
+                <textPath href="#min-seal-text-path" startOffset="0%">
+                  ✦ BUKAMIKU BANK ✦ OFFICIAL SOUL EXCHANGE ✦ CONTRACT VERIFIED ✦ 2026 ✦
+                </textPath>
+              </text>
+            </g>
+
+            <!-- Стильный геометрический логотип в центре -->
+            <g class="seal-center-logo">
+              <!-- Ромб + пламя души (логотип BuKaMiKu) -->
+              <polygon points="150,92 178,120 150,148 122,120" class="seal-logo-diamond" />
+              <path d="M 150 102 C 144 114 138 122 144 130 C 147 134 153 134 156 130 C 162 122 156 114 150 102 Z" class="seal-logo-flame" />
+              <circle cx="150" cy="124" r="3" class="seal-logo-dot" />
+
+              <!-- Текстовый бренд BuKaMiKu -->
+              <text x="150" y="172" class="seal-logo-brand" text-anchor="middle">BuKa<tspan class="seal-logo-brand-acc">MiKu</tspan></text>
+              <text x="150" y="188" class="seal-logo-sub" text-anchor="middle">SOUL BANK</text>
+            </g>
+          </svg>
+
+          <!-- Минималистичная плашка статуса -->
+          <div class="seal-min-tag">
+            <span class="seal-min-tag__icon">✓</span>
+            <span data-i18n="seal_banner_text">СДЕЛКА ЗАКЛЮЧЕНА</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         КУРС ДУШИ (rates)
+         Таблица-тикер: универсальные жизненные категории душ
+    =========================================================== -->
+    <section class="rates" id="rates">
+      <div class="section__head">
+        <span class="section__eyebrow" data-i18n="rates_eyebrow">01 — рыночные данные</span>
+        <h2 class="section__title" data-i18n="rates_title">Курс души в реальном времени</h2>
+      </div>
+
+      <div class="rates__table" role="table" aria-label="Курсы обмена душ">
+        <div class="rates__row rates__row--head" role="row">
+          <span role="columnheader" data-i18n="col_category">Категория души</span>
+          <span role="columnheader" data-i18n="col_status">Состояние</span>
+          <span role="columnheader" data-i18n="col_price">Цена</span>
+          <span role="columnheader" data-i18n="col_trend">Динамика</span>
+        </div>
+
+        <div class="rates__row" role="row" data-trend="up">
+          <span data-i18n="cat_office">Душа офисного сотрудника</span>
+          <span class="tag tag--worn" data-i18n="tag_office">Немного выгорела от созвонов</span>
+          <span class="price">1 480 €</span>
+          <span class="trend">▲ 1.8%</span>
+        </div>
+        <div class="rates__row" role="row" data-trend="up">
+          <span data-i18n="cat_student">Душа студента перед сессией</span>
+          <span class="tag tag--damaged" data-i18n="tag_student">Держится на кофе и молитвах</span>
+          <span class="price">950 €</span>
+          <span class="trend">▲ 3.4%</span>
+        </div>
+        <div class="rates__row" role="row" data-trend="up">
+          <span data-i18n="cat_dreamer">Душа мечтателя / романтика</span>
+          <span class="tag tag--fresh" data-i18n="tag_dreamer">Свежая, наивная</span>
+          <span class="price">2 620 €</span>
+          <span class="trend">▲ 8.5%</span>
+        </div>
+        <div class="rates__row" role="row" data-trend="down">
+          <span data-i18n="cat_mortgage">Душа человека с ипотекой</span>
+          <span class="tag tag--worn" data-i18n="tag_mortgage">Закалена, 15 лет гарантии</span>
+          <span class="price">2 150 €</span>
+          <span class="trend trend--down">▼ 2.1%</span>
+        </div>
+        <div class="rates__row" role="row" data-trend="flat">
+          <span data-i18n="cat_owl">Душа совы (после понедельника)</span>
+          <span class="tag tag--damaged" data-i18n="tag_owl">Требует сна, но не получает</span>
+          <span class="price">1 120 €</span>
+          <span class="trend trend--flat">— 0.0%</span>
+        </div>
+      </div>
+
+      <p class="rates__note" data-i18n="rates_note">Курс формируется биржей BuKaMiKu Exchange (внутренний индекс SOULX). Обновление каждые 24 часа, либо по факту экзистенциального кризиса.</p>
+    </section>
+
+    <!-- ==========================================================
+         ФОРМА ОЦЕНКИ ДУШИ (appraisal)
+         Основной конверсионный элемент. Многошаговая форма,
+         визуально как банковская анкета "на кредит"
+    =========================================================== -->
+    <section class="appraisal" id="appraisal">
+      <div class="section__head">
+        <span class="section__eyebrow" data-i18n="appraisal_eyebrow">02 — оценка</span>
+        <h2 class="section__title" data-i18n="appraisal_title">Узнайте стоимость своей души</h2>
+      </div>
+
+      <form class="appraisal__form" id="appraisal-form">
+        <!-- ШАГ 1: базовые данные -->
+        <fieldset class="form__group">
+          <legend class="form__legend" data-i18n="step1_legend">Шаг 1. Кто продаёт</legend>
+
+          <div class="form__row">
+            <label class="field">
+              <span class="field__label" data-i18n="label_firstname">Имя</span>
+              <input type="text" name="firstName" placeholder="Александр" data-i18n-ph="ph_firstname" required>
+            </label>
+
+            <label class="field">
+              <span class="field__label" data-i18n="label_lastname">Фамилия</span>
+              <input type="text" name="lastName" placeholder="Петров" data-i18n-ph="ph_lastname" required>
+            </label>
+          </div>
+
+          <div class="form__row">
+            <label class="field">
+              <span class="field__label" data-i18n="label_email">Электронная почта</span>
+              <input type="email" name="email" placeholder="alex@example.com" data-i18n-ph="ph_email" required>
+            </label>
+
+            <label class="field">
+              <span class="field__label" data-i18n="label_age">Возраст души</span>
+              <input type="number" name="age" min="18" max="120" placeholder="27" required>
+            </label>
+          </div>
+
+          <label class="field">
+            <span class="field__label" data-i18n="label_country">Страна проживания</span>
+            <select name="country" required>
+              <option value="" disabled selected data-i18n="select_country_default">Выберите страну</option>
+              <option value="DE" data-i18n="opt_de">Германия</option>
+              <option value="FR" data-i18n="opt_fr">Франция</option>
+              <option value="UA" data-i18n="opt_ua">Украина</option>
+              <option value="PL" data-i18n="opt_pl">Польша</option>
+              <option value="KZ" data-i18n="opt_kz">Казахстан</option>
+              <option value="ES" data-i18n="opt_es">Испания</option>
+              <option value="US" data-i18n="opt_us">США</option>
+              <option value="OTHER" data-i18n="opt_other">Другая страна</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <!-- ШАГ 2: состояние души — влияет на итоговую цену -->
+        <fieldset class="form__group">
+          <legend class="form__legend" data-i18n="step2_legend">Шаг 2. Состояние товара</legend>
+
+          <label class="field">
+            <span class="field__label" data-i18n="label_fatigue">Уровень вашей повседневной усталости</span>
+            <select name="fatigue">
+              <option value="fresh" data-i18n="fatigue_fresh">Полный сил и жизненной энергии</option>
+              <option value="tired" selected data-i18n="fatigue_tired">Устаю к пятнице, восстанавливаюсь к воскресенью</option>
+              <option value="burned" data-i18n="fatigue_burned">Мечтаю об отпуске последние 3 года</option>
+              <option value="zombie" data-i18n="fatigue_zombie">Держусь на кофе, мемах и честном слове</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span class="field__label" data-i18n="label_debt">Наличие кредитов или финансовых обязательств</span>
+            <select name="debt">
+              <option value="none" data-i18n="debt_none">Нет долгов и кредитов</option>
+              <option value="small" data-i18n="debt_small">Есть небольшая кредитка или рассрочка</option>
+              <option value="mortgage" data-i18n="debt_mortgage">Ипотека или крупный кредит (поэтому я здесь)</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span class="field__label" data-i18n="label_compromise">Частота компромиссов с совестью</span>
+            <select name="compromise">
+              <option value="saint" data-i18n="compromise_saint">Ни разу — я всегда честен перед собой</option>
+              <option value="minor" selected data-i18n="compromise_minor">Бывает по мелочи (обещал перезвонить и не перезвонил)</option>
+              <option value="career" data-i18n="compromise_career">Регулярно, это называется «взрослая жизнь»</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <!-- ШАГ 3: способ выплаты -->
+        <fieldset class="form__group">
+          <legend class="form__legend" data-i18n="step3_legend">Шаг 3. Куда переводить деньги</legend>
+
+          <div class="payout-method payout-method--active">
+            <div class="payout-method__header">
+              <div class="payout-method__title">
+                <svg class="payout-method__icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"></path><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"></path></svg>
+                <span>Kawaui Studio</span>
+              </div>
+              <span class="badge badge--active">ACTIVE</span>
+            </div>
+            <p class="payout-method__desc" data-i18n="payout_desc">
+              Выплата зачисляется прямо в отдельный кошелёк <strong>Kawaui Studio</strong> после подписания договора.
+            </p>
+            <input type="hidden" name="payoutAccount" value="Kawaui Studio">
+          </div>
+        </fieldset>
+
+        <!-- Итоговая цена — обновляется JS-ом на основе выбранных полей -->
+        <div class="appraisal__result" id="appraisal-result" aria-live="polite">
+          <span class="appraisal__result-label" data-i18n="result_label">Предварительная оценка</span>
+          <span class="appraisal__result-value" id="appraisal-value">0 €</span>
+        </div>
+        <div class="studio-sales" id="studio-sales" hidden></div>
+
+        <label class="field field--checkbox">
+          <input type="checkbox" name="agreeContract" required>
+          <span data-i18n-html="contract_agree">Я прочитал(а) и принимаю <a href="#contract">договор отчуждения души</a>, включая п. 6.6</span>
+        </label>
+
+        <button type="submit" class="btn btn--primary btn--wide" data-i18n="btn_submit">Подписать и получить деньги</button>
+      </form>
+    </section>
+
+    <!-- ==========================================================
+         ДОГОВОР (contract)
+         Юридически-стилизованный блок, аккордеон с пунктами.
+    =========================================================== -->
+    <section class="contract" id="contract">
+      <div class="section__head">
+        <span class="section__eyebrow" data-i18n="contract_eyebrow">03 — юридический блок</span>
+        <h2 class="section__title" data-i18n="contract_title">Договор об отчуждении нематериального актива</h2>
+      </div>
+
+      <div class="contract__accordion" id="contract-accordion">
+        <details class="contract__item" open>
+          <summary class="contract__summary" data-i18n="c1_title">1. Предмет договора и квалификация актива</summary>
+          <div class="contract__body">
+            <p data-i18n="c1_p1">1.1. Продавец передаёт, а Покупатель (BuKaMiKu Exchange) принимает в полноправную и бессрочную собственность нематериальный актив Продавца (далее — «Душа») в состоянии «как есть» (as is).</p>
+            <p style="margin-top: 10px;" data-i18n="c1_p2">1.2. Продавец подтверждает, что актив не находится в залоге у сторонних метафизических сущностей, не обременён духовными ипотеками и свободен от претензий третьих лиц.</p>
+          </div>
+        </details>
+
+        <details class="contract__item">
+          <summary class="contract__summary" data-i18n="c2_title">2. Цена и порядок расчётов</summary>
+          <div class="contract__body">
+            <p data-i18n="c2_p1">2.1. Оценка стоимости актива рассчитывается автоматически алгоритмом BuKaMiKu на основе анкеты Продавца в Евро (€).</p>
+            <p style="margin-top: 10px;" data-i18n="c2_p2">2.2. Оплата производится единовременно путем зачисления средств на аккаунт Kawaui Studio (в режиме SOON). Переход прав собственности на Душу происходит в момент нажатия кнопки «Подписать».</p>
+          </div>
+        </details>
+
+        <details class="contract__item">
+          <summary class="contract__summary" data-i18n="c3_title">3. Права, обязанности и гарантии Продавца</summary>
+          <div class="contract__body">
+            <p data-i18n="c3_p1">3.1. Продавец обязуется не испытывать публичных экзистенциальных сожалений о совершенной сделке и не привлекать обряды экзорцизма для расторжения настоящего договора.</p>
+            <p style="margin-top: 10px;" data-i18n="c3_p2">3.2. Потеря бытовой совести, легкое ощущение пустоты во время кофе-пауз и равнодушие к мелодрамам являются нормальными побочными эффектами и не признаются дефектом исполнения.</p>
+          </div>
+        </details>
+
+        <details class="contract__item">
+          <summary class="contract__summary" data-i18n="c4_title">4. Ответственность сторон и форс-мажор</summary>
+          <div class="contract__body">
+            <p data-i18n="c4_p1">4.1. Стороны освобождаются от ответственности только в случае полного наступления Апокалипсиса или глобального отключения электричества во всех мирах одновременно.</p>
+            <p style="margin-top: 10px;" data-i18n="c4_p2">4.2. Наступление рефлексии, кризиса среднего возраста или депрессии не признается обстоятельством непреодолимой силы.</p>
+          </div>
+        </details>
+
+        <details class="contract__item">
+          <summary class="contract__summary" data-i18n="c5_title">5. Конфиденциальность и реестр сделок</summary>
+          <div class="contract__body">
+            <p data-i18n="c5_p1">5.1. Все данные сделки шифруются и заносятся в астральный реестр BuKaMiKu Exchange. Третьи лица не имеют доступа к вашему договору без подписки VIP.</p>
+          </div>
+        </details>
+
+        <details class="contract__item">
+          <summary class="contract__summary" data-i18n="c6_title">6.6. Особые и бессрочные условия</summary>
+          <div class="contract__body">
+            <p data-i18n="c6_p1">6.6.1. Договор является бессрочным, безотзывным и действующим во всех известных и неизвестных измерениях, включая явь, навь и промежуточные тарифные зоны.</p>
+            <p style="margin-top: 10px;" data-i18n="c6_p2">6.6.2. Возврату, обмену, гарантийному ремонту и выкупу Душа не подлежит ни при каких обстоятельствах.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         FAQ
+         Простой аккордеон, повторно использует .contract__item стили
+    =========================================================== -->
+    <section class="faq" id="faq">
+      <div class="section__head">
+        <span class="section__eyebrow" data-i18n="faq_eyebrow">04 — вопросы</span>
+        <h2 class="section__title" data-i18n="faq_title">Частые вопросы</h2>
+      </div>
+
+      <div class="contract__accordion">
+        <details class="contract__item" open>
+          <summary class="contract__summary" data-i18n="faq_q1">Это физически больно?</summary>
+          <div class="contract__body">
+            <p data-i18n="faq_a1">Нет, абсолютная цифровая отчуждаемость! Никаких иголок, ритуалов или вызова демонов в 3 часа ночи. Всё происходит кликом по кнопке. Легкое ощущение внезапной свободы по понедельникам — это норма.</p>
+          </div>
+        </details>
+
+        <details class="contract__item">
+          <summary class="contract__summary" data-i18n="faq_q2">Можно продать часть души или взять аванс?</summary>
+          <div class="contract__body">
+            <p data-i18n="faq_a2">Да, алгоритм BuKaMiKu поддерживает частичную продажу (от 10% до 90%). Полный выкуп рекомендуется для решения крупных финансовых задач.</p>
+          </div>
+        </details>
+
+        <details class="contract__item">
+          <summary class="contract__summary" data-i18n="faq_q3">Куда переходят деньги после оценки?</summary>
+          <div class="contract__body">
+            <p data-i18n="faq_a3">Выплаты производятся напрямую в Евро (€) на ваш профиль в Kawaui Studio. В данный момент шлюз находится в стадии подключения (статус SOON).</p>
+          </div>
+        </details>
+
+        <details class="contract__item">
+          <summary class="contract__summary" data-i18n="faq_q4">А если я уже закладывал душу в микрозаймах?</summary>
+          <div class="contract__body">
+            <p data-i18n="faq_a4">В форме оценки (Шаг 2) честно укажите информацию о кредитах. Система BuKaMiKu учтёт мотивационную надбавку и пересчитает курс с учётом высокой готовности к сделке.</p>
+          </div>
+        </details>
+
+        <details class="contract__item">
+          <summary class="contract__summary" data-i18n="faq_q5">Можно ли выкупить душу обратно?</summary>
+          <div class="contract__body">
+            <p data-i18n="faq_a5">См. п. 6.6 договора. Все сделки на бирже BuKaMiKu Exchange являются окончательными, бессрочными и безотзывными.</p>
+          </div>
+        </details>
+
+        <details class="contract__item">
+          <summary class="contract__summary" data-i18n="faq_q6">Узнают ли об этом родственники или коллеги?</summary>
+          <div class="contract__body">
+            <p data-i18n="faq_a6">Нет, сделке присваивается 128-битный анонимный хэш. Ваше окружение замечает только то, что вы стали спокойнее относиться к дедлайнам и перестали спорить в комментариях.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================
+       FOOTER
+  =========================================================== -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="logo logo--footer">BuKa<span class="logo__accent">MiKu</span></div>
+      <p class="footer__legal" data-i18n="footer_legal">
+        BuKaMiKu не является банком в смысле закона о банках и банковской деятельности.
+        Все сделки окончательны. Сайт является пародией и не производит реальный обмен душ на деньги.
+      </p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="studio.js"></script>
+</body>
+</html>

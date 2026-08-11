@@ -26,3 +26,4 @@ build/
 *.key
 backups/*
 !backups/.gitkeep
+bukamiku_service/import_source/

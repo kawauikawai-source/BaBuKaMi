@@ -692,8 +692,18 @@
     showSuccess('deposit');
   }
 
-  function submitWithdraw() {
-    openWithdrawCheckout();
+  async function submitWithdraw() {
+    const method = selectedWithdrawMethod();
+    if (method.id !== 'kawaui-studio') {
+      openWithdrawCheckout();
+      return;
+    }
+    const values = withdrawalAmounts();
+    if (!validateWithdrawAmount(values.amount)) return;
+    const result = await store.withdraw(values.amount, method.id);
+    if (showStoreError(result)) return;
+    ui.showToast(ui.t('toast_withdraw_success'));
+    showSuccess('withdraw');
   }
 
   function initFormatting() {
@@ -724,6 +734,10 @@
     const initialPromoCode = String(initialParams.get('promo') || '').trim().toUpperCase().replace(/\s+/g, '');
     if (initialParams.get('method') === 'promo' || initialPromoCode) {
       store.setCashierMethod('deposit', 'promo');
+    }
+    if (initialParams.get('mode') === 'withdraw') setMode('withdraw');
+    if (initialParams.get('method') === 'kawaui-studio') {
+      store.setCashierMethod('withdraw', 'kawaui-studio');
     }
 
     document.addEventListener('click', e => {

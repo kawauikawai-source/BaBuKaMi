@@ -37,6 +37,21 @@
         <span class="partner-status" data-i18n="partner_status">ТЕРМИНАЛ ПРОЕКТОВ // 02 СИГНАЛА</span>
       </header>
 
+      <section class="studio-wallet-panel" id="studioWalletPanel" aria-live="polite">
+        <div>
+          <p class="label" data-i18n="studio_wallet_label">STUDIO WALLET</p>
+          <strong class="studio-wallet-balance" id="studioWalletBalance">—</strong>
+          <p class="studio-wallet-note" id="studioWalletNote" data-i18n="studio_wallet_loading">Загружаем отдельный баланс Studio...</p>
+        </div>
+        <div class="studio-wallet-history">
+          <div class="studio-wallet-history-head">
+            <h2 data-i18n="studio_history_title">Последние операции</h2>
+            <a href="deposit.html?mode=withdraw&amp;method=kawaui-studio" data-i18n="studio_transfer_action">Перевести из Casino</a>
+          </div>
+          <div id="studioWalletHistory" class="studio-wallet-history-list"></div>
+        </div>
+      </section>
+
       <section class="partner-worlds" aria-label="Kawaui Studio projects">
         <a class="partner-world is-current" href="../index.html" data-route="home">
           <div class="partner-world-top"><span>WORLD // BK-01</span><b data-i18n="partner_world_live">В СЕТИ</b></div>
@@ -47,6 +62,17 @@
             <p data-i18n="partner_world_casino_desc">Восемь миров риска, удачи и странных решений Кавая.</p>
           </div>
           <strong class="partner-world-action" data-i18n="partner_world_here">ВЫ СЕЙЧАС ЗДЕСЬ</strong>
+        </a>
+
+        <a class="partner-world is-current is-bukamiku" id="bukamikuWorld" href="http://127.0.0.1:5600">
+          <div class="partner-world-top"><span>WORLD // BM-02</span><b data-i18n="partner_world_live">В СЕТИ</b></div>
+          <div class="partner-world-mark">BM</div>
+          <div class="partner-world-copy">
+            <small data-i18n="partner_world_bukamiku_type">БАНК НЕМАТЕРИАЛЬНЫХ АКТИВОВ</small>
+            <h2>BuKaMiKu Bank</h2>
+            <p data-i18n="partner_world_bukamiku_desc">Оценка души, Великий пакт и автоматическое зачисление выплаты в Studio wallet.</p>
+          </div>
+          <strong class="partner-world-action" data-i18n="partner_world_open">ОТКРЫТЬ ПРОЕКТ</strong>
         </a>
 
         <article class="partner-world is-soon" aria-disabled="true">
@@ -69,9 +95,10 @@
   <script src="../js/config/app-domain.js?v=home-finish-v1"></script>
   <script src="../js/config/runtime.js?v=infra-v1"></script>
   <script src="../js/core/constants.js?v=operator-08-v1"></script>
-  <script src="../js/core/store.js?v=operator-08-v1"></script>
+  <script src="../js/core/store.js?v=kawaui-studio-v2"></script>
   <script src="../js/core/ui.js?v=optimization-v2"></script>
   <script src="../js/core/auth.js?v=optimization-v2"></script>
+  <script src="../js/pages/partner.js?v=kawaui-studio-v4"></script>
   <script src="../js/core/bootstrap.js?v=offline-i18n-v1"></script>
 </body>
 </html>

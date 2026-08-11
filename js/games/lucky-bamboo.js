@@ -6,7 +6,7 @@
   const ui = B.ui;
 
   const BETS = [5, 10, 25, 100];
-  const LINE_COUNT = 3;
+  const LINE_COUNT = 5;
   const SYMBOLS = {
     bamboo: { icon: '🎋', name: 'Bamboo', className: 'bamboo' },
     panda: { icon: '🐼', name: 'Panda', className: 'panda' },

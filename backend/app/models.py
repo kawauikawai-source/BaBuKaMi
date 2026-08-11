@@ -64,6 +64,10 @@ class User(Base):
         foreign_keys="ManagerTicket.user_id",
     )
     manager_bet_presets: Mapped[list["ManagerBetPreset"]] = relationship(back_populates="user")
+    studio_wallet: Mapped["StudioWallet | None"] = relationship(back_populates="user", uselist=False)
+    studio_transactions: Mapped[list["StudioTransaction"]] = relationship(back_populates="user")
+    identity_sessions: Mapped[list["IdentityAppSession"]] = relationship(back_populates="user")
+    soul_appraisals: Mapped[list["SoulAppraisal"]] = relationship(back_populates="user")
 
 
 class GameControlSettings(Base):
@@ -237,6 +241,120 @@ class AbuseEvent(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False, index=True)
 
     user: Mapped[User | None] = relationship()
+
+
+class StudioWallet(Base):
+    __tablename__ = "studio_wallets"
+    __table_args__ = (
+        UniqueConstraint("user_id", name="uq_studio_wallets_user"),
+        CheckConstraint("balance_cents >= 0", name="ck_studio_wallets_balance_nonnegative"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
+    currency: Mapped[str] = mapped_column(String(3), nullable=False, default="EUR")
+    balance_cents: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    version: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+
+    user: Mapped[User] = relationship(back_populates="studio_wallet")
+
+
+class StudioTransaction(Base):
+    __tablename__ = "studio_transactions"
+    __table_args__ = (
+        UniqueConstraint("casino_transaction_id", name="uq_studio_transactions_casino_transaction"),
+        UniqueConstraint("external_ref", name="uq_studio_transactions_external_ref"),
+        Index("ix_studio_transactions_user_created", "user_id", "created_at", "id"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
+    casino_transaction_id: Mapped[int | None] = mapped_column(ForeignKey("transactions.id"), nullable=True, index=True)
+    source: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
+    type: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
+    status: Mapped[str] = mapped_column(String(24), nullable=False, default="pending", index=True)
+    amount_cents: Mapped[int] = mapped_column(Integer, nullable=False)
+    fee_cents: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    net_cents: Mapped[int] = mapped_column(Integer, nullable=False)
+    currency: Mapped[str] = mapped_column(String(3), nullable=False, default="EUR")
+    external_ref: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    metadata_json: Mapped[str] = mapped_column(Text, nullable=False, default="{}")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+
+    user: Mapped[User] = relationship(back_populates="studio_transactions")
+    casino_transaction: Mapped[Transaction | None] = relationship()
+
+
+class IdentityAuthorizationCode(Base):
+    __tablename__ = "identity_authorization_codes"
+    __table_args__ = (Index("ix_identity_codes_client_expires", "client_id", "expires_at"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
+    client_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    code_hash: Mapped[str] = mapped_column(String(64), nullable=False, unique=True, index=True)
+    redirect_uri: Mapped[str] = mapped_column(String(512), nullable=False)
+    scope: Mapped[str] = mapped_column(String(255), nullable=False)
+    code_challenge: Mapped[str] = mapped_column(String(128), nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+
+class IdentityAppSession(Base):
+    __tablename__ = "identity_app_sessions"
+    __table_args__ = (Index("ix_identity_sessions_user_client", "user_id", "client_id", "revoked_at"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
+    client_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    token_hash: Mapped[str] = mapped_column(String(64), nullable=False, unique=True, index=True)
+    scope: Mapped[str] = mapped_column(String(255), nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    last_used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+    user: Mapped[User] = relationship(back_populates="identity_sessions")
+
+
+class IdentityConsent(Base):
+    __tablename__ = "identity_consents"
+    __table_args__ = (UniqueConstraint("user_id", "client_id", name="uq_identity_consents_user_client"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
+    client_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    scope: Mapped[str] = mapped_column(String(255), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+
+
+class SoulAppraisal(Base):
+    __tablename__ = "soul_appraisals"
+    __table_args__ = (
+        UniqueConstraint("user_id", "sale_number", name="uq_soul_appraisals_user_sale"),
+        UniqueConstraint("studio_transaction_id", name="uq_soul_appraisals_studio_transaction"),
+        CheckConstraint("sale_number >= 1 AND sale_number <= 3", name="ck_soul_appraisals_sale_number"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
+    sale_number: Mapped[int] = mapped_column(Integer, nullable=False)
+    answers_json: Mapped[str] = mapped_column(Text, nullable=False, default="{}")
+    daily_rate_cents: Mapped[int] = mapped_column(Integer, nullable=False)
+    base_value_cents: Mapped[int] = mapped_column(Integer, nullable=False)
+    decay_bps: Mapped[int] = mapped_column(Integer, nullable=False)
+    payout_cents: Mapped[int] = mapped_column(Integer, nullable=False)
+    contract_version: Mapped[str] = mapped_column(String(32), nullable=False, default="soul-pact-v1")
+    studio_transaction_id: Mapped[int] = mapped_column(ForeignKey("studio_transactions.id"), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+    user: Mapped[User] = relationship(back_populates="soul_appraisals")
+    studio_transaction: Mapped[StudioTransaction] = relationship()
 
 
 class GameRound(Base):

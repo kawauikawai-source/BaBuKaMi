@@ -23,6 +23,8 @@ from app.schemas import CashierRequest, CashierResponse, PromoPreviewPublic, Tra
 from app.core.errors import api_error
 from app.services.idempotency import begin_idempotency, complete_idempotency
 from app.services.money import apply_balance_delta
+from app.services.audit import add_audit_log
+from app.services.studio import create_pending_casino_transfer
 from app.services.promos import preview_promo_code, promo_public, redeem_promo_code
 from app.services.abuse import (
     add_abuse_event,
@@ -217,6 +219,30 @@ def withdraw(
     transaction.payout_cents = payout_cents
     db.add(transaction)
     db.flush()
+    if method_id == "kawaui-studio":
+        studio_transaction = create_pending_casino_transfer(
+            db,
+            user=user,
+            casino_transaction=transaction,
+            metadata={"vip_tier": user.vip_tier, "processing_hours": rules["withdraw_processing_hours"]},
+        )
+        add_audit_log(
+            db,
+            action="studio.transfer.request",
+            actor_user=user,
+            target_user=user,
+            amount_cents=payout_cents,
+            before_balance_cents=user.balance_cents,
+            after_balance_cents=user.balance_cents,
+            metadata={
+                "transaction_id": transaction.id,
+                "studio_transaction_id": studio_transaction.id,
+                "gross_cents": amount_cents,
+                "fee_cents": fee_cents,
+                "payout_cents": payout_cents,
+            },
+            request=request,
+        )
     response = CashierResponse(wallet=wallet_response(user), transaction=TransactionPublic.model_validate(transaction))
     complete_idempotency(db, idem, response, transaction_id=transaction.id)
     db.commit()

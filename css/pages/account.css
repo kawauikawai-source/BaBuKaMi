@@ -70,7 +70,7 @@
 
 .profile-section h2{font-family:var(--font);font-size:23px;font-weight:900;margin-bottom:18px}
 
-.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
 
 .stat-box{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:16px}
 

@@ -9,7 +9,7 @@ import jwt
 from authlib.integrations.starlette_client import OAuth
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from fastapi.responses import RedirectResponse
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
@@ -24,7 +24,7 @@ from app.core.security import (
 )
 from app.db.session import get_db
 from app.deps import apply_admin_email_role, get_current_user
-from app.models import RefreshSession, User
+from app.models import IdentityAppSession, RefreshSession, User
 from app.schemas import (
     GoogleStatusResponse,
     LoginRequest,
@@ -391,6 +391,13 @@ def logout_all(
     db: Session = Depends(get_db),
 ) -> MessageResponse:
     revoke_all_refresh_sessions(db, current_user.id, "logout_all")
+    now = datetime.now(UTC)
+    db.execute(
+        update(IdentityAppSession)
+        .where(IdentityAppSession.user_id == current_user.id, IdentityAppSession.revoked_at.is_(None))
+        .values(revoked_at=now)
+        .execution_options(synchronize_session=False)
+    )
     db.commit()
     clear_refresh_cookie(response)
     return MessageResponse(message="Logged out from all sessions")

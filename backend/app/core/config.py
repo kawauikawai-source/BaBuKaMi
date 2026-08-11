@@ -57,6 +57,12 @@ class Settings(BaseSettings):
     )
     serve_frontend: bool = False
     frontend_dist_dir: str = "../dist"
+    bukamiku_client_id: str = "bukamiku-bank"
+    bukamiku_client_secret: str = "local-bukamiku-secret-change-me"
+    bukamiku_public_url: str = "http://127.0.0.1:5600"
+    bukamiku_redirect_uri: str = "http://127.0.0.1:5600/auth/callback"
+    identity_code_ttl_seconds: int = 60
+    identity_session_expire_days: int = 30
 
     @model_validator(mode="after")
     def validate_production_security(self) -> "Settings":
@@ -80,6 +86,10 @@ class Settings(BaseSettings):
                 if any(marker in configured_url for marker in local_markers):
                     setattr(self, field_name, hosted_url)
 
+        bukamiku_url = self.bukamiku_public_url.strip().rstrip("/")
+        if bukamiku_url:
+            self.bukamiku_redirect_uri = f"{bukamiku_url}/auth/callback"
+
         env = self.environment.lower()
         origins = self.cors_origins
         if env in {"staging", "production"}:
@@ -87,6 +97,8 @@ class Settings(BaseSettings):
                 raise ValueError("Wildcard CORS origins are not allowed in staging/production")
             if self.secret_key.startswith("change-me"):
                 raise ValueError("BAMBIKU_SECRET_KEY must be changed in staging/production")
+            if self.bukamiku_client_secret.startswith("local-"):
+                raise ValueError("BAMBIKU_BUKAMIKU_CLIENT_SECRET must be changed in staging/production")
         if env == "production":
             local_markers = ("localhost", "127.0.0.1", "0.0.0.0")
             if any(marker in origin.lower() for origin in origins for marker in local_markers):

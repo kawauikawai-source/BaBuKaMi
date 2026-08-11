@@ -30,6 +30,12 @@ class AlembicMigrationTest(unittest.TestCase):
                 self.assertTrue(inspector.has_table("promo_redemptions"))
                 self.assertTrue(inspector.has_table("idempotency_keys"))
                 self.assertTrue(inspector.has_table("abuse_events"))
+                self.assertTrue(inspector.has_table("studio_wallets"))
+                self.assertTrue(inspector.has_table("studio_transactions"))
+                self.assertTrue(inspector.has_table("identity_authorization_codes"))
+                self.assertTrue(inspector.has_table("identity_app_sessions"))
+                self.assertTrue(inspector.has_table("identity_consents"))
+                self.assertTrue(inspector.has_table("soul_appraisals"))
                 self.assertFalse(inspector.has_table("arctic_cash_boards"))
                 self.assertTrue(inspector.has_table("alembic_version"))
                 refresh_columns = {column["name"]: column for column in inspector.get_columns("refresh_sessions")}

@@ -1,6 +1,6 @@
 # Bambiku on Render + Neon
 
-This guide publishes the test site as one Render Web Service. FastAPI serves both the frontend and `/api`, while Neon stores all persistent data.
+This guide publishes two Render Web Services from one repository. `bambiku` owns Kawaui ID, Casino, Studio wallet and Neon data. `bukamiku` serves BuKaMiKu Bank and talks to the central API only from its server-side BFF.
 
 ## 1. Create the Neon database
 
@@ -52,7 +52,7 @@ git push -u origin main
 4. Enter the prompted secret values:
    - `BAMBIKU_DATABASE_URL`: the direct Neon connection string from step 1.
    - `BAMBIKU_ADMIN_EMAILS`: the email that should receive admin access after registration.
-5. Apply the Blueprint and wait for the first deploy.
+5. Apply the Blueprint and wait for both `bambiku` and `bukamiku` to deploy.
 
 The deploy performs these steps automatically:
 
@@ -62,7 +62,7 @@ The deploy performs these steps automatically:
 4. Starts one Uvicorn worker on Render's assigned port.
 5. Waits for `/api/health` to confirm the database and migration revision.
 
-Render generates `BAMBIKU_SECRET_KEY` and supplies the public HTTPS address through `RENDER_EXTERNAL_URL`. No URL, CORS, or cookie values need to be copied manually.
+Render generates `BAMBIKU_SECRET_KEY`, the Kawaui ID client secret shared between services, and the BuKaMiKu cookie secret. These values never enter Git or browser JavaScript.
 
 ## 4. Verify the deployment
 
@@ -90,8 +90,11 @@ Then test in this order:
 3. Open the profile and admin pages.
 4. Add test balance, play one game, redeem a promo, and inspect the audit log.
 5. Register a second ordinary account and verify that it has no admin access.
+6. Open the public URL shown on the `bukamiku` Render service, sign in through Kawaui ID and verify that you return to BuKaMiKu.
+7. Preview a soul valuation, sign the contract once, then check the separate Studio balance and history in Kawaui Studio.
+8. Create a `Kawaui Studio` withdrawal in Casino and approve it in the existing admin withdrawals tab.
 
-Google and Telegram login remain disabled until their client credentials and public callback URLs are configured.
+Google and Telegram remain attached only to central Bambiku. BuKaMiKu never needs its own Google callback or BotFather domain.
 
 ## Updates and logs
 

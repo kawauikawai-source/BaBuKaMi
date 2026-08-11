@@ -89,7 +89,16 @@ Invoke-Checked $Python -m alembic current
 Pop-Location
 
 Step "JavaScript syntax"
-Get-ChildItem -Path (Join-Path $Root "js") -Filter "*.js" -Recurse | Sort-Object FullName | ForEach-Object {
+$JavaScriptRoots = @(
+  (Join-Path $Root "js"),
+  (Join-Path $Root "bukamiku_service\static")
+)
+$JavaScriptRoots | ForEach-Object {
+  Assert-RequiredFile $_
+}
+$JavaScriptRoots | ForEach-Object {
+  Get-ChildItem -Path $_ -Filter "*.js" -Recurse
+} | Sort-Object FullName | ForEach-Object {
   Invoke-Checked $Node --check $_.FullName
 }
 
@@ -130,7 +139,9 @@ $RequiredInfraFiles = @(
   "render.yaml",
   "scripts\build_render_site.py",
   "scripts\render-start.sh",
-  "RENDER_NEON_DEPLOY.md"
+  "RENDER_NEON_DEPLOY.md",
+  "bukamiku_service\app.py",
+  "bukamiku_service\static\index.html"
 )
 $RequiredInfraFiles | ForEach-Object {
   Assert-RequiredFile (Join-Path $Root $_)
@@ -139,7 +150,7 @@ Test-PowerShellParse (Join-Path $Root "scripts\backup-postgres.ps1")
 Test-PowerShellParse (Join-Path $Root "scripts\restore-postgres.ps1")
 
 $RenderBlueprint = Get-Content (Join-Path $Root "render.yaml") -Raw
-@("runtime: python", "plan: free", "region: frankfurt", "healthCheckPath: /api/health") | ForEach-Object {
+@("name: bambiku", "name: bukamiku", "runtime: python", "plan: free", "region: frankfurt", "healthCheckPath: /api/health", "healthCheckPath: /health") | ForEach-Object {
   if (-not $RenderBlueprint.Contains($_)) {
     throw "render.yaml is missing required setting: $_"
   }

@@ -726,6 +726,7 @@
         <div><span>VIP Points</span><strong>${ui.escapeHTML(ui.formatNumber(user.vip_points || 0))}</strong></div>
         <div><span>${ui.escapeHTML(ui.t('profile_games_played'))}</span><strong>${ui.escapeHTML(ui.formatNumber(user.games_played || 0))}</strong></div>
         <div><span>${ui.escapeHTML(ui.t('profile_total_won'))}</span><strong>${ui.formatMoney(user.total_won, user.currency)}</strong></div>
+        <div><span>${ui.escapeHTML(ui.t('studio_balance'))}</span><strong>${ui.formatMoney(Number(user.studio_balance || 0), 'EUR')}</strong></div>
         <div><span>${ui.escapeHTML(ui.t('admin_email_verified'))}</span><strong>${ui.escapeHTML(user.email_verified ? ui.t('yes') : ui.t('no'))}</strong></div>
         <div><span>${ui.escapeHTML(ui.t('admin_flag_admin'))}</span><strong>${ui.escapeHTML(user.is_admin ? ui.t('yes') : ui.t('no'))}</strong></div>
         <div><span>${ui.escapeHTML(ui.t('admin_created'))}</span><strong>${ui.escapeHTML(formatDate(user.created_at))}</strong></div>

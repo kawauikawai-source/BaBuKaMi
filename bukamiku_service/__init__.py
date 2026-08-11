@@ -1,0 +1,1 @@
+"""BuKaMiKu Bank BFF service."""

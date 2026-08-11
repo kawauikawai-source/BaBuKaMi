@@ -61,7 +61,7 @@
       withdrawMethods: [
         { id: 'card', label: 'Bank Card', label_ru: 'Банковская карта', label_en: 'Bank Card', icon: 'CARD', requiresCard: true },
         { id: 'usdt', label: 'Crypto', label_ru: 'Криптовалюта', label_en: 'Crypto', icon: 'CRYPTO', requiresCrypto: true },
-        { id: 'kawaui-studio', label: 'Kawaui Studio', label_ru: 'Kawaui Studio', label_en: 'Kawaui Studio', icon: 'STUDIO', comingSoon: true }
+        { id: 'kawaui-studio', label: 'Kawaui Studio', label_ru: 'Kawaui Studio', label_en: 'Kawaui Studio', icon: 'STUDIO' }
       ],
       paymentTags: ['CARD', 'USDT', 'PROMO']
     },

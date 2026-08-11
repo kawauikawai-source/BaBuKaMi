@@ -883,6 +883,20 @@
       }
       return getState();
     },
+    async authorizeKawauiClient(params) {
+      const query = params instanceof URLSearchParams ? params.toString() : new URLSearchParams(params || {}).toString();
+      return requestApi('/id/authorize?' + query);
+    },
+    async getStudioWallet() {
+      return requestApi('/studio/wallet');
+    },
+    async getStudioCatalog() {
+      return requestApi('/studio/catalog');
+    },
+    async getStudioTransactions(filters) {
+      const params = new URLSearchParams(filters || {});
+      return requestApi('/studio/transactions?' + params.toString());
+    },
     setData(games, i18n) {
       return setState(next => {
         next.data.games = games || clone(C.fallbackGames);
@@ -1568,6 +1582,16 @@
       try {
         const params = new URLSearchParams(paging || {});
         return await requestApi('/admin/users/' + encodeURIComponent(userId) + '/promo-redemptions?' + params.toString());
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async adminGetUserStudioTransactions(userId, filters) {
+      const active = activeUser(state);
+      if (!active || !active.apiId || !active.isAdmin) return fail('err_admin_required');
+      try {
+        const params = new URLSearchParams(filters || {});
+        return await requestApi('/admin/users/' + encodeURIComponent(userId) + '/studio-transactions?' + params.toString());
       } catch (err) {
         return fail(authErrorKey(err));
       }

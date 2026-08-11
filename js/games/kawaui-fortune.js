@@ -364,6 +364,7 @@
   function finishRound(result) {
     const roundId = String(result.round_id || activeRoundId || '');
     const alreadyRendered = roundId && settledRoundIds.has(roundId);
+    const wasLiveVisual = flying && visualStatus === 'active';
     stopPolling();
     flying = false;
     cashoutPending = false;
@@ -382,7 +383,10 @@
       status === 'completed' && net > 0 ? 'win' : (status === 'lost' ? 'loss' : '')
     );
     if (status === 'lost') {
-      const lossMultiplier = Math.max(CRASH_CASHOUT_MIN_MULTIPLIER, multiplierValue(multiplier));
+      // The result can arrive between animation frames. Keep the live curve at
+      // the point the player actually saw instead of snapping it forward to a
+      // polled server value. Restored settled rounds still render their result.
+      const lossMultiplier = wasLiveVisual ? multiplierValue(visualMultiplier) : multiplierValue(multiplier);
       setVisual(lossMultiplier, 'lost', { snap: true });
     } else {
       setVisual(multiplier, status);

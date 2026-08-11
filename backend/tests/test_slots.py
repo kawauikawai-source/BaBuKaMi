@@ -34,17 +34,52 @@ class SlotRulesTest(unittest.TestCase):
             {"row": 0, "reel": 4},
         ])
 
-    def test_scattered_and_diagonal_symbols_do_not_create_hidden_line(self):
+    def test_v_diagonal_is_a_visible_winning_line(self):
+        grid = [
+            ["bamboo", "coin", "jade", "coin", "bamboo"],
+            ["coin", "bamboo", "lotus", "bamboo", "coin"],
+            ["jade", "lotus", "bamboo", "lotus", "jade"],
+        ]
+
+        winning_lines, total_win_cents = evaluate_grid(grid, 500)
+
+        self.assertEqual(len(winning_lines), 1)
+        self.assertEqual(winning_lines[0]["line"], 4)
+        self.assertEqual(winning_lines[0]["symbol"], "bamboo")
+        self.assertEqual(winning_lines[0]["positions"], [
+            {"row": 0, "reel": 0},
+            {"row": 1, "reel": 1},
+            {"row": 2, "reel": 2},
+            {"row": 1, "reel": 3},
+            {"row": 0, "reel": 4},
+        ])
+        self.assertGreater(total_win_cents, 0)
+
+    def test_scattered_symbols_outside_paylines_do_not_win(self):
         grid = [
             ["bamboo", "coin", "jade", "lotus", "panda"],
-            ["coin", "bamboo", "lotus", "jade", "lantern"],
-            ["jade", "lotus", "bamboo", "coin", "panda"],
+            ["coin", "lotus", "bamboo", "jade", "lantern"],
+            ["jade", "bamboo", "lotus", "coin", "panda"],
         ]
 
         winning_lines, total_win_cents = evaluate_grid(grid, 500)
 
         self.assertEqual(winning_lines, [])
         self.assertEqual(total_win_cents, 0)
+
+    def test_inverted_v_diagonal_is_a_visible_winning_line(self):
+        grid = [
+            ["jade", "lotus", "panda", "lotus", "jade"],
+            ["coin", "panda", "lotus", "panda", "coin"],
+            ["panda", "coin", "jade", "coin", "panda"],
+        ]
+
+        winning_lines, total_win_cents = evaluate_grid(grid, 500)
+
+        self.assertEqual(len(winning_lines), 1)
+        self.assertEqual(winning_lines[0]["line"], 5)
+        self.assertEqual(winning_lines[0]["symbol"], "panda")
+        self.assertGreater(total_win_cents, 0)
 
     def test_three_lotus_pays_multiplier_against_line_bet(self):
         grid = [
@@ -55,11 +90,11 @@ class SlotRulesTest(unittest.TestCase):
 
         winning_lines, total_win_cents = evaluate_grid(grid, 500)
 
-        self.assertEqual(total_win_cents, 1_500)
+        self.assertEqual(total_win_cents, 900)
         self.assertEqual(winning_lines[0]["symbol"], "lotus")
         self.assertEqual(winning_lines[0]["count"], 3)
         self.assertEqual(winning_lines[0]["multiplier"], 9)
-        self.assertEqual(winning_lines[0]["win_cents"], 1_500)
+        self.assertEqual(winning_lines[0]["win_cents"], 900)
 
     def test_four_lanterns_show_payout_and_net_as_separate_values(self):
         grid = [
@@ -71,8 +106,8 @@ class SlotRulesTest(unittest.TestCase):
         winning_lines, total_win_cents = evaluate_grid(grid, 2_500)
         net_cents = total_win_cents - 2_500
 
-        self.assertEqual(total_win_cents, 16_666)
-        self.assertEqual(net_cents, 14_166)
+        self.assertEqual(total_win_cents, 10_000)
+        self.assertEqual(net_cents, 7_500)
         self.assertEqual(winning_lines[0]["symbol"], "lantern")
         self.assertEqual(winning_lines[0]["count"], 4)
         self.assertEqual(winning_lines[0]["multiplier"], 20)

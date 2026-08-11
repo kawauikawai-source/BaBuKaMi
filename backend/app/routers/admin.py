@@ -10,7 +10,7 @@ from app.core.errors import api_error
 from app.core.rate_limit import limiter
 from app.db.session import get_db
 from app.deps import get_admin_user
-from app.models import AuditLog, GameRound, ManagerBetPreset, ManagerMessage, ManagerTicket, PromoCode, PromoRedemption, Transaction, User
+from app.models import AuditLog, GameRound, ManagerBetPreset, ManagerMessage, ManagerTicket, PromoCode, PromoRedemption, StudioTransaction, Transaction, User
 from app.schemas import (
     AdminBalanceAdjustRequest,
     AdminBalanceAdjustResponse,
@@ -29,6 +29,7 @@ from app.schemas import (
     AuditLogPublic,
     GameRoundPublic,
     TransactionPublic,
+    StudioTransactionPublic,
     ManagerTicketPublic,
     UserPublic,
 )
@@ -87,7 +88,9 @@ def user_summary(user: User) -> AdminUserSummary:
 
 
 def user_detail(user: User) -> AdminUserDetail:
-    return AdminUserDetail.model_validate(user)
+    payload = AdminUserDetail.model_validate(user)
+    payload.studio_balance_cents = user.studio_wallet.balance_cents if user.studio_wallet else 0
+    return payload
 
 
 def get_withdrawal(db: Session, transaction_id: int) -> Transaction:
@@ -190,7 +193,32 @@ def get_user_detail(
     admin_user: User = Depends(get_admin_user),
     db: Session = Depends(get_db),
 ) -> AdminUserDetail:
-    return user_detail(get_user(db, user_id))
+    user = db.scalar(select(User).options(joinedload(User.studio_wallet)).where(User.id == user_id))
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    return user_detail(user)
+
+
+@router.get("/users/{user_id}/studio-transactions", response_model=list[StudioTransactionPublic])
+def get_user_studio_transactions(
+    user_id: int,
+    type_filter: str = Query(default="", alias="type", max_length=32),
+    status_filter: str = Query(default="", alias="status", max_length=32),
+    limit: int = Query(default=100, ge=1, le=250),
+    offset: int = Query(default=0, ge=0),
+    admin_user: User = Depends(get_admin_user),
+    db: Session = Depends(get_db),
+) -> list[StudioTransactionPublic]:
+    get_user(db, user_id)
+    query = select(StudioTransaction).where(StudioTransaction.user_id == user_id)
+    if type_filter.strip():
+        query = query.where(StudioTransaction.type == type_filter.strip().lower())
+    if status_filter.strip():
+        query = query.where(StudioTransaction.status == status_filter.strip().lower())
+    rows = db.scalars(
+        query.order_by(StudioTransaction.created_at.desc(), StudioTransaction.id.desc()).offset(offset).limit(limit)
+    ).all()
+    return [StudioTransactionPublic.model_validate(row) for row in rows]
 
 
 @router.get("/users/{user_id}/transactions", response_model=list[TransactionPublic])

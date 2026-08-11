@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Kawaui ID</title>
+  <link rel="stylesheet" href="../css/style.css?v=kawaui-id-v1"/>
+  <link rel="icon" type="image/png" href="../assets/favicon-bk-512.png?v=1"/>
+  <style>
+    .identity-page{min-height:100vh;display:grid;place-items:center;padding:24px;background-color:#080a09;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:48px 48px}
+    .identity-panel{width:min(620px,100%);border:1px solid rgba(0,217,139,.32);background:#0d100f;padding:clamp(28px,6vw,54px)}
+    .identity-mark{color:#00d98b;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px}
+    .identity-panel h1{font-size:clamp(34px,7vw,58px);margin:14px 0 10px}
+    .identity-panel p{color:#929b99;line-height:1.7}
+    .identity-status{margin-top:28px;padding:18px;border-left:2px solid #00d98b;background:#101513}
+    .identity-actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}.identity-actions .btn{flex:1;min-width:180px}
+  </style>
+</head>
+<body data-page="identity">
+  <main class="identity-page">
+    <section class="identity-panel">
+      <div class="identity-mark">Kawaui Studio // Identity</div>
+      <h1>Kawaui ID</h1>
+      <p id="identityText">Подтверждаем вход в BuKaMiKu Bank. Проект получит только имя, email, дату рождения и страну.</p>
+      <div class="identity-status" id="identityStatus">Проверяем сессию...</div>
+      <div class="identity-actions" id="identityActions" hidden>
+        <a class="btn btn-primary" id="identityLogin" href="#">Войти</a>
+        <a class="btn btn-outline" href="../index.html">Отмена</a>
+      </div>
+    </section>
+  </main>
+  <script src="../js/config/app-domain.js?v=kawaui-id-v1"></script>
+  <script src="../js/config/runtime.js?v=kawaui-id-v1"></script>
+  <script src="../js/core/constants.js?v=operator-08-v1"></script>
+  <script src="../js/core/store.js?v=kawaui-studio-v2"></script>
+  <script>
+    (async function () {
+      const status = document.getElementById('identityStatus');
+      const actions = document.getElementById('identityActions');
+      const params = new URLSearchParams(location.search);
+      const required = ['client_id','redirect_uri','state','scope','code_challenge','code_challenge_method'];
+      if (required.some(key => !params.get(key))) { status.textContent = 'Некорректный запрос Kawaui ID.'; return; }
+      await window.Bambiku.store.restoreSession();
+      const user = window.Bambiku.store.getState().currentUser;
+      if (!user) {
+        status.textContent = 'Для продолжения войдите в единый аккаунт.';
+        actions.hidden = false;
+        const next = location.pathname + location.search;
+        document.getElementById('identityLogin').href = '../index.html?auth=login&next=' + encodeURIComponent(next);
+        return;
+      }
+      status.textContent = 'Аккаунт найден. Создаём защищённую сессию BuKaMiKu...';
+      try {
+        const result = await window.Bambiku.store.authorizeKawauiClient(params);
+        location.replace(result.authorization_url);
+      } catch (error) {
+        status.textContent = 'Не удалось подтвердить вход. Проверьте адрес проекта и повторите попытку.';
+        actions.hidden = false;
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -9,10 +9,32 @@
   let historyFilter = 'all';
   let historyGameFilter = 'all';
   let historyVisible = HISTORY_PAGE_SIZE;
+  let studioBalanceCents = 0;
+  let studioBalanceLoading = false;
+  let studioBalanceLoadedFor = '';
   let managerOpen = false;
   let managerLoading = false;
   let managerState = null;
   let managerMessages = [];
+
+  async function loadStudioBalance() {
+    const state = store.getState();
+    const user = store.currentUser();
+    const userKey = String(user && (user.apiId || user.id || user.email) || '');
+    if (!userKey || state.apiStatus !== 'online' || studioBalanceLoading || studioBalanceLoadedFor === userKey) return;
+    studioBalanceLoading = true;
+    try {
+      const result = await store.getStudioWallet();
+      if (!result || result.error) return;
+      studioBalanceCents = Number(result.wallet?.balance_cents || 0);
+      studioBalanceLoadedFor = userKey;
+      render();
+    } catch (err) {
+      // The global API status already communicates temporary backend failures.
+    } finally {
+      studioBalanceLoading = false;
+    }
+  }
 
   function splitName(name) {
     const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
@@ -362,6 +384,7 @@
     ui.setText('stat-games-played', ui.formatNumber(user.gamesPlayed));
     ui.setText('stat-total-won', ui.formatMoney(user.totalWon, user.currency));
     ui.setText('stat-vip-points', ui.formatNumber(user.vipPoints));
+    ui.setText('stat-studio-balance', ui.formatMoney(studioBalanceCents / 100, 'EUR'));
     const adminLink = document.getElementById('profile-admin-link');
     if (adminLink) {
       adminLink.hidden = !user.isAdmin;
@@ -741,8 +764,12 @@
     document.addEventListener('keydown', event => {
       if (event.key === 'Escape' && document.getElementById('kycOverlay')?.classList.contains('open')) setKycModalOpen(false);
     });
-    store.subscribe(render);
+    store.subscribe(() => {
+      render();
+      loadStudioBalance();
+    });
     render();
+    loadStudioBalance();
   }
 
   B.profile = { init };

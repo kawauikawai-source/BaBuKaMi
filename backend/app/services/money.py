@@ -7,6 +7,7 @@ from app.models import Transaction, User
 from app.core.vip import award_vip_bet_points
 from app.services.audit import add_audit_log
 from app.services.game_control import consume_game_budget
+from app.services.studio import approve_casino_transfer, reject_casino_transfer
 
 
 def create_transaction(
@@ -105,6 +106,13 @@ def approve_withdrawal_transaction(
 ) -> Transaction:
     if transaction.status != "pending":
         raise api_error("err_withdraw_not_pending", status.HTTP_409_CONFLICT)
+    if transaction.method_id == "kawaui-studio":
+        approve_casino_transfer(
+            db,
+            casino_transaction=transaction,
+            actor_user=actor_user,
+            request=request,
+        )
     transaction.status = "completed"
     db.add(transaction)
     db.flush()
@@ -139,6 +147,8 @@ def reject_withdrawal_transaction(
 
     refund_cents = abs(transaction.amount_cents)
     before_balance = transaction.user.balance_cents
+    if transaction.method_id == "kawaui-studio":
+        reject_casino_transfer(db, casino_transaction=transaction)
     transaction.status = "rejected"
     transaction.user.balance_cents += refund_cents
     db.add(transaction.user)

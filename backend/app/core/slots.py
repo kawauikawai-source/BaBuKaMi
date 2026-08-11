@@ -9,11 +9,13 @@ SLOT_TITLE_KEY = "tx_lucky_bamboo_title"
 ALLOWED_BET_CENTS = {500, 1_000, 2_500, 10_000}
 REEL_COUNT = 5
 ROW_COUNT = 3
-LINE_COUNT = ROW_COUNT
+LINE_COUNT = 5
 PAYLINES = [
     [0, 0, 0, 0, 0],
     [1, 1, 1, 1, 1],
     [2, 2, 2, 2, 2],
+    [0, 1, 2, 1, 0],
+    [2, 1, 0, 1, 2],
 ]
 
 
@@ -58,28 +60,29 @@ def evaluate_grid(grid: list[list[str]], bet_cents: int) -> tuple[list[dict], in
     winning_lines = []
     total_win_cents = 0
 
-    for row_index, row in enumerate(grid):
+    for line_index, payline in enumerate(PAYLINES):
+        line_symbols = [grid[row_index][reel_index] for reel_index, row_index in enumerate(payline)]
         reel_index = 0
         while reel_index < REEL_COUNT:
             run_end = reel_index + 1
-            while run_end < REEL_COUNT and row[run_end] == row[reel_index]:
+            while run_end < REEL_COUNT and line_symbols[run_end] == line_symbols[reel_index]:
                 run_end += 1
             match_count = run_end - reel_index
             if match_count >= 3:
-                symbol = symbol_by_id(row[reel_index])
+                symbol = symbol_by_id(line_symbols[reel_index])
                 multiplier = symbol.payouts.get(match_count, 0)
                 if multiplier > 0:
                     win_cents = bet_cents * multiplier // LINE_COUNT
                     total_win_cents += win_cents
                     winning_lines.append(
                         {
-                            "line": row_index + 1,
+                            "line": line_index + 1,
                             "symbol": symbol.id,
                             "count": match_count,
                             "multiplier": multiplier,
                             "win_cents": win_cents,
                             "positions": [
-                                {"row": row_index, "reel": reel}
+                                {"row": payline[reel], "reel": reel}
                                 for reel in range(reel_index, run_end)
                             ],
                         }
