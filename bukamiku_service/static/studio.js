@@ -80,14 +80,22 @@
     } catch (_) {
       session = null;
     }
-    const right = document.querySelector('.header__right');
-    if (!right || document.getElementById('studio-session')) return;
+    const identity = document.getElementById('identity-control');
+    const gate = document.getElementById('appraisal-access');
+    const heroAction = document.getElementById('hero-appraisal-action');
+    document.body.classList.toggle('is-authenticated', Boolean(session));
+    document.body.classList.toggle('is-guest', !session);
+    if (form) form.hidden = !session;
+    if (gate) gate.hidden = Boolean(session);
+    if (heroAction) heroAction.href = session ? '#appraisal' : '/auth/login?next_path=%2F%23appraisal';
+    if (!identity) return;
+    identity.replaceChildren();
     const control = document.createElement(session ? 'button' : 'a');
     control.id = 'studio-session';
-    control.className = 'studio-session';
+    control.className = session ? 'identity-logout' : 'identity-login';
     if (session) {
       control.type = 'button';
-      control.textContent = `${session.user.name || session.user.email} | ${money(session.wallet.balance_cents)}`;
+      control.textContent = lang() === 'en' ? 'Sign out' : 'Выйти';
       control.addEventListener('click', async () => {
         await fetch('/auth/logout', { method: 'POST' });
         location.reload();
@@ -95,9 +103,26 @@
       prefillIdentity(session.user);
     } else {
       control.href = '/auth/login?next_path=%2F%23appraisal';
-      control.textContent = lang() === 'en' ? 'Kawaui ID login' : 'Войти через Kawaui ID';
+      control.textContent = lang() === 'en' ? 'Create Kawaui ID / Sign in' : 'Создать Kawaui ID / Войти';
     }
-    right.appendChild(control);
+    identity.appendChild(control);
+    renderAccessCopy();
+  }
+
+  function renderAccessCopy() {
+    const gate = document.getElementById('appraisal-access');
+    if (!gate || gate.hidden) return;
+    const en = lang() === 'en';
+    const head = gate.querySelector('.appraisal-access__head');
+    const steps = gate.querySelector('.appraisal-access__steps');
+    const action = gate.querySelector('.appraisal-access__action');
+    if (head) head.innerHTML = en
+      ? '<span class="appraisal-access__index">KAWAUI ID // REQUIRED</span><h3>Identify yourself first</h3><p>Rates, agreement and FAQ are public. Valuation and payout require one Kawaui Studio account.</p>'
+      : '<span class="appraisal-access__index">KAWAUI ID // ТРЕБУЕТСЯ</span><h3>Сначала представьтесь системе</h3><p>Курс, договор и ответы доступны всем. Для оценки и выплаты нужен единый аккаунт Kawaui Studio.</p>';
+    if (steps) steps.innerHTML = en
+      ? '<div><b>01</b><span><strong>Kawaui ID</strong><small>Register or sign in</small></span></div><div><b>02</b><span><strong>Valuation</strong><small>90-second application</small></span></div><div><b>03</b><span><strong>Studio Wallet</strong><small>Payout after signing</small></span></div>'
+      : '<div><b>01</b><span><strong>Kawaui ID</strong><small>Регистрация или вход</small></span></div><div><b>02</b><span><strong>Оценка</strong><small>90 секунд на анкету</small></span></div><div><b>03</b><span><strong>Studio Wallet</strong><small>Выплата после договора</small></span></div>';
+    if (action) action.textContent = en ? 'Create Kawaui ID or sign in' : 'Создать Kawaui ID или войти';
   }
 
   async function refreshRate() {
@@ -166,5 +191,9 @@
     });
   }
   refreshRate();
+  document.addEventListener('bukamiku:language', () => {
+    renderAccessCopy();
+    loadSession();
+  });
   loadSession().then(() => Promise.all([refreshPreview(), loadHistory()]));
 })();

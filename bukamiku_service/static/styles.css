@@ -818,3 +818,27 @@ input[type="number"] {
   max-width: 60ch;
 }
 .logo--footer { font-size: 16px; }
+
+/* Kawaui ID access shell */
+.studio-link,.identity-login{min-height:40px;padding:0 14px;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;color:var(--ink-0);font:600 12px/1 var(--font-body);white-space:nowrap;transition:border-color .2s,color .2s,background .2s}
+.studio-link{border-color:rgba(0,214,143,.4);color:#00d68f}
+.studio-link:hover,.identity-login:hover{border-color:var(--accent);color:var(--accent)}
+.identity-control{display:flex;align-items:center}
+.identity-logout{padding:6px 2px;border:0;background:transparent;color:var(--ink-1);font:600 12px/1 var(--font-body);cursor:pointer}
+.identity-logout:hover{color:var(--accent)}
+.appraisal-access{border:1px solid var(--line);background:var(--bg-1);padding:30px;display:grid;grid-template-columns:minmax(230px,.8fr) minmax(320px,1.2fr);gap:26px;align-items:center}
+.appraisal-access[hidden],.appraisal__form[hidden]{display:none!important}
+.appraisal-access__index{display:block;margin-bottom:13px;color:var(--accent);font:700 11px/1 var(--font-mono);letter-spacing:.1em}
+.appraisal-access__head h3{margin-bottom:9px;font:600 clamp(24px,3vw,34px)/1.08 var(--font-display)}
+.appraisal-access__head p{color:var(--ink-1);font-size:14px;line-height:1.6}
+.appraisal-access__steps{display:grid;grid-template-columns:repeat(3,1fr);grid-column:2;gap:1px;background:var(--line);border:1px solid var(--line)}
+.appraisal-access__steps>div{min-height:94px;padding:16px;background:var(--bg-0);display:flex;gap:11px;align-items:flex-start}
+.appraisal-access__steps b{color:var(--accent);font:700 12px/1 var(--font-mono)}
+.appraisal-access__steps span{display:grid;gap:5px}
+.appraisal-access__steps strong{font-size:13px}
+.appraisal-access__steps small{color:var(--ink-1);font-size:11px;line-height:1.35}
+.appraisal-access__action{grid-column:2;width:100%}
+.is-authenticated .appraisal__form{max-width:760px}
+@media(max-width:1050px){.header__inner{gap:14px}.nav{display:none}.header__ticker{display:none}}
+@media(max-width:760px){.header__inner{padding:14px 18px;grid-template-columns:auto 1fr}.header__right{justify-content:flex-end;gap:8px}.studio-link{padding:0 9px;font-size:11px}.identity-login{padding:0 9px;font-size:0}.identity-login::after{content:"Kawaui ID";font-size:11px}.appraisal-access{grid-template-columns:1fr;padding:22px}.appraisal-access__steps,.appraisal-access__action{grid-column:1}.appraisal-access__steps{grid-template-columns:1fr}.appraisal-access__steps>div{min-height:70px}.appraisal__form{max-width:100%}}
+@media(max-width:480px){.lang-switch{display:none}.studio-link{font-size:0}.studio-link::after{content:"Studio";font-size:11px}}

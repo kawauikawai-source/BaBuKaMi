@@ -18,6 +18,10 @@ CENTRAL_URL = os.getenv("BUKAMIKU_CENTRAL_URL", "http://127.0.0.1:8000").rstrip(
 CLIENT_ID = os.getenv("BUKAMIKU_CLIENT_ID", "bukamiku-bank")
 CLIENT_SECRET = os.getenv("BUKAMIKU_CLIENT_SECRET", "local-bukamiku-secret-change-me")
 PUBLIC_URL = os.getenv("RENDER_EXTERNAL_URL", os.getenv("BUKAMIKU_PUBLIC_URL", "http://127.0.0.1:5600")).rstrip("/")
+STUDIO_URL = os.getenv(
+    "BUKAMIKU_STUDIO_URL",
+    f"{CENTRAL_URL}/pages/partner.html" if CENTRAL_URL.startswith("https://") else "http://127.0.0.1:5500/pages/partner.html",
+)
 REDIRECT_URI = f"{PUBLIC_URL}/auth/callback"
 COOKIE_NAME = "bk_bukamiku_session"
 STATIC_DIR = Path(__file__).resolve().parent / "static"
@@ -62,6 +66,11 @@ def _relay(response: httpx.Response) -> Response:
 @app.get("/health")
 async def health() -> dict[str, str]:
     return {"status": "ok", "service": "bukamiku"}
+
+
+@app.get("/studio")
+async def studio() -> RedirectResponse:
+    return RedirectResponse(STUDIO_URL)
 
 
 @app.get("/auth/login")

@@ -475,6 +475,8 @@ function setLanguage(lang) {
     }
   });
 
+  document.dispatchEvent(new CustomEvent('bukamiku:language', { detail: { lang } }));
+
   // Фиксация скролла для предотвращения дергания страницы
   window.scrollTo({ top: scrollY, behavior: 'instant' });
 }

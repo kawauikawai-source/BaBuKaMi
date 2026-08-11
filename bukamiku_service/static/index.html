@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BuKaMiKu Bank — оценка нематериальных активов</title>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=bukamiku-access-v2">
 </head>
 <body>
 
@@ -35,6 +35,8 @@
           <span class="ticker__label" data-i18n="ticker_label">Курс души сегодня</span>
           <span class="ticker__value" id="soul-rate">— € / шт.</span>
         </div>
+        <a class="studio-link" href="/studio">Kawaui Studio</a>
+        <div class="identity-control" id="identity-control"></div>
       </div>
     </div>
   </header>
@@ -61,7 +63,7 @@
         </p>
 
         <div class="hero__cta-group">
-          <a href="#appraisal" class="btn btn--primary" data-i18n="hero_cta_eval">Оценить мою душу</a>
+          <a href="/auth/login?next_path=%2F%23appraisal" id="hero-appraisal-action" class="btn btn--primary" data-i18n="hero_cta_eval">Оценить мою душу</a>
           <a href="#contract" class="btn btn--ghost" data-i18n="hero_cta_contract">Читать договор</a>
         </div>
 
@@ -184,7 +186,21 @@
         <h2 class="section__title" data-i18n="appraisal_title">Узнайте стоимость своей души</h2>
       </div>
 
-      <form class="appraisal__form" id="appraisal-form">
+      <div class="appraisal-access" id="appraisal-access" aria-live="polite">
+        <div class="appraisal-access__head">
+          <span class="appraisal-access__index">KAWAUI ID // REQUIRED</span>
+          <h3>Сначала представьтесь системе</h3>
+          <p>Курс, договор и ответы доступны всем. Для оценки и выплаты нужен единый аккаунт Kawaui Studio.</p>
+        </div>
+        <div class="appraisal-access__steps">
+          <div><b>01</b><span><strong>Kawaui ID</strong><small>Регистрация или вход</small></span></div>
+          <div><b>02</b><span><strong>Оценка</strong><small>90 секунд на анкету</small></span></div>
+          <div><b>03</b><span><strong>Studio Wallet</strong><small>Выплата после договора</small></span></div>
+        </div>
+        <a class="btn btn--primary appraisal-access__action" href="/auth/login?next_path=%2F%23appraisal">Создать Kawaui ID или войти</a>
+      </div>
+
+      <form class="appraisal__form" id="appraisal-form" hidden>
         <!-- ШАГ 1: базовые данные -->
         <fieldset class="form__group">
           <legend class="form__legend" data-i18n="step1_legend">Шаг 1. Кто продаёт</legend>
@@ -427,7 +443,7 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
-  <script src="studio.js"></script>
+  <script src="script.js?v=bukamiku-access-v2"></script>
+  <script src="studio.js?v=bukamiku-access-v2"></script>
 </body>
 </html>
