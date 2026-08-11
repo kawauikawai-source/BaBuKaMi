@@ -201,7 +201,7 @@ body[data-page="deposit"] #navbar{
 
 .withdraw-preview{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:1px;
   margin:18px 0;
   overflow:hidden;
@@ -223,6 +223,7 @@ body[data-page="deposit"] #navbar{
 .withdraw-preview span{color:var(--text-3);font-size:12px}
 .withdraw-preview strong{color:var(--text-2);font-size:14px}
 .withdraw-preview.has-amount #withdraw-preview-payout{color:var(--accent);font-size:17px}
+
 
 .withdraw-success-receipt{
   min-height:48px;
@@ -392,6 +393,7 @@ body[data-page="deposit"] #navbar{
 
 .cashier-page .success-overlay h2{font-size:28px}
 .cashier-page .success-overlay p{max-width:480px;color:var(--text-2)}
+
 
 .cashier-page .balance-card{
   margin:0 0 24px;

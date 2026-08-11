@@ -171,6 +171,31 @@ class StudioIntegrationTest(unittest.TestCase):
         self.assertEqual(response.status_code, 422)
         self.assertEqual(response.json()["detail"]["code"], "err_studio_insufficient_balance")
 
+    def test_wallet_restores_confirmed_ledger_credit(self):
+        with self.SessionLocal() as db:
+            db.add(StudioWallet(user_id=self.player_id, currency="EUR", balance_cents=0, version=0))
+            db.add(
+                StudioTransaction(
+                    user_id=self.player_id,
+                    source="casino",
+                    type="casino_transfer",
+                    status="completed",
+                    amount_cents=5_000,
+                    fee_cents=250,
+                    net_cents=4_750,
+                    currency="EUR",
+                    external_ref="legacy-approved-transfer",
+                )
+            )
+            db.commit()
+
+        response = self.client.get("/api/studio/wallet")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["wallet"]["balance_cents"], 4_750)
+        with self.SessionLocal() as db:
+            wallet = db.query(StudioWallet).filter_by(user_id=self.player_id).one()
+            self.assertEqual(wallet.balance_cents, 4_750)
+
     def test_three_soul_sales_credit_studio_and_fourth_is_blocked(self):
         headers = self.identity_headers()
         body = {"fatigue": "fresh", "debt": "none", "compromise": "minor"}

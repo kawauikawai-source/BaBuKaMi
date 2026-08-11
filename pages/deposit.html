@@ -9,7 +9,10 @@
     body[data-page="deposit"]::before{content:"";position:fixed;inset:0;z-index:10000;pointer-events:none;background:#080809;opacity:0;visibility:hidden;transition:opacity .24s ease,visibility 0s linear .24s}
     body[data-page="deposit"].is-app-booting::before{opacity:1;visibility:visible;transition:none}
   </style>
-  <link rel="stylesheet" href="../css/style.css?v=cashier-studio-v1"/>
+  <style>
+    .studio-transfer-route{margin:18px 0 22px;border:1px solid rgba(0,217,139,.22);border-radius:7px;padding:20px;background:linear-gradient(rgba(0,217,139,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,217,139,.025) 1px,transparent 1px),#0c1110;background-size:36px 36px}.studio-transfer-route-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}.studio-transfer-route-head span{color:var(--accent);font-size:9px;font-weight:900;letter-spacing:.13em}.studio-transfer-route-head h3{margin:5px 0 0;font:900 18px/1.25 var(--font)}.studio-transfer-route-head>b{border:1px solid rgba(0,217,139,.25);border-radius:4px;padding:7px 9px;color:var(--accent);font-size:8px;letter-spacing:.1em;white-space:nowrap}.studio-transfer-account{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 18px;margin:18px 0;border-left:2px solid var(--accent);padding:11px 14px;background:rgba(0,217,139,.045)}.studio-transfer-account span{color:var(--text-3);font-size:10px;font-weight:800;text-transform:uppercase}.studio-transfer-account strong{overflow:hidden;color:var(--text);font-size:13px;text-align:right;text-overflow:ellipsis;white-space:nowrap}.studio-transfer-account small{grid-column:1/-1;margin-top:5px;color:var(--text-3);font-size:11px}.studio-transfer-path{display:grid;grid-template-columns:1fr 38px 1fr 38px 1fr;align-items:center;gap:8px}.studio-transfer-path div{display:flex;min-height:46px;align-items:center;gap:9px;border:1px solid var(--border);padding:9px 11px;background:#111513}.studio-transfer-path span{color:var(--accent);font:800 9px/1 var(--font)}.studio-transfer-path b{font-size:11px}.studio-transfer-path i{position:relative;height:1px;background:linear-gradient(90deg,var(--accent),rgba(0,217,139,.14))}.studio-transfer-path i::after{content:'';position:absolute;right:0;top:-3px;border:4px solid transparent;border-left-color:var(--accent);transform:translateX(5px)}.cashier-page .studio-transfer-success{min-height:0;padding:12px 0 0}.studio-transfer-success-card{display:grid;grid-template-columns:minmax(220px,.72fr) minmax(0,1.28fr);width:100%;overflow:hidden;border:1px solid rgba(0,217,139,.28);border-radius:8px;background:#0b0e0d;box-shadow:0 24px 70px rgba(0,0,0,.38);text-align:left}.studio-transfer-success-visual{display:flex;min-height:480px;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid rgba(0,217,139,.18);padding:24px;background:linear-gradient(rgba(0,217,139,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,217,139,.035) 1px,transparent 1px),rgba(0,217,139,.035);background-size:38px 38px}.studio-transfer-success-visual img{width:min(280px,100%);height:280px;object-fit:contain;filter:drop-shadow(0 18px 24px rgba(0,0,0,.4))}.studio-transfer-success-visual span{margin-top:12px;color:var(--accent);font-size:9px;font-weight:900;letter-spacing:.13em;text-align:center}.studio-transfer-success-copy{display:flex;min-width:0;flex-direction:column;justify-content:center;padding:34px}.cashier-page .studio-transfer-success-copy h2{margin:0;font-size:30px;line-height:1.15}.cashier-page .studio-transfer-success-copy>p{margin:12px 0 22px;line-height:1.6}.studio-transfer-receipt{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;border:1px solid var(--border);border-left:2px solid var(--accent);background:var(--border)}.studio-transfer-receipt>div{display:flex;min-height:62px;flex-direction:column;justify-content:center;gap:4px;padding:12px 14px;background:#111513}.studio-transfer-receipt span{color:var(--text-3);font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}.studio-transfer-receipt strong{overflow:hidden;font-size:13px;text-overflow:ellipsis;white-space:nowrap}.studio-transfer-receipt .is-payout strong{color:var(--accent);font-size:18px}.studio-transfer-receipt .is-status{grid-column:1/-1;min-height:54px}.studio-transfer-receipt .is-status strong{color:var(--gold);font-size:11px;text-transform:uppercase}.studio-transfer-success-actions{display:flex;gap:10px;margin-top:20px}.studio-transfer-success-actions .btn{min-height:50px;justify-content:center;border-radius:7px}@media(max-width:620px){.withdraw-preview{grid-template-columns:1fr}.studio-transfer-route{padding:16px}.studio-transfer-route-head{flex-direction:column;gap:10px}.studio-transfer-path{grid-template-columns:1fr;gap:6px}.studio-transfer-path i{width:1px;height:12px;margin:auto;background:var(--accent)}.studio-transfer-path i::after{right:-3px;top:auto;bottom:-5px;border-left-color:transparent;border-top-color:var(--accent);transform:none}.studio-transfer-success-card{grid-template-columns:1fr}.studio-transfer-success-visual{min-height:260px;border-right:0;border-bottom:1px solid rgba(0,217,139,.18);padding:18px}.studio-transfer-success-visual img{width:210px;height:210px}.studio-transfer-success-copy{padding:24px 18px}.studio-transfer-receipt{grid-template-columns:1fr}.studio-transfer-receipt .is-status{grid-column:auto}.studio-transfer-success-actions{flex-direction:column}}
+  </style>
+  <link rel="stylesheet" href="../css/style.css?v=studio-transfer-v2"/>
   <link rel="icon" type="image/png" sizes="512x512" href="../assets/favicon-bk-512.png?v=1"/>
   <link rel="apple-touch-icon" href="../assets/favicon-bk-512.png?v=1"/>
   <meta name="theme-color" content="#00d98b"/>
@@ -218,11 +221,34 @@
                 </div>
                 <div class="method-grid" id="withdrawMethods"></div>
 
+                <section class="studio-transfer-route" id="studio-withdraw-route" aria-labelledby="studio-withdraw-route-title">
+                  <div class="studio-transfer-route-head">
+                    <div>
+                      <span data-i18n="cashier_studio_route_kicker">KAWAUI STUDIO TRANSFER</span>
+                      <h3 id="studio-withdraw-route-title" data-i18n="cashier_studio_route_title">Funds go to your personal Studio Wallet</h3>
+                    </div>
+                    <b data-i18n="cashier_studio_route_status">ADMIN APPROVAL</b>
+                  </div>
+                  <div class="studio-transfer-account">
+                    <span data-i18n="cashier_studio_destination_account">Destination account</span>
+                    <strong id="studio-destination-account">Kawaui ID</strong>
+                    <small data-i18n="cashier_studio_destination_note">A separate EUR wallet in the Kawaui ecosystem</small>
+                  </div>
+                  <div class="studio-transfer-path" aria-hidden="true">
+                    <div><span>01</span><b>Casino</b></div>
+                    <i></i>
+                    <div><span>02</span><b>Kawaui ID</b></div>
+                    <i></i>
+                    <div><span>03</span><b>Studio Wallet</b></div>
+                  </div>
+                </section>
+
                 <div class="f-group">
                   <label class="f-label" for="withdraw-input" data-i18n="cashier_withdraw_amount">Withdrawal Amount</label>
                   <input class="f-input" type="number" id="withdraw-input" min="180" placeholder="&euro;180"/>
                 </div>
                 <div class="withdraw-preview" id="withdraw-preview">
+                  <div><span data-i18n="cashier_withdraw_requested">Requested</span><strong id="withdraw-preview-gross">&euro;0.00</strong></div>
                   <div><span data-i18n="cashier_fee_amount">Commission</span><strong id="withdraw-preview-fee">&euro;0.00</strong></div>
                   <div><span data-i18n="cashier_payout_amount">You receive</span><strong id="withdraw-preview-payout">&euro;0.00</strong></div>
                 </div>
@@ -293,13 +319,28 @@
               </div>
             </div>
 
-            <div class="success-overlay" id="withdraw-success">
-              <div class="success-icon">OK</div>
-              <h2 data-i18n="cashier_success_withdraw_title">Request Accepted!</h2>
-              <p data-i18n="cashier_success_withdraw_sub">Your request will be processed within your VIP tier timeframe.</p>
-              <p class="withdraw-success-receipt" id="withdraw-success-receipt"></p>
-              <a href="profile.html" class="btn btn-primary" data-route="profile" data-i18n="cashier_to_profile">My Profile</a>
-              <button class="btn btn-outline" type="button" data-cashier-reset="withdraw" data-i18n="cashier_new_withdraw">New Withdrawal</button>
+            <div class="success-overlay studio-transfer-success" id="withdraw-success">
+              <div class="studio-transfer-success-card">
+                <div class="studio-transfer-success-visual">
+                  <img id="withdraw-success-sticker" src="../assets/images/kawaui-transfer-smile.png" alt=""/>
+                  <span data-i18n="cashier_success_studio_kicker">OPERATOR 08 // ROUTE ACCEPTED</span>
+                </div>
+                <div class="studio-transfer-success-copy">
+                  <h2 data-i18n="cashier_success_studio_title">The route to Studio is open</h2>
+                  <p data-i18n="cashier_success_studio_sub">Kawaui passed the request upstairs. The reserved funds will appear in Studio Wallet after approval.</p>
+                  <div class="studio-transfer-receipt" id="withdraw-success-receipt">
+                    <div><span data-i18n="cashier_studio_destination_account">Destination account</span><strong id="withdraw-success-account">Kawaui ID</strong></div>
+                    <div><span data-i18n="cashier_withdraw_requested">Requested</span><strong id="withdraw-success-gross">&euro;0.00</strong></div>
+                    <div><span data-i18n="cashier_fee_amount">Commission</span><strong id="withdraw-success-fee">&euro;0.00</strong></div>
+                    <div class="is-payout"><span data-i18n="cashier_payout_amount">You receive</span><strong id="withdraw-success-payout">&euro;0.00</strong></div>
+                    <div class="is-status"><span data-i18n="cashier_transfer_status">Status</span><strong data-i18n="cashier_transfer_pending">Waiting for operator</strong></div>
+                  </div>
+                  <div class="studio-transfer-success-actions">
+                    <a href="partner.html" class="btn btn-primary" data-i18n="cashier_open_studio">Open Kawaui Studio</a>
+                    <button class="btn btn-outline" type="button" data-cashier-reset="withdraw" data-i18n="cashier_new_withdraw">New Withdrawal</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -344,11 +385,11 @@
 
   <script src="../js/config/app-domain.js?v=studio-deposit-v2"></script>
   <script src="../js/config/runtime.js?v=infra-v1"></script>
-  <script src="../js/core/constants.js?v=kawaui-id-withdraw-v1"></script>
+  <script src="../js/core/constants.js?v=studio-transfer-v2"></script>
   <script src="../js/core/store.js?v=kawaui-studio-v2"></script>
   <script src="../js/core/ui.js?v=cashier-vip-rules-v1"></script>
   <script src="../js/core/auth.js?v=optimization-v2"></script>
-  <script src="../js/pages/cashier.js?v=studio-deposit-v2"></script>
+  <script src="../js/pages/cashier.js?v=studio-transfer-v2"></script>
   <script src="../js/core/bootstrap.js?v=kawaui-id-withdraw-v1"></script>
 </body>
 </html>

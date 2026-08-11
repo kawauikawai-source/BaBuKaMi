@@ -611,12 +611,42 @@
     const amount = Math.max(0, parseAmount('withdraw-input'));
     const fee = amount * rules.commission / 100;
     const payout = Math.max(0, amount - fee);
+    const account = user.email || user.name || `Kawaui ID #${user.apiId || user.id || '08'}`;
     const preview = document.getElementById('withdraw-preview');
     if (preview) preview.classList.toggle('has-amount', amount > 0);
+    const route = document.getElementById('studio-withdraw-route');
+    if (route) route.hidden = selectedWithdrawMethod().id !== 'kawaui-studio';
+    const grossValue = document.getElementById('withdraw-preview-gross');
     const feeValue = document.getElementById('withdraw-preview-fee');
     const payoutValue = document.getElementById('withdraw-preview-payout');
+    const accountValue = document.getElementById('studio-destination-account');
+    if (grossValue) grossValue.textContent = ui.formatMoney(amount, user.currency);
     if (feeValue) feeValue.textContent = ui.formatMoney(fee, user.currency) + ` (${rules.commission}%)`;
     if (payoutValue) payoutValue.textContent = ui.formatMoney(payout, user.currency);
+    if (accountValue) accountValue.textContent = account;
+  }
+
+  function renderStudioTransferSuccess(values) {
+    const user = store.getDisplayUser();
+    const account = user.email || user.name || `Kawaui ID #${user.apiId || user.id || '08'}`;
+    const setText = (id, value) => {
+      const element = document.getElementById(id);
+      if (element) element.textContent = value;
+    };
+    setText('withdraw-success-account', account);
+    setText('withdraw-success-gross', ui.formatMoney(values.amount, user.currency));
+    setText('withdraw-success-fee', ui.formatMoney(values.fee, user.currency));
+    setText('withdraw-success-payout', ui.formatMoney(values.payout, user.currency));
+
+    const sticker = document.getElementById('withdraw-success-sticker');
+    if (sticker) {
+      const file = values.payout >= 400
+        ? 'kawaui-transfer-heart.png'
+        : values.payout >= 200
+          ? 'kawaui-transfer-bang.png'
+          : 'kawaui-transfer-smile.png';
+      sticker.src = `../assets/images/${file}`;
+    }
   }
 
   function resetSuccess(kind) {
@@ -703,6 +733,7 @@
     if (!validateWithdrawAmount(values.amount)) return;
     const result = await store.withdraw(values.amount, method.id);
     if (showStoreError(result)) return;
+    renderStudioTransferSuccess(values);
     ui.showToast(ui.t('toast_withdraw_success'));
     showSuccess('withdraw');
   }

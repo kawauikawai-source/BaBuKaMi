@@ -621,7 +621,7 @@ body[data-page="partner"] .studio-navbar{position:fixed;inset:0 0 auto;z-index:1
 .studio-brand-signal{width:8px;height:8px;background:var(--accent);transform:rotate(45deg)}
 .studio-nav-actions{display:flex;align-items:center;gap:14px}
 body[data-page="partner"] .partner-page{padding-top:116px;background-color:#060807;background-image:linear-gradient(rgba(116,148,135,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(116,148,135,.08) 1px,transparent 1px),radial-gradient(circle at 48% 28%,rgba(0,217,139,.07),transparent 38%);background-size:56px 56px,56px 56px,auto}
-body[data-page="partner"] .studio-wallet-panel{position:relative;grid-template-columns:minmax(300px,.82fr) minmax(0,1.18fr);overflow:hidden;border-color:rgba(106,180,151,.28);background:rgba(7,12,10,.93)}
+body[data-page="partner"] .studio-wallet-panel{position:relative;grid-template-columns:minmax(300px,.82fr) minmax(0,1.18fr);min-height:0;align-items:start;overflow:hidden;border-color:rgba(106,180,151,.28);padding:0;background:rgba(7,12,10,.93)}
 .studio-wallet-summary{padding:27px 32px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(106,180,151,.18);background:rgba(0,217,139,.025)}
 .studio-wallet-heading{display:flex;justify-content:space-between;gap:16px}
 .studio-wallet-state{color:#6f8a7f;font:700 10px/1 var(--mono);letter-spacing:.08em}

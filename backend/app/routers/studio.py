@@ -7,7 +7,7 @@ from app.db.session import get_db
 from app.deps import get_current_user
 from app.models import StudioTransaction, User
 from app.schemas import StudioTransactionPublic, StudioWalletPublic, StudioWalletResponse
-from app.services.studio import get_or_create_studio_wallet
+from app.services.studio import reconcile_studio_wallet
 
 
 router = APIRouter(prefix="/studio", tags=["studio"])
@@ -31,7 +31,7 @@ def studio_wallet(
     db: Session = Depends(get_db),
 ) -> StudioWalletResponse:
     user = db.merge(current_user)
-    wallet = get_or_create_studio_wallet(db, user)
+    wallet = reconcile_studio_wallet(db, user)
     recent = list(
         db.scalars(
             select(StudioTransaction)

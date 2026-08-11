@@ -4,7 +4,7 @@ import json
 from typing import Any
 
 from fastapi import Request, status
-from sqlalchemy import select, update
+from sqlalchemy import func, select, update
 from sqlalchemy.orm import Session
 
 from app.core.errors import api_error
@@ -19,6 +19,31 @@ def get_or_create_studio_wallet(db: Session, user: User) -> StudioWallet:
     wallet = StudioWallet(user_id=user.id, currency="EUR", balance_cents=0, version=0)
     db.add(wallet)
     db.flush()
+    return wallet
+
+
+def reconcile_studio_wallet(db: Session, user: User) -> StudioWallet:
+    """Restore confirmed ledger credits missing from an older wallet snapshot."""
+    wallet = get_or_create_studio_wallet(db, user)
+    ledger_balance = int(
+        db.scalar(
+            select(func.coalesce(func.sum(StudioTransaction.net_cents), 0)).where(
+                StudioTransaction.user_id == user.id,
+                StudioTransaction.status == "completed",
+            )
+        )
+        or 0
+    )
+    # Only restore money proven by the ledger. Never lower an existing wallet here.
+    if ledger_balance > int(wallet.balance_cents or 0):
+        db.execute(
+            update(StudioWallet)
+            .where(StudioWallet.id == wallet.id)
+            .values(balance_cents=ledger_balance, version=StudioWallet.version + 1)
+            .execution_options(synchronize_session=False)
+        )
+        db.flush()
+        db.refresh(wallet)
     return wallet
 
 
@@ -62,7 +87,7 @@ def transfer_studio_to_casino(
     if amount_cents <= 0:
         raise api_error("err_studio_amount_invalid")
 
-    wallet = get_or_create_studio_wallet(db, user)
+    wallet = reconcile_studio_wallet(db, user)
     studio_before = int(wallet.balance_cents or 0)
     update_result = db.execute(
         update(StudioWallet)
