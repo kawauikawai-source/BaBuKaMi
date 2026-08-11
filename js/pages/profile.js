@@ -280,6 +280,14 @@
         actionLabel: ui.t(kycStatus === 'pending' ? 'profile_kyc_retry' : 'profile_kyc_start')
       },
       {
+        label: ui.t('nav_logout'),
+        meta: ui.t('confirm_logout_message'),
+        status: '',
+        statusClass: '',
+        action: 'logout',
+        actionLabel: ui.t('nav_logout')
+      },
+      {
         label: ui.t('profile_logout_all'),
         meta: ui.t('profile_logout_all_meta'),
         status: '',
@@ -297,6 +305,7 @@
         <div class="security-row-actions">
           ${row.status ? `<span class="${row.statusClass}">${ui.escapeHTML(row.status)}</span>` : ''}
           ${row.action === 'kyc' ? `<button class="btn btn-outline btn-sm security-action" type="button" data-kyc-open>${ui.escapeHTML(row.actionLabel)}</button>` : ''}
+          ${row.action === 'logout' ? `<button class="btn btn-outline btn-sm security-action" type="button" data-profile-logout>${ui.escapeHTML(row.actionLabel)}</button>` : ''}
           ${row.action === 'logout-all' ? `<button class="btn btn-outline btn-sm security-action" type="button" data-logout-all>${ui.escapeHTML(row.actionLabel)}</button>` : ''}
         </div>
       </div>
@@ -364,6 +373,19 @@
       return;
     }
     ui.showToast(ui.t('toast_logout_all'));
+    location.href = '../index.html';
+  }
+
+  async function logoutCurrentSession() {
+    const confirmed = await ui.confirmAction({
+      title: ui.t('confirm_logout_title'),
+      message: ui.t('confirm_logout_message'),
+      cancelLabel: ui.t('confirm_cancel'),
+      okLabel: ui.t('nav_logout')
+    });
+    if (!confirmed) return;
+    store.logout();
+    ui.showToast(ui.t('toast_logout'));
     location.href = '../index.html';
   }
 
@@ -754,6 +776,7 @@
     document.getElementById('inp-fname')?.addEventListener('input', clearPersonalErrors);
     document.getElementById('securityRows')?.addEventListener('click', event => {
       if (event.target.closest('[data-kyc-open]')) setKycModalOpen(true);
+      if (event.target.closest('[data-profile-logout]')) logoutCurrentSession();
       if (event.target.closest('[data-logout-all]')) logoutAllSessions();
     });
     document.getElementById('kycOverlay')?.addEventListener('click', event => {

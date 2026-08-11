@@ -1140,24 +1140,14 @@
     const mounts = document.querySelectorAll('[data-auth-nav]');
     const mobileMounts = document.querySelectorAll('[data-mobile-auth-nav]');
     if (!mounts.length && !mobileMounts.length) return;
-    const hasModal = Boolean(document.getElementById('modalOverlay'));
     mounts.forEach(mount => {
       if (user) {
         mount.innerHTML = `
           <a href="${path('deposit')}" class="btn btn-ghost btn-sm nav-balance">${formatMoney(user.balance, user.currency)}</a>
           <a href="${path('profile')}" class="btn btn-outline btn-sm nav-user-link">${escapeHTML(user.name.split(' ')[0] || user.email)}</a>
-          <button class="btn btn-ghost btn-sm" data-auth-action="logout">${t('nav_logout')}</button>
-        `;
-      } else if (hasModal) {
-        mount.innerHTML = `
-          <button class="btn btn-ghost" data-modal="login">${t('nav_signin')}</button>
-          <button class="btn btn-primary btn-sm" data-modal="register">${t('nav_join')}</button>
         `;
       } else {
-        mount.innerHTML = `
-          <a href="${path('profile')}" class="btn btn-outline btn-sm" data-route="profile">${t('nav_profile')}</a>
-          <a href="${path('home')}" class="btn btn-outline btn-sm" data-route="home">${t('nav_home')}</a>
-        `;
+        mount.innerHTML = '';
       }
     });
     mobileMounts.forEach(mount => {
@@ -1165,12 +1155,6 @@
         mount.innerHTML = `
           <a href="${path('profile')}" data-route="profile">${t('nav_profile')}</a>
           <a href="${path('deposit')}" data-route="deposit">${t('nav_deposit')}</a>
-          <button class="mob-nav-logout" type="button" data-auth-action="logout">${t('nav_logout')}</button>
-        `;
-      } else if (hasModal) {
-        mount.innerHTML = `
-          <button class="btn btn-outline" type="button" data-modal="login">${t('nav_signin')}</button>
-          <button class="btn btn-primary" type="button" data-modal="register">${t('nav_join')}</button>
         `;
       } else {
         mount.innerHTML = '';
