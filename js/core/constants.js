@@ -2,6 +2,8 @@
   'use strict';
 
   const runtimeConfig = (global.Bambiku && global.Bambiku.runtimeConfig) || {};
+  const isLocalHost = /^(localhost|127\.0\.0\.1|\[::1\])$/i.test(global.location?.hostname || '');
+  const defaultApiBaseUrl = isLocalHost ? 'http://127.0.0.1:8000/api' : '/api';
   const C = {
     storage: {
       lang: 'bk_lang',
@@ -33,7 +35,7 @@
     },
     adminEmails: ['kawauikawai@gmail.com'],
     api: {
-      baseUrl: runtimeConfig.apiBaseUrl || 'http://127.0.0.1:8000/api'
+      baseUrl: runtimeConfig.apiBaseUrl || defaultApiBaseUrl
     },
     socialProviders: [
       { id: 'google', label: 'Google', i18nKey: 'form_social_google' },
@@ -3075,7 +3077,7 @@
     err_withdraw_not_pending: 'Эта заявка на вывод уже обработана',
     err_withdraw_max: 'Максимальная сумма вывода {{amount}}',
     err_admin_balance_max: 'Максимальная сумма админ-действия {{amount}}',
-    err_api_unavailable: 'Backend API недоступен. Запустите FastAPI сервер.',
+    err_api_unavailable: 'Сервер временно недоступен. Повторите попытку чуть позже.',
     err_google_oauth_failed: 'Google вход не завершился. Проверьте настройки OAuth или попробуйте другой аккаунт.'
   });
 
@@ -3088,7 +3090,7 @@
     err_withdraw_not_pending: 'This withdrawal has already been processed',
     err_withdraw_max: 'Maximum withdrawal amount is {{amount}}',
     err_admin_balance_max: 'Maximum admin balance action is {{amount}}',
-    err_api_unavailable: 'Backend API is unavailable. Start the FastAPI server.',
+    err_api_unavailable: 'The server is temporarily unavailable. Please try again shortly.',
     err_google_oauth_failed: 'Google sign-in did not finish. Check OAuth settings or try another account.'
   });
 

@@ -1,6 +1,5 @@
 (function (global) {
   'use strict';
-
   const B = global.Bambiku = global.Bambiku || {};
   const C = B.constants;
   const store = B.store;
@@ -21,11 +20,9 @@
     survival: { title: 'rules_survival_title', intro: 'rules_survival_intro', rows: ['rules_survival_flow', 'rules_survival_timer', 'rules_survival_payout', 'rules_server_result'] },
     holdem: { title: 'rules_holdem_title', intro: 'rules_holdem_intro', rows: ['rules_holdem_ante', 'rules_holdem_call_fold', 'rules_holdem_dealer', 'rules_server_result'] }
   };
-
   function readState() {
     return store.peekState ? store.peekState() : store.getState();
   }
-
   const audio = (() => {
     let ctx = null;
     let master = null;
@@ -39,11 +36,9 @@
     } catch (err) {
       muted = false;
     }
-
     function now() {
       return ctx ? ctx.currentTime : 0;
     }
-
     function ensure() {
       if (muted) return null;
       const AudioContext = global.AudioContext || global.webkitAudioContext;
@@ -57,7 +52,6 @@
       if (ctx.state === 'suspended') ctx.resume().catch(() => {});
       return ctx;
     }
-
     function unlock() {
       if (muted) return false;
       const audioCtx = ensure();
@@ -75,14 +69,12 @@
         return false;
       }
     }
-
     function envelope(gain, start, duration, peak) {
       gain.gain.cancelScheduledValues(start);
       gain.gain.setValueAtTime(0.0001, start);
       gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, peak), start + 0.012);
       gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
     }
-
     function tone(freq, duration, type, peak, delay, slideTo) {
       const audioCtx = ensure();
       if (!audioCtx) return;
@@ -97,7 +89,6 @@
       osc.start(start);
       osc.stop(start + duration + 0.04);
     }
-
     function noise(duration, peak, delay, filterFreq) {
       const audioCtx = ensure();
       if (!audioCtx) return;
@@ -118,7 +109,6 @@
       src.start(start);
       src.stop(start + duration + 0.04);
     }
-
     function play(name) {
       if (muted) return;
       switch (name) {
@@ -183,27 +173,22 @@
           break;
       }
     }
-
     function isMuted() {
       return muted;
     }
-
     function setMuted(nextMuted) {
       muted = Boolean(nextMuted);
       try {
         localStorage.setItem(audioMutedKey, muted ? '1' : '0');
       } catch (err) {
-        // Audio preference remains in memory if storage is unavailable.
       }
       if (!muted) unlock();
       syncAudioToggles();
       return muted;
     }
-
     function toggle() {
       return setMuted(!muted);
     }
-
     function status() {
       return {
         muted,
@@ -212,16 +197,12 @@
         supported: Boolean(global.AudioContext || global.webkitAudioContext)
       };
     }
-
     return { play, unlock, isMuted, setMuted, toggle, status };
   })();
-
   B.audio = audio;
-
   function isInnerPage() {
     return /\/pages\//.test(location.pathname.replace(/\\/g, '/'));
   }
-
   function path(route, suffix) {
     const inner = isInnerPage();
     const routes = {
@@ -243,7 +224,6 @@
     };
     return (routes[route] || route) + (suffix || '');
   }
-
   function sameOriginPath(value) {
     if (!value) return '';
     try {
@@ -254,32 +234,26 @@
       return '';
     }
   }
-
   function currentPath() {
     return location.pathname + location.search + location.hash;
   }
-
   function homeAuthUrl(tab, nextPath) {
     const home = isInnerPage() ? '../index.html' : 'index.html';
     const params = new URLSearchParams({ auth: tab === 'register' ? 'register' : 'login' });
     if (nextPath) params.set('next', nextPath);
     return `${home}?${params.toString()}`;
   }
-
   function homeLoginUrl(nextPath) {
     return homeAuthUrl('login', nextPath);
   }
-
   function rememberAuthNext(nextPath) {
     const safeNext = sameOriginPath(nextPath);
     if (!safeNext) return;
     try {
       sessionStorage.setItem(authNextKey, safeNext);
     } catch (err) {
-      // Losing the return target is fine; auth still works.
     }
   }
-
   function consumeAuthNext() {
     try {
       const stored = sessionStorage.getItem(authNextKey) || '';
@@ -289,11 +263,9 @@
       return '';
     }
   }
-
   function hasCurrentUser() {
     return Boolean(readState().currentUser);
   }
-
   function requireAuth(nextPath) {
     if (hasCurrentUser()) return true;
     const safeNext = sameOriginPath(nextPath || currentPath());
@@ -306,12 +278,10 @@
     }
     return false;
   }
-
   function removeAuthGate() {
     document.body.classList.remove('auth-gated');
     document.getElementById('authGate')?.remove();
   }
-
   function renderAuthGate() {
     const page = document.body.dataset.page || '';
     if (!protectedPages.has(page) || hasCurrentUser()) {
@@ -341,34 +311,28 @@
     `;
     return true;
   }
-
   function shouldProtectHref(href) {
     const safe = sameOriginPath(href);
     if (!safe) return false;
     return /\/pages\/(profile|deposit|game|slot|crash|mines|blocks|holdem|plinko|survival|admin)\.html/i.test(safe);
   }
-
   function replaceVars(text, vars) {
     return String(text || '').replace(/\{\{(\w+)\}\}/g, (match, key) => vars && vars[key] !== undefined ? vars[key] : match);
   }
-
   function setText(id, value) {
     const el = document.getElementById(id);
     if (el) el.textContent = value;
   }
-
   function setValue(id, value) {
     const el = document.getElementById(id);
     if (el && document.activeElement !== el) el.value = value == null ? '' : value;
   }
-
   function renderPaymentTags(root) {
     const scope = root || document;
     scope.querySelectorAll('[data-payment-tags]').forEach(mount => {
       mount.innerHTML = C.cashier.paymentTags.map(tag => `<span class="pay-tag">${escapeHTML(tag)}</span>`).join('');
     });
   }
-
   function syncAudioToggles() {
     document.querySelectorAll('[data-audio-toggle]').forEach(button => {
       const muted = B.audio?.isMuted?.();
@@ -381,7 +345,6 @@
       if (status) button.dataset.audioState = status.contextState;
     });
   }
-
   function initAudioToggle() {
     document.querySelectorAll('.nav-actions').forEach(actions => {
       if (actions.querySelector('[data-audio-toggle]')) return;
@@ -394,7 +357,6 @@
     });
     syncAudioToggles();
   }
-
   function t(key, vars) {
     const state = readState();
     const langPack = (state.data.i18n && state.data.i18n[state.lang]) || C.fallbackI18n[state.lang] || C.fallbackI18n.ru;
@@ -409,7 +371,6 @@
       responsibleGaming: C.links.responsibleGaming
     }, vars || {}));
   }
-
   function escapeHTML(value) {
     return String(value == null ? '' : value).replace(/[&<>"']/g, ch => ({
       '&': '&amp;',
@@ -419,7 +380,6 @@
       "'": '&#39;'
     })[ch]);
   }
-
   function sanitizeRichText(raw) {
     const template = document.createElement('template');
     template.innerHTML = String(raw || '');
@@ -444,7 +404,6 @@
     });
     return template.innerHTML;
   }
-
   function stateDefaults(type) {
     const safeType = ['loading', 'empty', 'error', 'offline'].includes(type) ? type : 'empty';
     return {
@@ -453,7 +412,6 @@
       textKey: safeType === 'loading' ? 'state_loading_text' : safeType === 'offline' ? 'state_offline_text' : safeType === 'error' ? 'state_error_text' : 'state_empty_text'
     };
   }
-
   function renderState(type, options) {
     const defaults = stateDefaults(type);
     const opts = Object.assign({}, defaults, options || {});
@@ -469,11 +427,9 @@
       </div>
     `;
   }
-
   function tableStateRow(colspan, type, options) {
     return `<tr><td colspan="${Number(colspan || 1)}" class="state-cell">${renderState(type, options)}</td></tr>`;
   }
-
   function renderGameHistory(mountId, items, emptyText, options) {
     const mount = typeof mountId === 'string' ? document.getElementById(mountId) : mountId;
     if (!mount) return;
@@ -498,7 +454,6 @@
       `;
     }).join('');
   }
-
   function formatNumber(value) {
     const lang = readState().lang;
     const locale = C.getLocale ? C.getLocale(lang) : (C.defaults.locale[lang] || 'en-US');
@@ -509,13 +464,11 @@
     }
     return formatter.format(Number(value || 0));
   }
-
   function getCurrency() {
     const state = readState();
     const user = state.currentUser || {};
     return user.currency || C.defaults.currency;
   }
-
   function formatMoney(value, currency) {
     const lang = readState().lang;
     const locale = C.getLocale ? C.getLocale(lang) : (C.defaults.locale[lang] || 'en-US');
@@ -532,19 +485,16 @@
     }
     return formatter.format(Number(value || 0));
   }
-
   function methodLabel(method) {
     if (!method) return t('tx_unknown_method');
     const lang = readState().lang;
     return method['label_' + lang] || method.label || method.id;
   }
-
   function applyRoutes(root) {
     (root || document).querySelectorAll('[data-route]').forEach(el => {
       el.setAttribute('href', path(el.dataset.route));
     });
   }
-
   const datePickerLabels = {
     ru: {
       months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
@@ -558,21 +508,18 @@
     }
   };
   const datePickerState = { input: null, view: null, popover: null };
-
   function isoDate(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
-
   function parseIsoDate(value) {
     const parts = String(value || '').split('-').map(Number);
     if (parts.length !== 3 || !parts.every(Number.isFinite)) return null;
     const date = new Date(parts[0], parts[1] - 1, parts[2]);
     return date.getFullYear() === parts[0] && date.getMonth() === parts[1] - 1 && date.getDate() === parts[2] ? date : null;
   }
-
   function datePickerLimits(input) {
     const today = new Date();
     const maxAge = Number(input.dataset.dateMaxAge || 0);
@@ -581,7 +528,6 @@
     const max = parseIsoDate(input.max) || calculatedMax;
     return { min, max };
   }
-
   function positionDatePicker() {
     const input = datePickerState.input;
     const popover = datePickerState.popover;
@@ -596,7 +542,6 @@
     popover.style.left = `${left}px`;
     popover.style.width = `${width}px`;
   }
-
   function renderDatePicker() {
     const input = datePickerState.input;
     const popover = datePickerState.popover;
@@ -613,7 +558,6 @@
     const todayIso = isoDate(new Date());
     const selectedIso = selected ? isoDate(selected) : '';
     const days = [];
-
     for (let index = 0; index < 42; index += 1) {
       const date = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + index);
       const value = isoDate(date);
@@ -621,7 +565,6 @@
       const disabled = date < limits.min || date > limits.max;
       days.push(`<button class="site-date-day${outside ? ' is-muted' : ''}${value === todayIso ? ' is-today' : ''}${value === selectedIso ? ' is-selected' : ''}" type="button" data-site-date-value="${value}"${disabled ? ' disabled' : ''}>${date.getDate()}</button>`);
     }
-
     const years = [];
     for (let year = limits.max.getFullYear(); year >= limits.min.getFullYear(); year -= 1) {
       years.push(`<option value="${year}"${year === viewYear ? ' selected' : ''}>${year}</option>`);
@@ -641,7 +584,6 @@
     `;
     global.requestAnimationFrame(positionDatePicker);
   }
-
   function closeDatePicker() {
     const input = datePickerState.input;
     datePickerState.popover?.classList.remove('is-open');
@@ -649,7 +591,6 @@
     datePickerState.input = null;
     datePickerState.view = null;
   }
-
   function openDatePicker(input) {
     if (!input || input.disabled) return;
     const limits = datePickerLimits(input);
@@ -660,7 +601,6 @@
     datePickerState.popover.classList.add('is-open');
     renderDatePicker();
   }
-
   function ensureDatePickerPopover() {
     if (datePickerState.popover) return datePickerState.popover;
     const popover = document.createElement('div');
@@ -710,7 +650,6 @@
     });
     return popover;
   }
-
   function initDatePickers(root) {
     ensureDatePickerPopover();
     (root || document).querySelectorAll('[data-site-date-picker]').forEach(input => {
@@ -742,12 +681,10 @@
       });
     });
   }
-
   function applyLang(root) {
     const scope = root || document;
     const lang = readState().lang;
     document.documentElement.lang = lang;
-
     scope.querySelectorAll('[data-i18n]').forEach(el => {
       el.textContent = t(el.dataset.i18n);
     });
@@ -774,7 +711,6 @@
     applyRoutes(scope);
     updateAuthNav();
   }
-
   function renderConfiguredBlocks(root) {
     const scope = root || document;
     renderPaymentTags(scope);
@@ -784,11 +720,9 @@
       `).join('');
     });
   }
-
   function apiBaseUrl() {
     return (C.api && C.api.baseUrl) || 'http://127.0.0.1:8000/api';
   }
-
   function showToast(message, type) {
     if (type === 'err') B.audio?.play?.('error');
     let container = document.querySelector('.toasts');
@@ -807,7 +741,6 @@
       setTimeout(() => toast.remove(), 300);
     }, 3200);
   }
-
   function ensureConfirmDialog() {
     let overlay = document.getElementById('siteConfirmOverlay');
     if (overlay) return overlay;
@@ -827,7 +760,6 @@
     document.body.appendChild(overlay);
     return overlay;
   }
-
   function confirmDialog(options) {
     const overlay = ensureConfirmDialog();
     const title = overlay.querySelector('#siteConfirmTitle');
@@ -839,7 +771,6 @@
     cancel.textContent = options.cancelLabel || t('confirm_cancel');
     ok.textContent = options.okLabel || t('nav_logout');
     overlay.classList.add('open');
-
     return new Promise(resolve => {
       let settled = false;
       const finish = value => {
@@ -867,7 +798,6 @@
       window.setTimeout(() => ok.focus(), 20);
     });
   }
-
   function ensureApiStatusBanner() {
     let banner = document.getElementById('apiStatusBanner');
     if (banner) return banner;
@@ -878,7 +808,6 @@
     document.body.appendChild(banner);
     return banner;
   }
-
   function updateApiStatusBanner() {
     const status = readState().apiStatus || 'checking';
     const banner = ensureApiStatusBanner();
@@ -889,7 +818,6 @@
       <button class="btn btn-outline btn-sm" type="button" data-api-retry>${escapeHTML(t('state_retry'))}</button>
     `;
   }
-
   function ensureGameRulesModal() {
     let overlay = document.getElementById('gameRulesOverlay');
     if (overlay) return overlay;
@@ -913,7 +841,6 @@
     document.body.appendChild(overlay);
     return overlay;
   }
-
   function openGameRules(page) {
     const config = gameRulePages[page || document.body.dataset.page || ''];
     if (!config) return;
@@ -930,14 +857,12 @@
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden', 'false');
   }
-
   function closeGameRules() {
     const overlay = document.getElementById('gameRulesOverlay');
     if (!overlay) return;
     overlay.classList.remove('open');
     overlay.setAttribute('aria-hidden', 'true');
   }
-
   function initGameRules() {
     const page = document.body.dataset.page || '';
     const config = gameRulePages[page];
@@ -970,15 +895,43 @@
       if (event.key === 'Escape') closeGameRules();
     });
   }
-
   function initNavbar() {
     const nav = document.getElementById('navbar');
+    if (nav && !document.getElementById('navBurger')) {
+      const navInner = nav.querySelector('.nav-inner');
+      const navActions = navInner?.querySelector('.nav-actions');
+      if (navInner && navActions) {
+        const burger = document.createElement('button');
+        burger.className = 'nav-burger';
+        burger.id = 'navBurger';
+        burger.type = 'button';
+        burger.setAttribute('aria-label', 'Menu');
+        burger.setAttribute('aria-controls', 'mobNav');
+        burger.setAttribute('aria-expanded', 'false');
+        burger.innerHTML = '<span></span><span></span><span></span>';
+        navInner.appendChild(burger);
+        const mobileNav = document.createElement('div');
+        mobileNav.className = 'mob-nav';
+        mobileNav.id = 'mobNav';
+        mobileNav.setAttribute('aria-hidden', 'true');
+        mobileNav.innerHTML = `
+          <div class="mob-nav-head">
+            <a class="mob-nav-brand" href="${path('home')}">Bambi<span>ku</span></a>
+            <button class="mob-nav-close" type="button" data-mobile-nav-close aria-label="Close">&times;</button>
+          </div>
+          <a href="${path('home')}#games" data-route="games">${t('nav_games')}</a>
+          <a href="${path('home')}#bonuses" data-route="bonuses">${t('nav_bonuses')}</a>
+          <a href="${path('home')}#vip" data-route="vip">${t('nav_vip')}</a>
+          <div class="mob-nav-auth" data-mobile-auth-nav></div>
+        `;
+        nav.insertAdjacentElement('afterend', mobileNav);
+      }
+    }
     if (nav) {
       const onScroll = () => nav.classList.toggle('scrolled', global.scrollY > 38);
       global.addEventListener('scroll', onScroll, { passive: true });
       onScroll();
     }
-
     const burger = document.getElementById('navBurger');
     const mob = document.getElementById('mobNav');
     if (burger && mob) {
@@ -1000,7 +953,6 @@
         if (e.key === 'Escape' && mob.classList.contains('open')) setMobileOpen(false);
       });
     }
-
     document.addEventListener('click', e => {
       B.audio?.unlock?.();
       const audioToggle = e.target.closest('[data-audio-toggle]');
@@ -1020,7 +972,6 @@
       if (target) target.scrollIntoView({ behavior: 'smooth' });
     });
   }
-
   function initScrollSpy() {
     const secs = document.querySelectorAll('section[id]');
     const links = document.querySelectorAll('.nav-links a, .mob-nav a');
@@ -1036,7 +987,6 @@
     }, { threshold: 0.35 });
     secs.forEach(sec => obs.observe(sec));
   }
-
   function initLanguageSwitcher() {
     document.addEventListener('click', e => {
       const btn = e.target.closest('.lang-btn[data-lang]');
@@ -1044,7 +994,6 @@
       store.setLang(btn.dataset.lang);
     });
   }
-
   function cleanAuthQuery() {
     try {
       const url = new URL(location.href);
@@ -1052,10 +1001,8 @@
       url.searchParams.delete('next');
       history.replaceState(null, '', url.toString());
     } catch (err) {
-      // Keeping harmless query params is better than breaking page init.
     }
   }
-
   function handleOAuthErrorQuery() {
     try {
       const url = new URL(location.href);
@@ -1066,10 +1013,8 @@
       history.replaceState(null, '', url.toString());
       showToast(t(error), 'err');
     } catch (err) {
-      // OAuth error display is best-effort and should not block app init.
     }
   }
-
   function handleAuthQuery() {
     try {
       const url = new URL(location.href);
@@ -1084,14 +1029,11 @@
         window.setTimeout(() => openModal(authTab), 0);
       }
     } catch (err) {
-      // Auth query is best-effort UI routing.
     }
   }
-
   function guardCurrentPage() {
     renderAuthGate();
   }
-
   function guardProtectedNavigation(event) {
     if (hasCurrentUser()) return;
     const game = event.target.closest('[data-game-url]');
@@ -1115,7 +1057,6 @@
       requireAuth(link.getAttribute('href'));
     }
   }
-
   function initAuthGuard() {
     guardCurrentPage();
     handleOAuthErrorQuery();
@@ -1123,20 +1064,17 @@
     if (hasCurrentUser()) redirectAfterAuth();
     document.addEventListener('click', guardProtectedNavigation, true);
   }
-
   function redirectAfterAuth() {
     const next = consumeAuthNext();
     if (!next || next === currentPath()) return false;
     location.href = next;
     return true;
   }
-
   function updateAuthNav() {
     const user = readState().currentUser;
     document.querySelectorAll('[data-footer-auth-link]').forEach(link => {
       link.hidden = Boolean(user);
     });
-
     const mounts = document.querySelectorAll('[data-auth-nav]');
     const mobileMounts = document.querySelectorAll('[data-mobile-auth-nav]');
     if (!mounts.length && !mobileMounts.length) return;
@@ -1177,11 +1115,9 @@
       }
     });
   }
-
   function initModal() {
     const overlay = document.getElementById('modalOverlay');
     if (!overlay) return;
-
     document.addEventListener('click', e => {
       const opener = e.target.closest('[data-modal]');
       if (opener) {
@@ -1191,7 +1127,6 @@
       const closer = e.target.closest('[data-modal-close]');
       if (closer) closeModal();
     });
-
     overlay.addEventListener('click', e => {
       if (e.target === overlay) closeModal();
     });
@@ -1215,7 +1150,6 @@
       tab.addEventListener('click', () => switchModalTab(tab.dataset.tab));
     });
   }
-
   function openModal(tab, opener) {
     const overlay = document.getElementById('modalOverlay');
     if (!overlay) return;
@@ -1226,7 +1160,6 @@
     const initial = overlay.querySelector('#registerFormWrap:not([hidden]) input, #loginFormWrap:not([hidden]) input, [data-modal-close]');
     if (initial) initial.focus();
   }
-
   function closeModal() {
     const overlay = document.getElementById('modalOverlay');
     if (!overlay) return;
@@ -1234,7 +1167,6 @@
     document.body.style.overflow = '';
     if (lastModalOpener && typeof lastModalOpener.focus === 'function') lastModalOpener.focus();
   }
-
   function switchModalTab(tab) {
     const nextTab = tab === 'register' ? 'register' : 'login';
     const authModal = document.querySelector('#modalOverlay .auth-modal');
@@ -1251,7 +1183,6 @@
     const sub = document.getElementById('modalSub');
     if (sub) sub.textContent = t(nextTab === 'login' ? 'modal_sub_login' : 'modal_sub_register');
   }
-
   function initCookieBanner() {
     const banner = document.getElementById('cookieBanner');
     if (!banner) return;
@@ -1270,14 +1201,12 @@
       try {
         localStorage.setItem(C.storage.cookie, btn.dataset.cookieChoice);
       } catch (err) {
-        // Keep banner dismiss flow non-fatal if storage is blocked.
       }
       banner.style.transition = 'opacity .3s';
       banner.style.opacity = '0';
       setTimeout(() => banner.remove(), 300);
     });
   }
-
   function initReveal() {
     if (!('IntersectionObserver' in global)) {
       document.querySelectorAll('.reveal').forEach(el => el.classList.add('on'));
@@ -1293,12 +1222,10 @@
     }, { threshold: 0.12 });
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   }
-
   function initHelp() {
     const container = document.getElementById('faq-container');
     if (!container) return;
     let activeCategory = 'all';
-
     const render = () => {
       const lang = readState().lang;
       const q = (document.getElementById('faq-search')?.value || '').trim().toLowerCase();
@@ -1328,7 +1255,6 @@
       }).join('');
       container.innerHTML = total ? html : `<div class="no-results"><div class="no-results-icon">?</div><p>${t('help_no_results')}</p></div>`;
     };
-
     document.querySelectorAll('.help-cat').forEach(btn => {
       btn.addEventListener('click', () => {
         activeCategory = btn.dataset.cat || 'all';
@@ -1363,7 +1289,6 @@
     store.subscribe(render);
     render();
   }
-
   function initCommon() {
     initNavbar();
     initAudioToggle();
@@ -1441,7 +1366,6 @@
     renderAuthGate();
     updateApiStatusBanner();
   }
-
   B.ui = {
     path,
     t,

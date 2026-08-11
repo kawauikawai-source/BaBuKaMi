@@ -72,7 +72,7 @@ class UserPublic(BaseModel):
 class UserUpdateRequest(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=255)
     first_name: str | None = Field(default=None, min_length=1, max_length=128)
-    last_name: str | None = Field(default=None, min_length=1, max_length=128)
+    last_name: str | None = Field(default=None, max_length=128)
     email: EmailStr | None = None
     phone: str | None = Field(default=None, max_length=64)
     dob: str | None = Field(default=None, max_length=32)

@@ -531,6 +531,18 @@ body[data-page="plinko"] {
 
 }
 
+.mobile-game-dock-state {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mobile-game-dock-toggle {
+  display: none;
+}
+
 
 
 @media (max-width: 1180px) {
@@ -556,89 +568,191 @@ body[data-page="plinko"] {
 
 
 @media (max-width: 760px) {
+  body[data-page="game"],
+  body[data-page="slot"],
+  body[data-page="crash"],
+  body[data-page="mines"],
+  body[data-page="blocks"],
+  body[data-page="holdem"],
+  body[data-page="plinko"] {
+    padding-bottom: min(42svh, 330px);
+  }
+
+  .game-page > .container { padding-inline: 10px; }
 
   .game-command-head:not(.survival-command-head) {
-
-    min-height: 0;
-
-    padding: 22px 19px;
-
-  }
-
-
-
-  .game-command-head:not(.survival-command-head)::after {
-
-    display: none;
-
-  }
-
-
-
-  .game-command-head:not(.survival-command-head) .page-title {
-
-    font-size: clamp(32px, 10vw, 44px);
-
-  }
-
-
-
-  .game-command-meta {
-
     display: grid;
-
-    grid-template-columns: 1fr;
-
-  }
-
-
-
-  .game-command-meta > span {
-
-    width: 100%;
-
-  }
-
-
-
-  .game-command-back {
-
-    width: 100%;
-
-    justify-content: center;
-
-    margin-top: 8px;
-
-  }
-
-
-
-  .game-console-stage:not(.survival-stage) {
-
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
     min-height: 0;
-
-    padding: 12px;
-
+    margin-bottom: 10px;
+    padding: 14px 15px;
   }
-
-
+  .game-command-head:not(.survival-command-head)::after,
+  .game-command-head:not(.survival-command-head) .game-command-kicker,
+  .game-command-head:not(.survival-command-head) .page-sub,
+  .game-command-meta { display: none; }
+  .game-command-head:not(.survival-command-head) .page-title {
+    margin: 0;
+    font-size: clamp(23px, 7vw, 31px);
+  }
+  .game-command-back {
+    width: auto;
+    min-height: 38px;
+    justify-content: center;
+    margin-top: 0;
+    padding: 8px 14px;
+  }
+  .game-console-stage:not(.survival-stage) { min-height: 0; padding: 12px; }
 
   .game-console-panel:not(.survival-panel) {
-
-    padding: 10px;
-
+    position: fixed!important;
+    inset: auto 8px 0;
+    z-index: 95;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: auto;
+    max-height: min(42svh, 330px);
+    padding: 52px 12px 12px;
+    overflow: auto;
+    overscroll-behavior: contain;
+    border-radius: 16px 16px 0 0;
+    background: color-mix(in srgb, var(--bg-card) 96%, transparent);
+    box-shadow: 0 -18px 48px rgba(0,0,0,.58), inset 0 1px 0 var(--game-console-border);
+    transform: translateY(calc(100% - 50px));
+    transition: transform .24s var(--ease);
+    backdrop-filter: blur(18px);
   }
-
-
-
+  .game-console-panel:not(.survival-panel):has(> .mobile-game-dock-state:checked) { transform: translateY(0); }
+  .mobile-game-dock-toggle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: .06em;
+  }
+  .mobile-game-dock-toggle i {
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid currentColor;
+    border-left: 2px solid currentColor;
+    transform: rotate(45deg) translateY(3px);
+    transition: transform .2s var(--ease);
+  }
+  .mobile-game-dock-state:not(:checked) + .mobile-game-dock-toggle i { transform: rotate(225deg) translateY(3px); }
+  .mobile-game-dock-state:focus-visible + .mobile-game-dock-toggle { outline: 2px solid var(--accent); outline-offset: -3px; }
+  .game-console-panel:not(.survival-panel) > .balance-card { display: none; }
+  .game-console-panel:not(.survival-panel) > .slot-bet-box,
+  .game-console-panel:not(.survival-panel) > .bet-slip,
+  .game-console-panel:not(.survival-panel) > .blocks-meter,
+  .game-console-panel:not(.survival-panel) > .blocks-stats,
+  .game-console-panel:not(.survival-panel) > .blocks-next-box,
+  .game-console-panel:not(.survival-panel) > .blocks-difficulty-box,
+  .game-console-panel:not(.survival-panel) > .holdem-info-grid,
+  .game-console-panel:not(.survival-panel) > .plinko-control-box {
+    flex: 0 0 auto;
+    padding: 11px;
+  }
   .game-console-panel .chip-row {
-
-    grid-template-columns: repeat(4, minmax(50px, var(--bet-chip-size)));
-
+    grid-template-columns: repeat(4, minmax(50px, 64px));
     gap: 6px;
-
   }
 
+  body[data-page="blocks"] .blocks-stage {
+    height: calc(100svh - 126px);
+    min-height: 480px!important;
+    justify-content: flex-start;
+    padding: 8px;
+  }
+  body[data-page="blocks"] .blocks-board-shell {
+    width: min(calc((100svh - 236px) * .6667), calc(100vw - 38px));
+    min-width: 230px;
+    padding: 8px;
+    border-radius: 10px;
+  }
+  body[data-page="blocks"] .blocks-board { gap: 2px; }
+  body[data-page="blocks"] .blocks-cell { border-radius: 3px; }
+  body[data-page="blocks"] .blocks-status,
+  body[data-page="blocks"] .blocks-recent { font-size: 12px; }
+  body[data-page="blocks"].blocks-round-active .blocks-panel > .slot-bet-box,
+  body[data-page="blocks"].blocks-round-active .blocks-panel > .blocks-difficulty-box { display: none; }
+  body[data-page="blocks"]:not(.blocks-round-active) .blocks-panel > .blocks-meter,
+  body[data-page="blocks"]:not(.blocks-round-active) .blocks-panel > .blocks-stats { display: none; }
+  body[data-page="blocks"] .blocks-meter {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 3px 10px;
+  }
+  body[data-page="blocks"] .blocks-meter strong {
+    grid-row: 1 / 3;
+    grid-column: 2;
+    margin: 0;
+    font-size: 28px;
+  }
+  body[data-page="blocks"] .blocks-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
+  body[data-page="blocks"] .blocks-stats strong { font-size: 15px; }
+  body[data-page="blocks"] .blocks-next-box { display: none!important; }
+  body[data-page="blocks"] .blocks-action-btn {
+    min-height: 58px;
+    margin: 0;
+    border-radius: 12px;
+    font-size: 17px;
+  }
+
+  body[data-page="game"] .roulette-stage { min-height: 300px; padding: 8px; }
+  body[data-page="game"] .roulette-container {
+    --wheel-shadow-space: 24px;
+    width: min(72vw, 280px);
+  }
+  body[data-page="game"] .roulette-result { margin-top: 2px; }
+  body[data-page="game"] .roulette-table-wrap { padding: 8px; overflow-x: visible; }
+  body[data-page="game"] .roulette-table,
+  body[data-page="game"] .roulette-advanced-toggle { min-width: 0; width: 100%; }
+  body[data-page="game"] .roulette-table { gap: 5px; }
+  body[data-page="game"] .roulette-number-grid {
+    grid-template-columns: 30px repeat(12, minmax(0, 1fr));
+    grid-template-rows: repeat(3, 38px);
+    gap: 2px;
+  }
+  body[data-page="game"] .roulette-bet {
+    min-width: 0;
+    min-height: 36px;
+    padding: 0;
+    border-radius: 3px;
+    font-size: 9px;
+  }
+  body[data-page="game"] .roulette-bet.is-selected::after {
+    right: 1px;
+    bottom: 1px;
+    padding: 1px 2px;
+    font-size: 6.5px;
+  }
+  body[data-page="game"] .roulette-outside-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3px;
+  }
+  body[data-page="game"] .roulette-advanced-toggle { margin-top: 7px; padding: 10px; }
+  body[data-page="game"] .roulette-all-in-chip { display: none; }
+  body[data-page="game"] .roulette-panel .bet-slip { padding: 9px; }
+  body[data-page="game"] .roulette-panel .bet-slip-list {
+    min-height: 34px;
+    max-height: 44px;
+    margin: 6px 0;
+  }
+  body[data-page="game"] .roulette-panel .roulette-spin-btn { min-height: 50px; }
 }
 
 
