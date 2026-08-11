@@ -856,16 +856,12 @@
     `).join('');
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden', 'false');
-    document.documentElement.classList.add('game-rules-locked');
-    document.body.classList.add('game-rules-locked');
   }
   function closeGameRules() {
     const overlay = document.getElementById('gameRulesOverlay');
     if (!overlay) return;
     overlay.classList.remove('open');
     overlay.setAttribute('aria-hidden', 'true');
-    document.documentElement.classList.remove('game-rules-locked');
-    document.body.classList.remove('game-rules-locked');
   }
   function initGameRules() {
     const page = document.body.dataset.page || '';

@@ -568,6 +568,16 @@ body[data-page="plinko"] {
 
 
 @media (max-width: 760px) {
+  body[data-page="game"],
+  body[data-page="slot"],
+  body[data-page="crash"],
+  body[data-page="mines"],
+  body[data-page="blocks"],
+  body[data-page="holdem"],
+  body[data-page="plinko"] {
+    padding-bottom: min(42svh, 330px);
+  }
+
   .game-page > .container { padding-inline: 10px; }
 
   .game-command-head:not(.survival-command-head) {
@@ -596,6 +606,65 @@ body[data-page="plinko"] {
   }
   .game-console-stage:not(.survival-stage) { min-height: 0; padding: 12px; }
 
+  .game-console-panel:not(.survival-panel) {
+    position: fixed!important;
+    inset: auto 8px 0;
+    z-index: 95;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: auto;
+    max-height: min(42svh, 330px);
+    padding: 52px 12px 12px;
+    overflow: auto;
+    overscroll-behavior: contain;
+    border-radius: 16px 16px 0 0;
+    background: color-mix(in srgb, var(--bg-card) 96%, transparent);
+    box-shadow: 0 -18px 48px rgba(0,0,0,.58), inset 0 1px 0 var(--game-console-border);
+    transform: translateY(calc(100% - 50px));
+    transition: transform .24s var(--ease);
+    backdrop-filter: blur(18px);
+  }
+  .game-console-panel:not(.survival-panel):has(> .mobile-game-dock-state:checked) { transform: translateY(0); }
+  .mobile-game-dock-toggle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: .06em;
+  }
+  .mobile-game-dock-toggle i {
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid currentColor;
+    border-left: 2px solid currentColor;
+    transform: rotate(45deg) translateY(3px);
+    transition: transform .2s var(--ease);
+  }
+  .mobile-game-dock-state:not(:checked) + .mobile-game-dock-toggle i { transform: rotate(225deg) translateY(3px); }
+  .mobile-game-dock-state:focus-visible + .mobile-game-dock-toggle { outline: 2px solid var(--accent); outline-offset: -3px; }
+  .game-console-panel:not(.survival-panel) > .balance-card { display: none; }
+  .game-console-panel:not(.survival-panel) > .slot-bet-box,
+  .game-console-panel:not(.survival-panel) > .bet-slip,
+  .game-console-panel:not(.survival-panel) > .blocks-meter,
+  .game-console-panel:not(.survival-panel) > .blocks-stats,
+  .game-console-panel:not(.survival-panel) > .blocks-next-box,
+  .game-console-panel:not(.survival-panel) > .blocks-difficulty-box,
+  .game-console-panel:not(.survival-panel) > .holdem-info-grid,
+  .game-console-panel:not(.survival-panel) > .plinko-control-box {
+    flex: 0 0 auto;
+    padding: 11px;
+  }
   .game-console-panel .chip-row {
     grid-template-columns: repeat(4, minmax(50px, 64px));
     gap: 6px;
@@ -684,109 +753,6 @@ body[data-page="plinko"] {
     margin: 6px 0;
   }
   body[data-page="game"] .roulette-panel .roulette-spin-btn { min-height: 50px; }
-}
-
-/* Mobile play mode: settings stay in document flow; only live actions float. */
-html.game-rules-locked,
-body.game-rules-locked {
-  overflow: hidden!important;
-  overscroll-behavior: none;
-}
-
-@media (max-width: 760px) {
-  body[data-page="game"],
-  body[data-page="slot"],
-  body[data-page="crash"],
-  body[data-page="mines"],
-  body[data-page="blocks"],
-  body[data-page="holdem"],
-  body[data-page="plinko"] {
-    padding-bottom: 0;
-  }
-
-  .game-console-panel:not(.survival-panel) {
-    position: static!important;
-    inset: auto!important;
-    width: 100%;
-    max-height: none;
-    padding: 12px;
-    overflow: visible;
-    overscroll-behavior: auto;
-    border-radius: 10px;
-    transform: none!important;
-    transition: none;
-    backdrop-filter: none;
-  }
-
-  .mobile-game-dock-state,
-  .mobile-game-dock-toggle { display: none!important; }
-  .game-console-panel:not(.survival-panel) > .balance-card { display: none; }
-
-  body[data-page="game"] .roulette-panel {
-    position: sticky!important;
-    bottom: 4px!important;
-    z-index: 90;
-    gap: 6px;
-    padding: 8px;
-    box-shadow: 0 -10px 28px rgba(0,0,0,.48);
-  }
-  body[data-page="game"] .roulette-panel .chip-row {
-    grid-template-columns: repeat(4, minmax(46px, 58px));
-  }
-  body[data-page="game"] .roulette-panel .bet-slip-list { display: none; }
-  body[data-page="game"] .roulette-panel .bet-slip-head { margin-bottom: 3px; }
-  body[data-page="game"] .roulette-panel .bet-slip-total { min-height: 28px; }
-  body[data-page="game"] .roulette-panel .roulette-spin-btn { min-height: 46px; }
-
-  body.game-round-active[data-page="crash"] .crash-panel,
-  body.game-round-active[data-page="mines"] .mines-panel,
-  body.game-round-active[data-page="blocks"] .blocks-panel,
-  body.game-round-active[data-page="holdem"] .holdem-panel {
-    position: fixed!important;
-    inset: auto 8px 8px!important;
-    z-index: 96;
-    width: auto;
-    padding: 8px;
-    border-radius: 12px;
-    background: var(--bg-card);
-    box-shadow: 0 10px 34px rgba(0,0,0,.62), inset 0 1px 0 var(--game-console-border);
-  }
-
-  body.game-round-active[data-page="crash"] .crash-panel > :not(.slot-bet-box),
-  body.game-round-active[data-page="crash"] .crash-panel .slot-bet-box > :not(.crash-action-btn),
-  body.game-round-active[data-page="mines"] .mines-panel > :not(.mines-action-btn),
-  body.game-round-active[data-page="blocks"] .blocks-panel > :not(.blocks-action-btn):not(.blocks-forfeit-btn),
-  body.game-round-active[data-page="holdem"] .holdem-panel > :not(.holdem-actions) {
-    display: none!important;
-  }
-
-  body.game-round-active[data-page="crash"] .crash-panel .slot-bet-box {
-    padding: 0;
-    border: 0;
-    background: transparent;
-  }
-  body.game-round-active .crash-action-btn,
-  body.game-round-active .mines-action-btn,
-  body.game-round-active .blocks-action-btn,
-  body.game-round-active .holdem-actions .btn {
-    min-height: 54px;
-    margin: 0;
-  }
-
-  #navbar,
-  #navbar.scrolled,
-  .game-rules-overlay,
-  .game-console-panel:not(.survival-panel) {
-    -webkit-backdrop-filter: none!important;
-    backdrop-filter: none!important;
-  }
-
-  body[data-page="crash"] { animation: none!important; }
-  body[data-page="crash"] .crash-chart,
-  body[data-page="plinko"] .plinko-board-shell,
-  body[data-page="holdem"] .holdem-table-shell {
-    box-shadow: inset 0 0 0 1px var(--border);
-  }
 }
 
 

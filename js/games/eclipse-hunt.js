@@ -150,7 +150,6 @@
   }
 
   function renderAll() {
-    document.body.classList.toggle('game-round-active', isActive());
     renderBalance();
     renderBets();
     renderCounts();

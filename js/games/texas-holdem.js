@@ -330,7 +330,6 @@
   }
 
   function renderAll() {
-    document.body.classList.toggle('game-round-active', isActive());
     const round = roundForView();
     const dealerHidden = round ? Number(round.dealer_hidden_count || 0) : 0;
     const playerHand = round && resultVisible ? visibleHand(round, 'player') : null;
