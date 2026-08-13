@@ -308,9 +308,13 @@ function checkPerformanceBudgets() {
   }
 
   for (const filePath of walk(path.join(root, 'css'), file => file.endsWith('.css'))) {
-    const size = fs.statSync(filePath).size;
+    const bytes = fs.readFileSync(filePath);
+    const size = bytes.length;
     if (size > maxCssBytes) {
       fail(`${rel(filePath)}: stylesheet is ${(size / 1024).toFixed(1)} KB; budget is ${maxCssBytes / 1024} KB`);
+    }
+    if (path.basename(filePath) === 'style.css' && bytes.includes(13)) {
+      fail(`${rel(filePath)}: generated stylesheet contains CR bytes; normalize CRLF/LF in scripts/build-css.js`);
     }
     if (/fonts\.googleapis\.com/i.test(read(filePath))) {
       fail(`${rel(filePath)}: external Google Fonts import blocks first render`);
