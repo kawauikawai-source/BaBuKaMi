@@ -364,6 +364,26 @@ body[data-page="profile"] #navbar{
 
   .profile-page .container{padding:0 14px}
 
+  .profile-command-head.game-command-head{display:block;min-height:0;margin-bottom:18px;padding:19px 18px 18px}
+
+  .profile-command-head.game-command-head .profile-command-copy{width:100%}
+
+  .profile-command-head.game-command-head .page-title{margin-top:10px;font-size:36px;line-height:.98}
+
+  .profile-command-head.game-command-head .page-sub{max-width:280px;margin-top:10px;font-size:14px;line-height:1.55}
+
+  .profile-command-head .profile-command-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin-top:16px;background:var(--border)}
+
+  .profile-command-head .profile-command-meta>span{display:flex;width:auto;min-width:0;min-height:52px;align-items:flex-start;justify-content:center;flex-direction:column;gap:3px;padding:8px 9px;border-left:0;background:#0b100e}
+
+  .profile-command-head .profile-command-meta small,.profile-command-head .profile-command-meta strong{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  .profile-command-head .profile-command-meta small{font-size:7px}
+
+  .profile-command-head .profile-command-meta strong{font-size:10px}
+
+  .profile-command-head .profile-command-back{position:static;width:auto;min-width:108px;min-height:42px;margin:12px 0 0 auto;padding:9px 16px}
+
   .profile-sidebar,.profile-content{padding:20px 16px}
 
   .profile-content{min-height:0}
