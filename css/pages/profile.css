@@ -25,7 +25,8 @@ body[data-page="profile"] #navbar{
 }
 
 .profile-page.page-shell{
-
+  position:relative;
+  isolation:isolate;
   padding-top:96px;
 
   background:
@@ -38,7 +39,10 @@ body[data-page="profile"] #navbar{
 
 }
 
-.profile-page .container{max-width:1500px}
+.profile-page.page-shell::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.68;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:56px 56px;mask-image:linear-gradient(90deg,transparent,black 8%,black 92%,transparent)}
+.profile-page .container{max-width:1500px;position:relative;z-index:1}
+
+@media(max-width:620px){.profile-page.page-shell::after{background-size:44px 44px;opacity:.52}}
 
 .profile-command-head{
 

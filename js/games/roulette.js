@@ -33,10 +33,12 @@
   let ctx = null;
   let canvasSize = 0;
   let lastResult = null;
+  let initialized = false;
   let recentResults = [];
   let settledBets = [];
   let settlementState = '';
   let wheelResizeObserver = null;
+  let wheelResizeFrame = 0;
   let spinFrameProgress = 1;
   let canvasDpr = 1;
   let wheelLayerCanvas = null;
@@ -422,6 +424,14 @@
     ctx = canvas.getContext('2d');
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     drawWheel();
+  }
+
+  function scheduleCanvasResize() {
+    if (wheelResizeFrame) return;
+    wheelResizeFrame = requestAnimationFrame(() => {
+      wheelResizeFrame = 0;
+      resizeCanvas();
+    });
   }
 
   function labelFor(type, selection) {
@@ -892,9 +902,9 @@
     document.getElementById('rouletteClear')?.addEventListener('click', clearBets);
     document.getElementById('rouletteSpin')?.addEventListener('click', spin);
     document.getElementById('rouletteAdvancedToggle')?.addEventListener('click', toggleAdvancedBets);
-    global.addEventListener('resize', resizeCanvas);
+    global.addEventListener('resize', scheduleCanvasResize);
     if (global.ResizeObserver && canvas && !wheelResizeObserver) {
-      wheelResizeObserver = new ResizeObserver(resizeCanvas);
+      wheelResizeObserver = new ResizeObserver(scheduleCanvasResize);
       wheelResizeObserver.observe(canvas);
     }
   }
@@ -907,7 +917,8 @@
   }
 
   function init() {
-    if (document.body.dataset.page !== 'game') return;
+    if (document.body.dataset.page !== 'game' || initialized) return;
+    initialized = true;
     initCanvas();
     renderBalance();
     renderChips();

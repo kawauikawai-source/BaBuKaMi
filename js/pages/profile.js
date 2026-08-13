@@ -6,12 +6,14 @@
   const store = B.store;
   const ui = B.ui;
   const HISTORY_PAGE_SIZE = 15;
+  let initialized = false;
   let historyFilter = 'all';
   let historyGameFilter = 'all';
   let historyVisible = HISTORY_PAGE_SIZE;
   let studioBalanceCents = 0;
   let studioBalanceLoading = false;
   let studioBalanceLoadedFor = '';
+  let studioBalanceRequestId = 0;
   let managerOpen = false;
   let managerLoading = false;
   let managerState = null;
@@ -23,16 +25,20 @@
     const userKey = String(user && (user.apiId || user.id || user.email) || '');
     if (!userKey || state.apiStatus !== 'online' || studioBalanceLoading || studioBalanceLoadedFor === userKey) return;
     studioBalanceLoading = true;
+    const requestId = ++studioBalanceRequestId;
     try {
       const result = await store.getStudioWallet();
       if (!result || result.error) return;
+      const current = store.currentUser();
+      const currentKey = String(current && (current.apiId || current.id || current.email) || '');
+      if (requestId !== studioBalanceRequestId || currentKey !== userKey) return;
       studioBalanceCents = Number(result.wallet?.balance_cents || 0);
       studioBalanceLoadedFor = userKey;
       render();
     } catch (err) {
       // The global API status already communicates temporary backend failures.
     } finally {
-      studioBalanceLoading = false;
+      if (requestId === studioBalanceRequestId) studioBalanceLoading = false;
     }
   }
 
@@ -335,6 +341,8 @@
     overlay.classList.toggle('open', open);
     overlay.setAttribute('aria-hidden', open ? 'false' : 'true');
     if (open) {
+      const qr = overlay.querySelector('img[data-src]');
+      if (qr && !qr.getAttribute('src')) qr.src = qr.dataset.src;
       const checkbox = document.getElementById('kyc-scan-check');
       if (checkbox) checkbox.checked = false;
       syncKycContinue();
@@ -704,7 +712,8 @@
   }
 
   function init() {
-    if (document.body.dataset.page !== 'profile') return;
+    if (document.body.dataset.page !== 'profile' || initialized) return;
+    initialized = true;
     initTabs();
     document.getElementById('btn-save-personal')?.addEventListener('click', savePersonal);
     document.getElementById('profileManagerButton')?.addEventListener('click', () => setManagerOpen(true));
@@ -787,7 +796,17 @@
     document.addEventListener('keydown', event => {
       if (event.key === 'Escape' && document.getElementById('kycOverlay')?.classList.contains('open')) setKycModalOpen(false);
     });
-    store.subscribe(() => {
+    store.subscribe((next, prev) => {
+      const nextUser = next.currentUser || {};
+      const prevUser = prev.currentUser || {};
+      const nextKey = String(nextUser.apiId || nextUser.id || nextUser.email || '');
+      const prevKey = String(prevUser.apiId || prevUser.id || prevUser.email || '');
+      if (nextKey !== prevKey) {
+        studioBalanceRequestId += 1;
+        studioBalanceLoading = false;
+        studioBalanceLoadedFor = '';
+        studioBalanceCents = 0;
+      }
       render();
       loadStudioBalance();
     });

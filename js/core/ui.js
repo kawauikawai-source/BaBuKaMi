@@ -4,6 +4,7 @@
   const B = global.Bambiku = global.Bambiku || {};
   const C = B.constants;
   const store = B.store;
+  let commonInitialized = false;
   let lastModalOpener = null;
   const numberFormatters = new Map();
   const currencyFormatters = new Map();
@@ -938,6 +939,39 @@
     overlay.setAttribute('aria-hidden', 'true');
   }
 
+  function initMobileNavigation(nav) {
+    if (!nav || nav.dataset.mobileNavReady) return;
+    const inner = nav.querySelector('.nav-inner');
+    const actions = inner?.querySelector('.nav-actions');
+    if (!actions || nav.hasAttribute('data-mobile-nav-disabled')) return;
+    nav.dataset.mobileNavReady = '1';
+    let burger = document.getElementById('navBurger');
+    let drawer = document.getElementById('mobNav');
+    if (!burger) {
+      actions.insertAdjacentHTML('beforeend', '<button class="nav-burger" id="navBurger" type="button" aria-label="Open menu" aria-controls="mobNav" aria-expanded="false"><span></span><span></span><span></span></button>');
+      burger = document.getElementById('navBurger');
+    }
+    if (!drawer) {
+      nav.insertAdjacentHTML('afterend', '<div class="mob-nav" id="mobNav" role="dialog" aria-modal="true" aria-label="Site navigation" aria-hidden="true"></div>');
+      drawer = document.getElementById('mobNav');
+    }
+    drawer.setAttribute('role', 'dialog');
+    drawer.setAttribute('aria-modal', 'true');
+    drawer.setAttribute('aria-label', 'Site navigation');
+    drawer.setAttribute('aria-hidden', 'true');
+    const links = Array.from(inner.querySelectorAll('.nav-links a')).map(link => link.outerHTML).join('');
+    drawer.innerHTML = `<div class="mob-nav-head"><span class="mob-nav-brand">Bambi<span>ku</span></span><button class="mob-nav-close" type="button" data-mobile-nav-close aria-label="Close menu">&times;</button></div><nav class="mob-nav-links">${links}</nav><div class="mob-nav-auth" data-mobile-auth-nav></div>`;
+    const setOpen = open => {
+      [drawer, burger].forEach(item => item.classList.toggle(item === drawer ? 'open' : 'is-open', open));
+      drawer.ariaHidden = String(!open);
+      burger.ariaExpanded = String(open);
+      document.body.classList.toggle('mobile-nav-open', open);
+    };
+    burger.addEventListener('click', () => setOpen(!drawer.classList.contains('open')));
+    drawer.addEventListener('click', event => event.target.closest('a,[data-mobile-nav-close]') && setOpen(false));
+    document.addEventListener('keydown', event => event.key === 'Escape' && drawer.classList.contains('open') && setOpen(false));
+  }
+
   function initGameRules() {
     const page = document.body.dataset.page || '';
     const config = gameRulePages[page];
@@ -977,28 +1011,7 @@
       const onScroll = () => nav.classList.toggle('scrolled', global.scrollY > 38);
       global.addEventListener('scroll', onScroll, { passive: true });
       onScroll();
-    }
-
-    const burger = document.getElementById('navBurger');
-    const mob = document.getElementById('mobNav');
-    if (burger && mob) {
-      const setMobileOpen = open => {
-        mob.classList.toggle('open', open);
-        mob.setAttribute('aria-hidden', open ? 'false' : 'true');
-        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-        document.body.style.overflow = open ? 'hidden' : '';
-      };
-      burger.addEventListener('click', () => {
-        setMobileOpen(!mob.classList.contains('open'));
-      });
-      mob.addEventListener('click', e => {
-        if (e.target === mob || e.target.closest('a,button,[data-mobile-nav-close]')) {
-          setMobileOpen(false);
-        }
-      });
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && mob.classList.contains('open')) setMobileOpen(false);
-      });
+      initMobileNavigation(nav);
     }
 
     document.addEventListener('click', e => {
@@ -1278,77 +1291,14 @@
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   }
 
-  function initHelp() {
-    const container = document.getElementById('faq-container');
-    if (!container) return;
-    let activeCategory = 'all';
-
-    const render = () => {
-      const lang = readState().lang;
-      const q = (document.getElementById('faq-search')?.value || '').trim().toLowerCase();
-      const categories = activeCategory === 'all' ? Object.keys(C.faq) : [activeCategory];
-      let total = 0;
-      const html = categories.map(cat => {
-        const items = (C.faq[cat] || []).filter(item => {
-          if (!q) return true;
-          return (item['q_' + lang] + ' ' + item['a_' + lang]).toLowerCase().includes(q);
-        });
-        if (!items.length) return '';
-        total += items.length;
-        return `
-          <div class="faq-section">
-            <div class="faq-section-title">${escapeHTML(t('help_' + cat))}</div>
-            ${items.map((item, idx) => `
-              <div class="faq-item">
-                <button class="faq-q" type="button" data-faq-toggle aria-expanded="false" aria-controls="faq-answer-${cat}-${idx}">
-                  ${escapeHTML(item['q_' + lang])}
-                  <span class="faq-arrow">v</span>
-                </button>
-                <div class="faq-a" id="faq-answer-${cat}-${idx}">${escapeHTML(item['a_' + lang])}</div>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      }).join('');
-      container.innerHTML = total ? html : `<div class="no-results"><div class="no-results-icon">?</div><p>${t('help_no_results')}</p></div>`;
-    };
-
-    document.querySelectorAll('.help-cat').forEach(btn => {
-      btn.addEventListener('click', () => {
-        activeCategory = btn.dataset.cat || 'all';
-        document.querySelectorAll('.help-cat').forEach(item => {
-          const active = item === btn;
-          item.classList.toggle('active', active);
-          item.setAttribute('aria-selected', active ? 'true' : 'false');
-        });
-        const search = document.getElementById('faq-search');
-        if (search) search.value = '';
-        render();
-      });
-    });
-    document.getElementById('faq-search')?.addEventListener('input', render);
-    document.getElementById('btn-search')?.addEventListener('click', render);
-    container.addEventListener('click', e => {
-      const toggle = e.target.closest('[data-faq-toggle]');
-      if (!toggle) return;
-      const answer = toggle.nextElementSibling;
-      const open = answer.classList.contains('open');
-      container.querySelectorAll('.faq-a.open').forEach(el => el.classList.remove('open'));
-      container.querySelectorAll('.faq-q.open').forEach(el => {
-        el.classList.remove('open');
-        el.setAttribute('aria-expanded', 'false');
-      });
-      if (!open) {
-        answer.classList.add('open');
-        toggle.classList.add('open');
-        toggle.setAttribute('aria-expanded', 'true');
-      }
-    });
-    store.subscribe(render);
-    render();
-  }
-
   function initCommon() {
+    if (commonInitialized) {
+      applyLang();
+      renderAuthGate();
+      updateApiStatusBanner();
+      return;
+    }
+    commonInitialized = true;
     initNavbar();
     initAudioToggle();
     initScrollSpy();
@@ -1383,6 +1333,11 @@
     document.addEventListener('click', e => {
       const provider = e.target.closest('[data-provider]');
       if (!provider) return;
+      if (readState().apiStatus === 'offline') {
+        e.preventDefault();
+        showToast(t('err_api_unavailable'), 'err');
+        return;
+      }
       if (provider.dataset.provider === 'google') {
         location.href = apiBaseUrl() + '/auth/google/login';
         return;
@@ -1444,10 +1399,10 @@
     confirmAction: confirmDialog,
     openModal,
     closeModal,
+    authUrl: homeAuthUrl,
     redirectAfterAuth,
     requireAuth,
     requireAuthGate: renderAuthGate,
-    initCommon,
-    initHelp
+    initCommon
   };
 })(window);

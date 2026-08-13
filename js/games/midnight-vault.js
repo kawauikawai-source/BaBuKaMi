@@ -16,6 +16,7 @@
   let selectedRisk = 'medium';
   let selectedRows = 12;
   let selectedBalls = 3;
+  let initialized = false;
   let busy = false;
   let recent = [];
   let engine = null;
@@ -27,7 +28,7 @@
       this.canvas = document.createElement('canvas');
       this.canvas.className = 'plinko-canvas';
       this.ctx = this.canvas.getContext('2d');
-      this.dpr = Math.max(1, Math.min(1.75, window.devicePixelRatio || 1));
+      this.dpr = 1;
       this.rows = 12;
       this.risk = 'medium';
       this.pockets = clientPockets(12, 'medium');
@@ -47,9 +48,8 @@
       if (window.ResizeObserver) {
         this.resizeObserver = new ResizeObserver(this.resize);
         this.resizeObserver.observe(this.root);
-      } else {
-        window.addEventListener('resize', this.resize);
       }
+      window.addEventListener('resize', this.resize);
       document.addEventListener('visibilitychange', this.handleVisibility);
       this.resize();
     }
@@ -73,14 +73,50 @@
 
     resize() {
       const rect = this.root.getBoundingClientRect();
-      this.width = Math.max(320, Math.floor(rect.width || 900));
-      this.height = Math.max(420, Math.floor(rect.height || 600));
+      const width = Math.max(320, Math.floor(rect.width || 900));
+      const height = Math.max(420, Math.floor(rect.height || 600));
+      const dpr = Math.max(1, Math.min(1.75, window.devicePixelRatio || 1));
+      const geometryChanged = width !== this.width || height !== this.height;
+      if (!geometryChanged && dpr === this.dpr) return;
+
+      this.width = width;
+      this.height = height;
+      this.dpr = dpr;
       this.canvas.width = Math.floor(this.width * this.dpr);
       this.canvas.height = Math.floor(this.height * this.dpr);
       this.canvas.style.width = this.width + 'px';
       this.canvas.style.height = this.height + 'px';
       this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
-      this.draw(performance.now());
+      const now = performance.now();
+      if (geometryChanged && this.balls.length) this.reflowAnimation(now);
+      this.draw(now);
+    }
+
+    reflowAnimation(now) {
+      this.sparks = [];
+      this.balls.forEach(ball => {
+        const basket = this.basketBallPosition(Number(ball.source.slot || 0), ball.stackIndex);
+        const points = this.buildPath(ball.source, basket);
+        ball.points = points;
+        ball.basket = basket;
+        ball.trail = [];
+        ball.segments.forEach((segment, index) => {
+          segment.from = points[index];
+          segment.to = points[index + 1];
+        });
+        if (ball.done) {
+          const last = points[points.length - 1];
+          ball.x = last.x;
+          ball.y = last.y;
+          return;
+        }
+        if (now < ball.startAt) {
+          ball.x = points[0].x;
+          ball.y = points[0].y;
+          return;
+        }
+        this.updateBall(ball, now);
+      });
     }
 
     geometry() {
@@ -816,7 +852,8 @@
   }
 
   function init() {
-    if (document.body.dataset.page !== 'plinko') return;
+    if (document.body.dataset.page !== 'plinko' || initialized) return;
+    initialized = true;
     renderBalance();
     renderControls();
     renderBoard(lastPockets);
@@ -834,5 +871,5 @@
     });
   }
 
-  document.addEventListener('DOMContentLoaded', init);
+  B.plinko = { init };
 })(window);

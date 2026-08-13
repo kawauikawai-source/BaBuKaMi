@@ -4,6 +4,7 @@
   const B = global.Bambiku = global.Bambiku || {};
   const store = B.store;
   const ui = B.ui;
+  let initialized = false;
   let registerStep = 1;
 
   function validateEmail(email) {
@@ -203,6 +204,8 @@
   }
 
   function init() {
+    if (initialized) return;
+    initialized = true;
     document.getElementById('loginForm')?.addEventListener('submit', handleLogin);
     document.getElementById('registerForm')?.addEventListener('submit', handleRegister);
     document.querySelector('[data-register-next]')?.addEventListener('click', () => {

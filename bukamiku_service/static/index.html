@@ -28,18 +28,42 @@
       </nav>
 
       <div class="header__right">
-        <div class="lang-switch" role="group" aria-label="Language selector">
-          <button type="button" class="lang-btn is-active" data-lang="ru">RU</button>
+        <div class="lang-switch" role="group" aria-label="Language selector" data-i18n-aria-label="language_selector">
+          <button type="button" class="lang-btn is-active" data-lang="ru" aria-pressed="true">RU</button>
           <span class="lang-divider">/</span>
-          <button type="button" class="lang-btn" data-lang="en">EN</button>
+          <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
         </div>
 
         <div class="header__ticker">
           <span class="ticker__label" data-i18n="ticker_label">Курс души сегодня</span>
           <span class="ticker__value" id="soul-rate">— € / шт.</span>
         </div>
+
+        <button class="mobile-nav-toggle" type="button" aria-label="Открыть меню" data-i18n-aria-label="mobile_menu_open" aria-controls="mobile-nav" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
+
+    <div class="mobile-nav-backdrop" data-mobile-nav-close hidden></div>
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Мобильная навигация" data-i18n-aria-label="mobile_navigation" aria-hidden="true">
+      <div class="mobile-nav__head">
+        <span>BuKa<span class="logo__accent">MiKu</span> // <span data-i18n="mobile_menu">МЕНЮ</span></span>
+        <button class="mobile-nav__close" type="button" aria-label="Закрыть меню" data-i18n-aria-label="mobile_menu_close" data-mobile-nav-close>&times;</button>
+      </div>
+      <a href="#rates" class="mobile-nav__link" data-i18n="nav_rates">Курс</a>
+      <a href="#appraisal" class="mobile-nav__link" data-i18n="nav_appraisal">Оценка</a>
+      <a href="#contract" class="mobile-nav__link" data-i18n="nav_contract">Договор</a>
+      <a href="#faq" class="mobile-nav__link" data-i18n="nav_faq">Вопросы</a>
+      <div class="mobile-nav__language">
+        <span class="mobile-nav__language-label" data-i18n="language_label">Язык</span>
+        <div class="lang-switch lang-switch--drawer" role="group" aria-label="Выбор языка" data-i18n-aria-label="language_selector">
+          <button type="button" class="lang-btn is-active" data-lang="ru" aria-pressed="true">RU</button>
+          <span class="lang-divider">/</span>
+          <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+      </div>
+    </nav>
   </header>
 
   <main>

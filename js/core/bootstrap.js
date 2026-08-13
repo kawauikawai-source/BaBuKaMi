@@ -882,7 +882,7 @@
         document.body.classList.add('is-app-ready');
       });
     }
-  });
+  }, { once: true });
 
   function bootstrapFeatures() {
     ui.initCommon();
@@ -897,7 +897,11 @@
     B.mines?.init();
     B.blocks?.init();
     B.holdem?.init();
-    ui.initHelp();
+    B.plinko?.init();
+    B.survival?.init();
+    B.partner?.init();
+    B.trust?.init();
+    B.gameControl?.init();
     ui.applyLang();
   }
 })(window);

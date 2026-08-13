@@ -4,6 +4,7 @@
   const B = global.Bambiku = global.Bambiku || {};
   const store = B.store;
   const ui = B.ui;
+  let initialized = false;
 
   let activeStatus = 'pending';
   let activePromoStatus = 'active';
@@ -1752,7 +1753,8 @@
   }
 
   function init() {
-    if (document.body.dataset.page !== 'admin') return;
+    if (document.body.dataset.page !== 'admin' || initialized) return;
+    initialized = true;
     setupDateInputs();
     syncPromoRewardFields();
     bindEvents();

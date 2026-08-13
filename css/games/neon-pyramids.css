@@ -1,5 +1,13 @@
 /* Bambiku Neon Pyramids - generated from the former monolithic stylesheet. */
 
+body[data-page="blocks"]{
+  --bg:#07080d;--bg-2:#0d1019;--bg-3:#151927;--bg-card:#0f111b;
+  --border:rgba(160,220,255,.08);--border-h:rgba(255,79,216,.2);
+  --accent:#55f0ff;--accent-dim:rgba(85,240,255,.12);--accent-glow:rgba(85,240,255,.32);
+  --gold:#f5c842;--gold-dim:rgba(245,200,66,.1);--text-2:#a6aec3;--text-3:#747d97;
+  background:radial-gradient(circle at 16% 12%,rgba(85,240,255,.08),transparent 32%),radial-gradient(circle at 84% 18%,rgba(255,79,216,.07),transparent 31%),repeating-linear-gradient(115deg,transparent 0 92px,rgba(85,240,255,.018) 92px 94px,transparent 94px 188px),linear-gradient(180deg,#07080d 0%,#0b0d16 50%,#07080d 100%)
+}
+
 /* Neon Pyramids */
 
 .blocks-page.page-shell{padding-top:96px}

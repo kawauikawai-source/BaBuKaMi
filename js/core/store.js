@@ -123,11 +123,17 @@
     if (refreshAccessPromise) return refreshAccessPromise;
 
     refreshAccessPromise = (async () => {
-      const response = await fetch(apiBaseUrl + '/auth/refresh', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' }
-      });
+      let response;
+      try {
+        response = await fetch(apiBaseUrl + '/auth/refresh', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' }
+        });
+      } catch (err) {
+        setApiStatus('offline');
+        throw new Error('err_api_unavailable');
+      }
       let data = null;
       try {
         data = await response.json();
@@ -135,11 +141,12 @@
         data = null;
       }
       if (!response.ok || !data || !data.access_token) {
-        saveApiToken('');
-        if (data && data.detail && /^err_refresh_/.test(String(data.detail.code || ''))) {
+        const code = String(data?.detail?.code || '');
+        if (response.status === 401 || response.status === 403 || /^err_refresh_/.test(code)) {
           clearApiSession('auth:refresh-failed');
+          return null;
         }
-        return null;
+        throw new Error(code || 'err_api_unavailable');
       }
       saveApiToken(data.access_token);
       return data;
@@ -249,6 +256,7 @@
       const detail = data && data.detail ? data.detail : 'api_error';
       const apiError = new Error(Array.isArray(detail) ? 'api_validation_error' : (detail.code || detail));
       apiError.detail = detail;
+      apiError.status = response.status;
       throw apiError;
     }
     return data;
@@ -878,8 +886,11 @@
         const user = await requestApi('/users/me');
         setApiUser(user, 'auth:restore');
       } catch (err) {
-        saveApiToken('');
-        remove(C.storage.session);
+        const code = apiErrorCode(err) || String(err?.message || '');
+        const rejected = err?.status === 401 || err?.status === 403 || /^err_refresh_/.test(code);
+        if (rejected) {
+          clearApiSession('auth:restore-failed');
+        }
       }
       return getState();
     },

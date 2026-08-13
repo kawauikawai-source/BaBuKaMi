@@ -12,16 +12,12 @@
 
 }
 
-.game-page.page-shell,
-.profile-page.page-shell,
-.cashier-page.page-shell {
+.game-page.page-shell {
   position: relative;
   isolation: isolate;
 }
 
-.game-page.page-shell::after,
-.profile-page.page-shell::after,
-.cashier-page.page-shell::after {
+.game-page.page-shell::after {
   content: "";
   position: fixed;
   inset: 0;
@@ -35,16 +31,111 @@
   mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
 }
 
-.profile-page > .container,
-.cashier-page > .container {
-  position: relative;
-  z-index: 1;
+@media(max-width:620px){
+  .game-page.page-shell::after{background-size:44px 44px;opacity:.52}
+}
+
+.chip-row{display:grid;grid-template-columns:repeat(4,var(--bet-chip-size));justify-content:center;gap:var(--bet-chip-gap);margin-bottom:var(--bet-chip-gap)}
+.chip-btn{display:flex;align-items:center;justify-content:center;aspect-ratio:1;width:var(--bet-chip-size);min-width:0;padding:0;border-radius:50%;border:2px dashed var(--gold);background:var(--gold-dim);color:var(--gold);font-family:var(--font);font-size:10.5px;line-height:1;font-weight:900;white-space:nowrap;letter-spacing:0}
+.chip-btn.selected{background:var(--gold);color:#000;box-shadow:0 0 0 4px var(--gold-dim)}
+
+.balance-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px}
+.balance-card span{display:block;color:var(--text-3);font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:800}
+.balance-card strong{font-family:var(--font);font-size:31px;color:var(--accent)}
+.slot-bet-box{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:14px}
+.slot-bet-box>strong{display:block;font-family:var(--font);font-size:14px;font-weight:900;margin-bottom:12px}
+.section-row{display:flex;justify-content:space-between;gap:12px;color:var(--text-2);font-size:13px}
+
+.game-history-strip{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;min-height:34px}
+.game-history-empty{font-size:11.5px;color:var(--text-3)}
+.game-history-item{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:74px;max-width:180px;padding:7px 12px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.035);font-family:var(--font);font-size:12px;font-weight:1000;line-height:1.1;box-shadow:0 8px 18px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.035)}
+.game-history-item strong{display:none}
+.game-history-item span{color:var(--text);white-space:nowrap}
+.game-history-item small{max-width:70px;color:var(--text-3);font-size:10px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.game-history-item.win{border-color:rgba(114,201,147,.42);background:rgba(114,201,147,.1)}
+.game-history-item.win span{color:#8fe0ab}
+.game-history-item.loss{border-color:rgba(255,103,91,.28);background:rgba(255,63,82,.08)}
+.game-history-item.loss span{color:#ff8f86}
+.game-history-item.push{border-color:rgba(212,232,220,.16);background:rgba(212,232,220,.045)}
+.game-history-item.push span{color:var(--text-2)}
+.crash-recent .game-history-item.win{border-color:rgba(190,143,255,.5);background:rgba(155,92,255,.14)}
+.crash-recent .game-history-item.win span{color:#d7b4ff}
+.mines-recent .game-history-item.win{border-color:rgba(255,207,136,.46);background:rgba(216,155,88,.12)}
+.mines-recent .game-history-item.win span{color:#f0bd77}
+.blocks-recent .game-history-item.win{border-color:rgba(85,240,255,.42);background:rgba(85,240,255,.1)}
+.blocks-recent .game-history-item.win span{color:#8ff7ff}
+.plinko-recent .game-history-item.win{border-color:rgba(184,205,222,.38);background:rgba(184,205,222,.075)}
+.plinko-recent .game-history-item.win span{color:#dce8f2}
+.holdem-recent .game-history-item.win,.roulette-recent .game-history-item.win{border-color:rgba(212,175,55,.42);background:rgba(212,175,55,.1)}
+.holdem-recent .game-history-item.win span,.roulette-recent .game-history-item.win span{color:#f5d978}
+
+.game-rules-open{width:100%;justify-content:center;margin-top:12px;text-transform:uppercase}
+.game-rules-overlay{position:fixed;inset:0;z-index:1250;display:none;place-items:center;padding:22px;background:rgba(0,0,0,.68);backdrop-filter:blur(8px)}
+.game-rules-overlay.open{display:grid}
+.game-rules-modal{width:min(720px,100%);max-height:calc(100vh - 44px);overflow:auto;border:1px solid var(--border-h);border-radius:var(--r-lg);background:linear-gradient(145deg,var(--bg-card),var(--bg-2));box-shadow:0 30px 90px rgba(0,0,0,.55);padding:20px}
+.game-rules-intro{color:var(--text-2);line-height:1.55;margin:0 0 14px}
+.game-rules-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.game-rule-row{border:1px solid var(--border);border-radius:var(--r-sm);background:var(--bg-3);padding:12px}
+.game-rule-row span{display:block;font-family:var(--font);font-size:13px;color:var(--accent);margin-bottom:5px}
+.game-rule-row p{margin:0;color:var(--text-2);font-size:13px;line-height:1.45}
+
+.roulette-layout{grid-template-columns:minmax(0,1fr) 360px}
+.holdem-layout{grid-template-columns:minmax(0,1fr) 360px}
+.roulette-panel,.slot-panel,.crash-panel,.mines-panel,.blocks-panel,.holdem-panel,.plinko-panel{width:100%;box-sizing:border-box}
+.roulette-panel .balance-card,.slot-panel .balance-card,.crash-panel .balance-card,.mines-panel .balance-card,.blocks-panel .balance-card,.holdem-panel .balance-card,.plinko-panel .balance-card{min-height:112px;padding:20px}
+.roulette-panel .balance-card strong,.slot-panel .balance-card strong,.crash-panel .balance-card strong,.mines-panel .balance-card strong,.blocks-panel .balance-card strong,.holdem-panel .balance-card strong,.plinko-panel .balance-card strong{font-size:clamp(28px,2.2vw,35px)}
+.roulette-panel .slot-bet-box,.slot-panel .slot-bet-box,.crash-panel .slot-bet-box,.mines-panel .slot-bet-box,.blocks-panel .slot-bet-box,.holdem-panel .slot-bet-box,.plinko-panel .slot-bet-box,.plinko-control-box{padding:16px}
+.roulette-spin-btn,.slot-spin-btn,.plinko-drop-btn{min-height:56px}
+.crash-action-btn,.mines-action-btn,.blocks-action-btn{min-height:104px}
+
+@media(max-width:960px){
+  .roulette-layout,.slot-layout,.crash-layout,.mines-layout,.blocks-layout,.holdem-layout{grid-template-columns:1fr}
+  .roulette-panel,.slot-panel,.crash-panel,.mines-panel,.blocks-panel,.holdem-panel{position:static}
 }
 
 @media(max-width:620px){
-  .game-page.page-shell::after,
-  .profile-page.page-shell::after,
-  .cashier-page.page-shell::after{background-size:44px 44px;opacity:.52}
+  .game-head{align-items:flex-start;flex-direction:column}
+  .roulette-stage,.roulette-panel,.roulette-table-wrap{padding:16px}
+  .roulette-stage{min-height:560px}
+  .roulette-container{--wheel-shadow-space:34px;width:min(96vw,500px)}
+  .slot-stage,.slot-panel,.crash-stage,.crash-panel,.mines-stage,.mines-panel,.blocks-stage,.blocks-panel,.holdem-table-shell,.holdem-panel{padding:16px}
+  .crash-action-btn{width:100%;min-height:82px;margin:14px 0 0;font-size:19px;border-radius:20px}
+  .mines-action-btn,.blocks-action-btn{min-height:82px;font-size:19px;border-radius:20px}
+  .crash-chart{min-height:380px}
+  .mines-board-shell,.blocks-board-shell{padding:12px}
+  .mines-board{grid-template-columns:repeat(5,minmax(44px,1fr));gap:8px}
+  .blocks-board{gap:3px}
+  .blocks-mobile-controls{grid-template-columns:repeat(2,1fr)}
+  .blocks-controls-modal{padding:22px 16px;border-radius:20px}
+  .blocks-controls-grid,.blocks-controls-actions,.holdem-actions,.holdem-rank-grid{grid-template-columns:1fr}
+  .holdem-table-felt{min-height:420px;border-radius:var(--r-lg);padding:22px 14px;gap:14px}
+  .holdem-card{width:50px;height:74px;border-radius:7px;padding:0}
+  .holdem-card strong{font-size:22px}
+  .holdem-card span,.holdem-card small{font-size:11px}
+  .holdem-card span{top:6px;left:6px}
+  .holdem-card small{right:6px;bottom:6px}
+  .holdem-cards{gap:6px;min-height:82px}
+  .holdem-rules-modal{padding:22px 16px;border-radius:20px}
+  .holdem-rules-modal h2{font-size:23px}
+  .holdem-rules-list,.game-rules-list{grid-template-columns:1fr}
+  .holdem-rank-row{grid-template-columns:1fr;gap:8px}
+  .holdem-rank-cards{justify-content:flex-start;overflow-x:auto}
+  .holdem-mini-card{width:31px;height:44px;flex:0 0 auto}
+  .crash-multiplier{top:40%;font-size:clamp(44px,13vw,70px)}
+  .crash-chart-labels{left:18px;right:18px}
+  .slot-reels{grid-template-rows:repeat(3,86px);gap:8px}
+  .slot-cell span{font-size:28px}
+  .slot-cell small{font-size:9px}
+  .roulette-table{min-width:720px}
+  .roulette-number-grid{grid-template-columns:50px repeat(12,minmax(44px,1fr));grid-template-rows:repeat(3,42px)}
+  .number-bet.zero{grid-column:1;grid-row:1 / span 3}
+  .roulette-outside-grid,.inside-buttons,.inside-buttons.compact,.preset-grid{grid-template-columns:repeat(3,1fr)}
+  .roulette-advanced-toggle{min-width:720px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .mines-board-shell.is-loss,.mines-cell.is-hit,.mines-board-shell.is-win,.mines-cell.is-cashed,.mines-meter.is-win,.roulette-bet.is-settled-win,.roulette-bet.is-settled-loss,.roulette-bet.is-settled-win::before,.roulette-bet.is-settled-loss::before,.holdem-card.is-dealt,.holdem-card.is-flipped,.holdem-card.is-folded,.holdem-table-shell.is-folding .player-seat,.holdem-table-shell.is-win .player-seat .holdem-card:not(.is-empty){animation:none!important}
+  .roulette-inside-grid{transition:none!important}
 }
 
 
@@ -130,256 +221,6 @@ body[data-page="plinko"] {
   --game-console-faint: rgba(101, 151, 187, .035);
 
   --game-console-border: rgba(184, 205, 222, .23);
-
-}
-
-
-
-.game-command-head:not(.survival-command-head) {
-
-  position: relative;
-
-  align-items: stretch;
-
-  min-height: 196px;
-
-  margin-bottom: 24px;
-
-  padding: 26px 30px;
-
-  overflow: hidden;
-
-  border: 1px solid var(--game-console-border);
-
-  border-radius: 8px;
-
-  background:
-
-    linear-gradient(90deg, var(--game-console-soft), transparent 44%),
-
-    repeating-linear-gradient(90deg, transparent 0 72px, var(--game-console-faint) 73px),
-
-    rgba(9, 11, 14, .92);
-
-  box-shadow:
-
-    inset 0 0 38px var(--game-console-faint),
-
-    0 18px 52px rgba(0, 0, 0, .22);
-
-}
-
-
-
-.game-command-head:not(.survival-command-head)::before {
-
-  content: "";
-
-  position: absolute;
-
-  inset: 0 auto 0 0;
-
-  width: 3px;
-
-  background: var(--game-console-accent);
-
-  box-shadow: 0 0 20px var(--game-console-accent);
-
-}
-
-
-
-.game-command-head:not(.survival-command-head)::after {
-
-  content: attr(data-system);
-
-  position: absolute;
-
-  top: 17px;
-
-  right: 28px;
-
-  color: color-mix(in srgb, var(--game-console-accent) 22%, transparent);
-
-  font-size: 9px;
-
-  font-weight: 900;
-
-  text-transform: uppercase;
-
-}
-
-
-
-.game-command-head:not(.survival-command-head) .game-command-copy {
-
-  position: relative;
-
-  z-index: 1;
-
-  display: grid;
-
-  align-content: start;
-
-  width: min(850px, 100%);
-
-}
-
-
-
-.game-command-head:not(.survival-command-head) .label {
-
-  display: none;
-
-}
-
-
-
-.game-command-kicker {
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 9px;
-
-  color: var(--text-2);
-
-  font-size: 10px;
-
-  font-weight: 900;
-
-}
-
-
-
-.game-command-kicker i {
-
-  width: 7px;
-
-  height: 7px;
-
-  flex: 0 0 7px;
-
-  border-radius: 50%;
-
-  background: var(--game-console-accent, var(--survival-green));
-
-  box-shadow: 0 0 13px var(--game-console-accent, var(--survival-green));
-
-}
-
-
-
-.game-command-kicker b {
-
-  padding-left: 9px;
-
-  border-left: 1px solid var(--game-console-border, rgba(143, 194, 211, .22));
-
-  color: var(--game-console-accent, var(--survival-cyan));
-
-  font-size: 10px;
-
-}
-
-
-
-.game-command-head:not(.survival-command-head) .page-title {
-
-  margin: 10px 0 0;
-
-  color: #f1f1f2;
-
-  font-size: clamp(34px, 4vw, 54px);
-
-  line-height: 1;
-
-}
-
-
-
-.game-command-head:not(.survival-command-head) .page-sub {
-
-  max-width: 740px;
-
-  margin: 9px 0 0;
-
-  color: var(--text-2);
-
-}
-
-
-
-.game-command-meta {
-
-  display: flex;
-
-  flex-wrap: wrap;
-
-  gap: 8px;
-
-  margin-top: 19px;
-
-}
-
-
-
-.game-command-meta > span {
-
-  display: grid;
-
-  grid-template-columns: auto auto;
-
-  align-items: center;
-
-  gap: 11px;
-
-  min-width: 160px;
-
-  padding: 8px 11px;
-
-  border-left: 2px solid var(--game-console-border, rgba(91, 215, 236, .42));
-
-  background: var(--game-console-faint, rgba(92, 147, 166, .055));
-
-}
-
-
-
-.game-command-meta small {
-
-  color: var(--text-3);
-
-  font-size: 8px;
-
-  font-weight: 900;
-
-}
-
-
-
-.game-command-meta strong {
-
-  color: var(--text);
-
-  font-size: 12px;
-
-}
-
-
-
-.game-command-back {
-
-  position: relative;
-
-  z-index: 1;
-
-  align-self: flex-end;
-
-  border-color: var(--game-console-border, rgba(135, 188, 206, .28));
-
-  background: rgba(7, 10, 14, .58);
 
 }
 
@@ -557,62 +398,6 @@ body[data-page="plinko"] {
 
 @media (max-width: 760px) {
 
-  .game-command-head:not(.survival-command-head) {
-
-    min-height: 0;
-
-    padding: 22px 19px;
-
-  }
-
-
-
-  .game-command-head:not(.survival-command-head)::after {
-
-    display: none;
-
-  }
-
-
-
-  .game-command-head:not(.survival-command-head) .page-title {
-
-    font-size: clamp(32px, 10vw, 44px);
-
-  }
-
-
-
-  .game-command-meta {
-
-    display: grid;
-
-    grid-template-columns: 1fr;
-
-  }
-
-
-
-  .game-command-meta > span {
-
-    width: 100%;
-
-  }
-
-
-
-  .game-command-back {
-
-    width: 100%;
-
-    justify-content: center;
-
-    margin-top: 8px;
-
-  }
-
-
-
   .game-console-stage:not(.survival-stage) {
 
     min-height: 0;
@@ -640,6 +425,4 @@ body[data-page="plinko"] {
   }
 
 }
-
-
 

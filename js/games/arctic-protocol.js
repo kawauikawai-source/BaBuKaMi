@@ -8,6 +8,7 @@
 
   let selectedBet = 5;
   let activeRound = null;
+  let initialized = false;
   let busy = false;
   let loading = true;
   let timerFrame = 0;
@@ -629,7 +630,8 @@
   }
 
   async function init() {
-    if (document.body.dataset.page !== 'survival') return;
+    if (document.body.dataset.page !== 'survival' || initialized) return;
+    initialized = true;
     renderAll();
     bindEvents();
     if (!currentUser()) {
@@ -656,5 +658,5 @@
     });
   }
 
-  document.addEventListener('DOMContentLoaded', init);
+  B.survival = { init };
 })(window);

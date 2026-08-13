@@ -4,6 +4,7 @@
   const B = global.Bambiku = global.Bambiku || {};
   const store = B.store;
   const ui = B.ui;
+  let initialized = false;
 
   const WIDTH = 10;
   const DEFAULT_HEIGHT = 15;
@@ -664,6 +665,8 @@
   }
 
   function initBlocks() {
+    if (document.body.dataset.page !== 'blocks' || initialized) return;
+    initialized = true;
     document.addEventListener('click', e => {
       const bet = e.target.closest('[data-blocks-bet]');
       if (bet && !isActive()) {

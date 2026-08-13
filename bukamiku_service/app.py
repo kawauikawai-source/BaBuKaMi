@@ -25,6 +25,7 @@ STUDIO_URL = os.getenv(
 REDIRECT_URI = f"{PUBLIC_URL}/auth/callback"
 COOKIE_NAME = "bk_bukamiku_session"
 STATIC_DIR = Path(__file__).resolve().parent / "static"
+STATIC_SUFFIXES = {".css", ".js", ".json", ".woff2", ".png", ".jpg", ".jpeg", ".gif", ".webp", ".avif", ".svg", ".ico"}
 
 
 app = FastAPI(title="BuKaMiKu Bank", docs_url=None, redoc_url=None)
@@ -34,6 +35,20 @@ app.add_middleware(
     https_only=PUBLIC_URL.startswith("https://"),
     same_site="lax",
 )
+
+
+@app.middleware("http")
+async def static_cache_headers(request: Request, call_next):
+    response = await call_next(request)
+    path = request.url.path
+    if path == "/" or path.endswith(".html"):
+        response.headers["Cache-Control"] = "no-store"
+    elif Path(path).suffix.lower() in STATIC_SUFFIXES:
+        if request.query_params.get("v") or Path(path).suffix.lower() == ".woff2":
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        else:
+            response.headers["Cache-Control"] = "public, max-age=604800, stale-while-revalidate=86400"
+    return response
 
 
 def _pkce_challenge(verifier: str) -> str:

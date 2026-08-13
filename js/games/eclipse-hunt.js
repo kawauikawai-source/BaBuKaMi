@@ -17,6 +17,7 @@
   let restoreAttempted = false;
   let lossHitCell = null;
   let recent = [];
+  let initialized = false;
 
   function currentBalance() {
     return Number(store.getDisplayUser().balance || 0);
@@ -304,7 +305,8 @@
   }
 
   function init() {
-    if (document.body.dataset.page !== 'mines') return;
+    if (document.body.dataset.page !== 'mines' || initialized) return;
+    initialized = true;
     renderAll();
     store.getManagerState?.().then(result => {
       if (!result?.error) {

@@ -9,7 +9,9 @@
     body[data-page="profile"]::before{content:"";position:fixed;inset:0;z-index:10000;pointer-events:none;background:#080809;opacity:0;visibility:hidden;transition:opacity .24s ease,visibility 0s linear .24s}
     body[data-page="profile"].is-app-booting::before{opacity:1;visibility:visible;transition:none}
   </style>
-  <link rel="stylesheet" href="../css/style.css?v=operator-08-chat-v2"/>
+<link rel="stylesheet" href="../css/core/base.css?v=css-modules-v1"/>
+<link rel="stylesheet" href="../css/pages/account-shared.css?v=css-modules-v1"/>
+<link rel="stylesheet" href="../css/pages/profile.css?v=css-modules-v1"/>
   <link rel="icon" type="image/png" sizes="512x512" href="../assets/favicon-bk-512.png?v=1"/>
   <link rel="apple-touch-icon" href="../assets/favicon-bk-512.png?v=1"/>
   <meta name="theme-color" content="#00d98b"/>
@@ -294,7 +296,7 @@
       <h2 id="kyc-title" class="kyc-title" data-i18n="kyc_modal_title">KYC Verification</h2>
       <p class="modal-sub" data-i18n="kyc_modal_sub">Scan this QR code to continue verification.</p>
       <div class="kyc-qr-frame">
-        <img src="../assets/kyc-qr.gif" alt="KYC QR code" class="kyc-qr"/>
+        <img data-src="../assets/kyc-qr.gif?v=resource-v1" alt="KYC QR code" class="kyc-qr" loading="lazy" decoding="async"/>
       </div>
       <label class="kyc-check">
         <input type="checkbox" id="kyc-scan-check"/>
@@ -316,6 +318,6 @@
   <script src="../js/core/ui.js?v=site-date-manager-v1"></script>
   <script src="../js/core/auth.js?v=site-date-manager-v1"></script>
   <script src="../js/pages/profile.js?v=kawaui-studio-v1"></script>
-  <script src="../js/core/bootstrap.js?v=offline-i18n-v1"></script>
+  <script src="../js/core/page-bootstrap.js?v=js-audit-v1"></script>
 </body>
 </html>

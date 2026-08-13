@@ -38,6 +38,19 @@ settings = get_settings()
 configure_logging(settings)
 logger = logging.getLogger("app.main")
 
+STATIC_ASSET_SUFFIXES = {".css", ".js", ".json", ".woff2", ".png", ".jpg", ".jpeg", ".gif", ".webp", ".avif", ".svg", ".ico"}
+
+
+def static_cache_control(path: str, versioned: bool = False) -> str | None:
+    if path == "/" or path.endswith(".html") or path == "/js/config/runtime.js":
+        return "no-store"
+    suffix = Path(path).suffix.lower()
+    if suffix == ".woff2" or (suffix in STATIC_ASSET_SUFFIXES and versioned):
+        return "public, max-age=31536000, immutable"
+    if suffix in STATIC_ASSET_SUFFIXES:
+        return "public, max-age=604800, stale-while-revalidate=86400"
+    return None
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -116,10 +129,9 @@ def create_app() -> FastAPI:
 
         path = request.url.path
         if not path.startswith("/api/") and path not in {"/docs", "/openapi.json", "/redoc"}:
-            if path == "/" or path.endswith(".html") or path == "/js/config/runtime.js":
-                response.headers["Cache-Control"] = "no-store"
-            elif Path(path).suffix.lower() in {".css", ".js", ".json", ".woff2", ".png", ".jpg", ".jpeg", ".webp", ".svg", ".ico"}:
-                response.headers.setdefault("Cache-Control", "public, max-age=604800")
+            cache_control = static_cache_control(path, bool(request.query_params.get("v")))
+            if cache_control:
+                response.headers["Cache-Control"] = cache_control
         return response
 
     @app.get("/api/health")

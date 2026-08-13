@@ -1,5 +1,15 @@
 /* Bambiku Midnight Vault - generated from the former monolithic stylesheet. */
 
+body[data-page="plinko"]{
+  position:relative;--bg:#04060b;--bg-2:#0c1119;--bg-3:#151b25;--bg-card:#0d121b;
+  --border:rgba(156,201,232,.08);--border-h:rgba(184,205,222,.24);
+  --accent:#b8cdde;--accent-dim:rgba(184,205,222,.12);--accent-glow:rgba(115,156,190,.25);
+  --gold:#b8cdde;--gold-dim:rgba(184,205,222,.1);--text-2:#a7b5c4;--text-3:#748294;
+  background:radial-gradient(circle at 50% -6%,rgba(67,119,162,.18),transparent 34%),radial-gradient(circle at 12% 18%,rgba(107,137,164,.075),transparent 30%),radial-gradient(circle at 86% 16%,rgba(156,201,232,.055),transparent 28%),linear-gradient(180deg,#04060b 0%,#05070d 52%,#030407 100%)
+}
+
+body[data-page="plinko"] #navbar.scrolled{background:rgba(4,6,11,.9);border-color:rgba(156,201,232,.09);box-shadow:0 12px 34px rgba(0,0,0,.3),0 0 24px rgba(67,119,162,.08)}
+
 .plinko-page.page-shell{background:radial-gradient(circle at 50% 0%,rgba(27,78,126,.18),transparent 34%),radial-gradient(circle at 9% 24%,rgba(107,126,145,.07),transparent 28%),linear-gradient(180deg,#04060b 0%,#030408 62%,#060708 100%)}
 
 .plinko-page .container{max-width:1360px}
@@ -87,24 +97,6 @@
 .plinko-recent-item.push{color:#cdd8e6}
 
 
-
-.roulette-layout{grid-template-columns:minmax(0,1fr) 360px}
-
-.holdem-layout{grid-template-columns:minmax(0,1fr) 360px}
-
-.plinko-layout{grid-template-columns:minmax(760px,1fr) 360px}
-
-.roulette-panel,.slot-panel,.crash-panel,.mines-panel,.blocks-panel,.holdem-panel,.plinko-panel{width:100%;box-sizing:border-box}
-
-.roulette-panel .balance-card,.slot-panel .balance-card,.crash-panel .balance-card,.mines-panel .balance-card,.blocks-panel .balance-card,.holdem-panel .balance-card,.plinko-panel .balance-card{min-height:112px;padding:20px}
-
-.roulette-panel .balance-card strong,.slot-panel .balance-card strong,.crash-panel .balance-card strong,.mines-panel .balance-card strong,.blocks-panel .balance-card strong,.holdem-panel .balance-card strong,.plinko-panel .balance-card strong{font-size:clamp(28px,2.2vw,35px)}
-
-.roulette-panel .slot-bet-box,.slot-panel .slot-bet-box,.crash-panel .slot-bet-box,.mines-panel .slot-bet-box,.blocks-panel .slot-bet-box,.holdem-panel .slot-bet-box,.plinko-panel .slot-bet-box,.plinko-control-box{padding:16px}
-
-.roulette-spin-btn,.slot-spin-btn,.plinko-drop-btn{min-height:56px}
-
-.crash-action-btn,.mines-action-btn,.blocks-action-btn{min-height:104px}
 
 @keyframes plinkoCanvasWin{0%{filter:brightness(1)}45%{filter:brightness(1.14)}100%{filter:brightness(1)}}
 

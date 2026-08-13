@@ -1,5 +1,9 @@
 /* Bambiku admin - generated from the former monolithic stylesheet. */
 
+.stat-box{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:16px}
+.stat-box-label{font-size:11px;color:var(--text-3);text-transform:uppercase;font-weight:800;letter-spacing:.08em}
+.stat-box-val{font-family:var(--font);font-size:22px;font-weight:900;margin-top:4px}
+
 /* Admin */
 
 .admin-page .container{max-width:1500px}

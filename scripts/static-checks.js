@@ -262,6 +262,147 @@ function checkBlankLinks() {
   }
 }
 
+function frontendHtmlFiles() {
+  return [
+    path.join(root, 'index.html'),
+    ...walk(path.join(root, 'pages'), file => file.endsWith('.html')),
+  ].filter(file => fs.existsSync(file));
+}
+
+function stripUrlSuffix(value) {
+  return String(value || '').split('#')[0].split('?')[0];
+}
+
+function localReference(filePath, value) {
+  const clean = stripUrlSuffix(value).trim();
+  if (!clean || /[{}]/.test(clean) || /^(?:#|https?:|mailto:|tel:|data:|javascript:|about:)/i.test(clean)) return '';
+  return clean.startsWith('/')
+    ? path.resolve(root, clean.replace(/^\/+/, ''))
+    : path.resolve(path.dirname(filePath), clean);
+}
+
+function checkFrontendContracts() {
+  const htmlFiles = frontendHtmlFiles();
+  const knownRoutes = new Set([
+    'home', 'games', 'bonuses', 'vip', 'profile', 'admin', 'deposit', 'withdraw',
+    'help', 'privacy', 'terms', 'responsible', 'dataGames', 'dataI18n', 'css'
+  ]);
+  const scriptConsumers = new Map();
+
+  for (const filePath of htmlFiles) {
+    const source = read(filePath);
+    const relative = rel(filePath);
+    if (relative.startsWith('pages/') && /js\/core\/bootstrap\.js(?:\?[^"']*)?["']/i.test(source)) {
+      fail(`${relative}: internal page loads the home controller; use js/core/page-bootstrap.js`);
+    }
+    if (/\b(?:localhost|127\.0\.0\.1)(?::\d+)?\b/i.test(source)) {
+      fail(`${relative}: public HTML contains a localhost URL`);
+    }
+
+    const ids = new Set();
+    for (const match of source.matchAll(/\bid\s*=\s*["']([^"']+)["']/gi)) {
+      if (ids.has(match[1])) fail(`${relative}: duplicate id="${match[1]}"`);
+      ids.add(match[1]);
+    }
+
+    for (const match of source.matchAll(/\bdata-route\s*=\s*["']([^"']+)["']/gi)) {
+      if (!knownRoutes.has(match[1])) fail(`${relative}: unknown data-route="${match[1]}"`);
+    }
+
+    for (const match of source.matchAll(/\b(?:href|src)\s*=\s*["']([^"']+)["']/gi)) {
+      const value = match[1].trim();
+      const resolved = localReference(filePath, value);
+      if (resolved && !fs.existsSync(resolved)) {
+        fail(`${relative}: local reference does not exist (${value})`);
+      }
+      if (value.startsWith('#') && value.length > 1 && !ids.has(value.slice(1))) {
+        fail(`${relative}: fragment target does not exist (${value})`);
+      }
+    }
+
+    for (const match of source.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["']/gi)) {
+      const resolved = localReference(filePath, match[1]);
+      if (!resolved || !/[/\\]js[/\\](?:pages|games)[/\\].+\.js$/i.test(resolved)) continue;
+      const consumers = scriptConsumers.get(resolved) || [];
+      consumers.push({ filePath, ids });
+      scriptConsumers.set(resolved, consumers);
+    }
+  }
+
+  for (const filePath of [
+    ...walk(path.join(root, 'js', 'pages'), file => file.endsWith('.js')),
+    ...walk(path.join(root, 'js', 'games'), file => file.endsWith('.js')),
+  ]) {
+    const source = read(filePath);
+    if (/DOMContentLoaded/.test(source)) {
+      fail(`${rel(filePath)}: page controller must be initialized by the shared bootstrap`);
+    }
+  }
+
+  for (const filePath of walk(path.join(root, 'js', 'games'), file => file.endsWith('.js'))) {
+    const source = read(filePath);
+    if (!/\binitialized\s*=\s*false\b/.test(source) || !/\binitialized\b[\s\S]{0,120}\breturn\b/.test(source)) {
+      fail(`${rel(filePath)}: game controller must guard against repeated initialization`);
+    }
+    if (/getContext\(\s*['"]2d['"]\s*\)/.test(source)) {
+      if (!/\bdevicePixelRatio\b/.test(source)) {
+        fail(`${rel(filePath)}: canvas controller must account for devicePixelRatio`);
+      }
+      if (!/\bResizeObserver\b/.test(source)) {
+        fail(`${rel(filePath)}: canvas controller must react to element resize`);
+      }
+    }
+  }
+
+  // A controller used by exactly one page has a strict DOM contract. Shared
+  // controllers intentionally contain optional elements for several pages.
+  for (const [scriptPath, consumers] of scriptConsumers) {
+    if (consumers.length !== 1 || !fs.existsSync(scriptPath)) continue;
+    const scriptSource = read(scriptPath);
+    const references = new Set();
+    const generatedIds = new Set();
+    for (const match of scriptSource.matchAll(/getElementById\(\s*["']([^"']+)["']\s*\)/g)) {
+      references.add(match[1]);
+    }
+    for (const match of scriptSource.matchAll(/\bid=["']([^"']+)["']/g)) generatedIds.add(match[1]);
+    for (const match of scriptSource.matchAll(/\.id\s*=\s*["']([^"']+)["']/g)) generatedIds.add(match[1]);
+    for (const id of references) {
+      if (!consumers[0].ids.has(id) && !generatedIds.has(id)) {
+        fail(`${rel(scriptPath)}: expects #${id}, missing from ${rel(consumers[0].filePath)}`);
+      }
+    }
+  }
+}
+
+function checkBukamikuLanguageNavigation() {
+  const htmlPath = path.join(root, 'bukamiku_service', 'static', 'index.html');
+  const cssPath = path.join(root, 'bukamiku_service', 'static', 'styles.css');
+  const scriptPath = path.join(root, 'bukamiku_service', 'static', 'script.js');
+  if (![htmlPath, cssPath, scriptPath].every(filePath => fs.existsSync(filePath))) return;
+
+  const html = read(htmlPath);
+  const css = read(cssPath);
+  const script = read(scriptPath);
+  const ids = new Set();
+  for (const match of html.matchAll(/\bid\s*=\s*["']([^"']+)["']/gi)) {
+    if (ids.has(match[1])) fail(`bukamiku_service/static/index.html: duplicate id="${match[1]}"`);
+    ids.add(match[1]);
+  }
+
+  const switches = html.match(/class=["'][^"']*\blang-switch\b[^"']*["']/gi) || [];
+  const ruButtons = html.match(/class=["'][^"']*\blang-btn\b[^"']*["'][^>]*data-lang=["']ru["']/gi) || [];
+  const enButtons = html.match(/class=["'][^"']*\blang-btn\b[^"']*["'][^>]*data-lang=["']en["']/gi) || [];
+  if (switches.length < 2 || ruButtons.length < 2 || enButtons.length < 2) {
+    fail('bukamiku_service: desktop and mobile RU/EN language controls are required');
+  }
+  if (!css.includes('.header__right>.lang-switch{display:none}') || !css.includes('.lang-switch--drawer{display:flex}')) {
+    fail('bukamiku_service: the mobile drawer language switch must remain visible at narrow widths');
+  }
+  for (const contract of ['document.documentElement.lang = lang', "btn.setAttribute('aria-pressed'", "btn.dataset.i18nReady === '1'"]) {
+    if (!script.includes(contract)) fail(`bukamiku_service/static/script.js: missing language contract (${contract})`);
+  }
+}
+
 function checkI18nSanitizerPath() {
   const uiPath = path.join(root, 'js', 'core', 'ui.js');
   const text = read(uiPath);
@@ -282,15 +423,13 @@ function checkI18nSanitizerPath() {
 }
 
 function checkPerformanceBudgets() {
-  const maxImageBytes = 512 * 1024;
-  // The restored compatibility bundle intentionally preserves the original
-  // cross-page cascade. Keep a tight ceiling while it is migrated safely.
+  const maxImageBytes = 300 * 1024;
+  const maxAssetImageBytes = 1024 * 1024;
+  // style.css remains as a compatibility artifact, but pages must load the
+  // modular core/page/game styles below instead of shipping every theme.
   const maxCssBytes = 320 * 1024;
-  const maxPageCssBytes = 320 * 1024;
-  const pageCssBudgetBytes = new Map([
-    // Game Control adds one isolated terminal stylesheet; other pages keep the shared budget.
-    ['pages/responsible.html', 332 * 1024],
-  ]);
+  const maxPageCssBytes = 96 * 1024;
+  const pageCssBudgetBytes = new Map();
   // Kawaui Studio adds a small shared identity/wallet client to authenticated pages.
   const maxPageScriptBytes = 440 * 1024;
   const pageScriptBudgetBytes = new Map([
@@ -300,11 +439,22 @@ function checkPerformanceBudgets() {
   const maxPageScripts = 8;
   const maxPageStylesheets = 3;
 
-  for (const filePath of walk(path.join(root, 'assets'), file => /\.(png|jpe?g|webp|avif)$/i.test(file))) {
+  const imageFiles = walk(path.join(root, 'assets'), file => /\.(png|jpe?g|gif|webp|avif)$/i.test(file));
+  let assetImageBytes = 0;
+  const imageHashes = new Map();
+  for (const filePath of imageFiles) {
     const size = fs.statSync(filePath).size;
+    assetImageBytes += size;
     if (size > maxImageBytes) {
-      fail(`${rel(filePath)}: image is ${(size / 1024).toFixed(1)} KB; budget is 512 KB`);
+      fail(`${rel(filePath)}: image is ${(size / 1024).toFixed(1)} KB; budget is ${maxImageBytes / 1024} KB`);
     }
+    const hash = require('crypto').createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
+    const duplicate = imageHashes.get(hash);
+    if (duplicate) fail(`${rel(filePath)}: duplicates image content from ${rel(duplicate)}`);
+    else imageHashes.set(hash, filePath);
+  }
+  if (assetImageBytes > maxAssetImageBytes) {
+    fail(`assets: raster images total ${(assetImageBytes / 1024).toFixed(1)} KB; budget is ${maxAssetImageBytes / 1024} KB`);
   }
 
   for (const filePath of walk(path.join(root, 'css'), file => file.endsWith('.css'))) {
@@ -327,7 +477,30 @@ function checkPerformanceBudgets() {
   ];
   for (const filePath of htmlFiles) {
     const source = read(filePath);
+    for (const match of source.matchAll(/<img\b[^>]*>/gi)) {
+      const tag = match[0];
+      if (!/\bdecoding=["']async["']/i.test(tag)) {
+        fail(`${rel(filePath)}: every image must declare decoding="async"`);
+      }
+      if (!/\bloading=["'](?:lazy|eager)["']/i.test(tag)) {
+        fail(`${rel(filePath)}: every image must explicitly declare loading="lazy" or loading="eager"`);
+      }
+    }
+    if (/<nav\b[^>]*\bid=["']navbar["']/i.test(source) && /class=["'][^"']*nav-inner/i.test(source) && !/js\/core\/ui\.js(?:\?[^"']*)?["']/i.test(source)) {
+      fail(`${rel(filePath)}: standard navbar requires js/core/ui.js for mobile navigation`);
+    }
     const stylesheets = Array.from(source.matchAll(/<link\b[^>]*\brel=["']stylesheet["'][^>]*\bhref=["']([^"']+)["']/gi));
+    const stylesheetHrefs = stylesheets.map(match => match[1].split('?')[0].replace(/\\/g, '/'));
+    if (stylesheetHrefs.some(href => /(?:^|\/)css\/style\.css$/i.test(href))) {
+      fail(`${rel(filePath)}: compatibility css/style.css must not be loaded by pages; use modular stylesheets`);
+    }
+    const gameThemes = stylesheetHrefs.filter(href => /(?:^|\/)css\/games\/(?!shared\.css$)[^/]+\.css$/i.test(href));
+    if (gameThemes.length > 1) {
+      fail(`${rel(filePath)}: loads multiple game themes (${gameThemes.join(', ')})`);
+    }
+    if (gameThemes.length === 1 && !stylesheetHrefs.some(href => /(?:^|\/)css\/games\/shared\.css$/i.test(href))) {
+      fail(`${rel(filePath)}: game theme requires css/games/shared.css`);
+    }
     if (stylesheets.length > maxPageStylesheets) {
       fail(`${rel(filePath)}: loads ${stylesheets.length} stylesheets; budget is ${maxPageStylesheets}`);
     }
@@ -366,6 +539,8 @@ checkReleaseMarkers();
 checkSecrets();
 checkMojibake();
 checkBlankLinks();
+checkFrontendContracts();
+checkBukamikuLanguageNavigation();
 checkI18nSanitizerPath();
 checkPerformanceBudgets();
 

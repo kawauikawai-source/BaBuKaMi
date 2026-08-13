@@ -1,5 +1,19 @@
 /* Bambiku Kawaui Fortune - generated from the former monolithic stylesheet. */
 
+body[data-page="crash"]{
+  --bg:#07060b;--bg-2:#100e18;--bg-3:#191526;--bg-card:#11101a;
+  --border:rgba(220,205,255,.08);--border-h:rgba(220,205,255,.2);
+  --accent:#9b5cff;--accent-dim:rgba(155,92,255,.15);--accent-glow:rgba(155,92,255,.38);
+  --text-2:#aaa2bc;--text-3:#7d738f;
+  background:
+    linear-gradient(115deg,transparent 0 16%,rgba(155,92,255,.052) 16% 16.6%,transparent 16.6% 42%,rgba(215,180,255,.04) 42% 42.45%,transparent 42.45% 72%,rgba(245,200,66,.032) 72% 72.45%,transparent 72.45%),
+    linear-gradient(63deg,transparent 0 34%,rgba(155,92,255,.035) 34% 34.35%,transparent 34.35% 64%,rgba(245,200,66,.022) 64% 64.28%,transparent 64.28%),
+    repeating-linear-gradient(115deg,transparent 0 92px,rgba(220,205,255,.018) 92px 93px,transparent 93px 186px),
+    linear-gradient(180deg,#07060b 0%,#0c0713 48%,#07060b 100%);
+  background-size:520px 520px,680px 680px,360px 360px,100% 100%;
+  animation:crashBackdropDrift 18s cubic-bezier(.45,0,.2,1) infinite alternate
+}
+
 /* Dragon Crash */
 
 .crash-page.page-shell{padding-top:96px}

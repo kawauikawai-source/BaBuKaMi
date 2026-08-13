@@ -5,6 +5,7 @@
   const C = B.constants;
   const store = B.store;
   const ui = B.ui;
+  let initialized = false;
   let promoPreview = null;
   let promoPreviewLoading = false;
   let selectedPaymentRail = 'sbp';
@@ -18,6 +19,7 @@
   let oopsContext = 'deposit';
   let studioBalanceCents = null;
   let studioBalanceLoading = false;
+  let studioBalanceRequestId = 0;
 
   const cryptoAssets = {
     usdt: {
@@ -88,16 +90,24 @@
       return;
     }
     studioBalanceLoading = true;
+    const user = store.currentUser();
+    const userKey = String(user && (user.apiId || user.id || user.email) || '');
+    const requestId = ++studioBalanceRequestId;
     renderStudioBalance();
     try {
       const result = await store.getStudioWallet();
       if (!result || result.error) return;
+      const current = store.currentUser();
+      const currentKey = String(current && (current.apiId || current.id || current.email) || '');
+      if (requestId !== studioBalanceRequestId || currentKey !== userKey) return;
       studioBalanceCents = Number(result.wallet?.balance_cents || 0);
     } catch (_) {
-      studioBalanceCents = null;
+      if (requestId === studioBalanceRequestId) studioBalanceCents = null;
     } finally {
-      studioBalanceLoading = false;
-      renderStudioBalance();
+      if (requestId === studioBalanceRequestId) {
+        studioBalanceLoading = false;
+        renderStudioBalance();
+      }
     }
   }
 
@@ -440,6 +450,7 @@
       text.textContent = ui.t(key);
     }
     if (!overlay) return;
+    loadDeferredImages(overlay);
     overlay.hidden = false;
     window.requestAnimationFrame(() => overlay.classList.add('is-visible'));
   }
@@ -690,11 +701,12 @@
     const sticker = document.getElementById('withdraw-success-sticker');
     if (sticker) {
       const file = values.payout >= 400
-        ? 'kawaui-transfer-heart.png'
+        ? 'kawaui-transfer-heart.webp'
         : values.payout >= 200
-          ? 'kawaui-transfer-bang.png'
-          : 'kawaui-transfer-smile.png';
-      sticker.src = `../assets/images/${file}`;
+          ? 'kawaui-transfer-bang.webp'
+          : 'kawaui-transfer-smile.webp';
+      sticker.dataset.src = `../assets/images/${file}?v=resource-v1`;
+      sticker.removeAttribute('src');
     }
   }
 
@@ -744,10 +756,17 @@
     history.replaceState(null, '', url.toString());
   }
 
+  function loadDeferredImages(root) {
+    root?.querySelectorAll('img[data-src]').forEach(image => {
+      if (!image.getAttribute('src')) image.src = image.dataset.src;
+    });
+  }
+
   function showSuccess(kind) {
     const main = document.getElementById(kind + '-main');
     const success = document.getElementById(kind + '-success');
     if (main && success) {
+      loadDeferredImages(success);
       main.hidden = true;
       success.classList.add('show');
     }
@@ -825,7 +844,8 @@
   }
 
   function init() {
-    if (document.body.dataset.page !== 'deposit') return;
+    if (document.body.dataset.page !== 'deposit' || initialized) return;
+    initialized = true;
     const initialParams = new URL(location.href).searchParams;
     const initialPromoCode = String(initialParams.get('promo') || '').trim().toUpperCase().replace(/\s+/g, '');
     if (initialParams.get('method') === 'promo' || initialPromoCode) {
@@ -915,7 +935,16 @@
     document.getElementById('amount-input')?.addEventListener('input', renderDepositStudioRoute);
     document.getElementById('withdraw-input')?.addEventListener('input', renderWithdrawPreview);
     initFormatting();
-    store.subscribe(() => {
+    store.subscribe((next, prev) => {
+      const nextUser = next.currentUser || {};
+      const prevUser = prev.currentUser || {};
+      const nextKey = String(nextUser.apiId || nextUser.id || nextUser.email || '');
+      const prevKey = String(prevUser.apiId || prevUser.id || prevUser.email || '');
+      if (nextKey !== prevKey) {
+        studioBalanceRequestId += 1;
+        studioBalanceLoading = false;
+        studioBalanceCents = null;
+      }
       renderMethods();
       renderSummary();
     });

@@ -4,6 +4,7 @@
   const B = global.Bambiku = global.Bambiku || {};
   const store = B.store;
   const ui = B.ui;
+  let initialized = false;
 
   const BETS = [5, 10, 25, 100];
   const LINE_COUNT = 5;
@@ -242,7 +243,8 @@
   }
 
   function init() {
-    if (document.body.dataset.page !== 'slot') return;
+    if (document.body.dataset.page !== 'slot' || initialized) return;
+    initialized = true;
     renderBalance();
     renderBets();
     renderGrid(EMPTY_GRID, []);

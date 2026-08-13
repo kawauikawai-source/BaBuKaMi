@@ -1,5 +1,13 @@
 /* Bambiku Eclipse Hunt - generated from the former monolithic stylesheet. */
 
+body[data-page="mines"]{
+  --bg:#090806;--bg-2:#120f0a;--bg-3:#1a130d;--bg-card:#110f0c;
+  --border:rgba(223,161,95,.075);--border-h:rgba(223,161,95,.18);
+  --accent:#d89b58;--accent-dim:rgba(216,155,88,.12);--accent-glow:rgba(216,155,88,.28);
+  --gold:#d89b58;--gold-dim:rgba(216,155,88,.11);--text-2:#b7a88f;--text-3:#81735e;
+  background:radial-gradient(circle at 18% 16%,rgba(216,155,88,.075),transparent 30%),radial-gradient(circle at 84% 14%,rgba(139,86,40,.045),transparent 28%),linear-gradient(180deg,#090806 0%,#100d09 48%,#070706 100%)
+}
+
 /* Solar Mines */
 
 .mines-page.page-shell{padding-top:96px}

@@ -1,5 +1,14 @@
 /* Bambiku Lucky Bamboo - generated from the former monolithic stylesheet. */
 
+body[data-page="slot"]{
+  --bg:#070a08;--bg-2:#0f1310;--bg-3:#171d19;--bg-card:#101411;
+  --border:rgba(212,232,220,.07);--border-h:rgba(212,232,220,.16);
+  --accent:#72c993;--accent-dim:rgba(114,201,147,.1);--accent-glow:rgba(114,201,147,.22);
+  --text-2:#a9b5ad;--text-3:#78827b;
+  background:radial-gradient(circle at 16% 12%,rgba(114,201,147,.08),transparent 32%),radial-gradient(circle at 86% 18%,rgba(245,200,66,.04),transparent 28%),linear-gradient(180deg,#070a08 0%,#0c120e 52%,#070a08 100%);
+  background-size:145% 145%,135% 135%,100% 100%
+}
+
 /* Lucky Bamboo Slot */
 
 .slot-page.page-shell{background:radial-gradient(circle at 18% 14%,rgba(114,201,147,.06),transparent 30%),radial-gradient(circle at 88% 22%,rgba(245,200,66,.045),transparent 26%),var(--bg);background-size:140% 140%,135% 135%,auto;background-position:0% 0%,100% 0%,0 0}
@@ -88,55 +97,11 @@
 
 .slot-recent-item.loss{border-color:rgba(255,103,91,.3);color:#ff887f;background:rgba(255,63,82,.09);box-shadow:inset 0 -2px 0 rgba(255,63,82,.24)}
 
-.game-history-strip{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;min-height:34px}
-
-.game-history-empty{font-size:11.5px;color:var(--text-3)}
-
-.game-history-item{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:74px;max-width:180px;padding:7px 12px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.035);font-family:var(--font);font-size:12px;font-weight:1000;line-height:1.1;box-shadow:0 8px 18px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.035)}
-
-.game-history-item strong{display:none}
-
-.game-history-item span{color:var(--text-1);white-space:nowrap}
-
-.game-history-item small{max-width:70px;color:var(--text-3);font-size:10px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-.game-history-item.win{border-color:rgba(114,201,147,.42);background:rgba(114,201,147,.1)}
-
-.game-history-item.win span{color:#8fe0ab}
-
-.game-history-item.loss{border-color:rgba(255,103,91,.28);background:rgba(255,63,82,.08)}
-
-.game-history-item.loss span{color:#ff8f86}
-
-.game-history-item.push{border-color:rgba(212,232,220,.16);background:rgba(212,232,220,.045)}
-
-.game-history-item.push span{color:var(--text-2)}
-
-.crash-recent .game-history-item.win{border-color:rgba(190,143,255,.5);background:rgba(155,92,255,.14)}
-
-.crash-recent .game-history-item.win span{color:#d7b4ff}
-
-.mines-recent .game-history-item.win{border-color:rgba(255,207,136,.46);background:rgba(216,155,88,.12)}
-
-.mines-recent .game-history-item.win span{color:#f0bd77}
-
-.blocks-recent .game-history-item.win{border-color:rgba(85,240,255,.42);background:rgba(85,240,255,.1)}
-
-.blocks-recent .game-history-item.win span{color:#8ff7ff}
-
-.plinko-recent .game-history-item.win{border-color:rgba(184,205,222,.38);background:rgba(184,205,222,.075)}
-
-.plinko-recent .game-history-item.win span{color:#dce8f2}
-
-.holdem-recent .game-history-item.win,.roulette-recent .game-history-item.win{border-color:rgba(212,175,55,.42);background:rgba(212,175,55,.1)}
-
-.holdem-recent .game-history-item.win span,.roulette-recent .game-history-item.win span{color:#f5d978}
-
 .slot-panel{padding:22px;position:sticky;top:92px}
 
-.slot-bet-box,.slot-paytable{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:14px}
+.slot-paytable{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:14px}
 
-.slot-bet-box>strong,.slot-paytable>strong{display:block;font-family:var(--font);font-size:14px;font-weight:900;margin-bottom:12px}
+.slot-paytable>strong{display:block;font-family:var(--font);font-size:14px;font-weight:900;margin-bottom:12px}
 
 .slot-spin-btn{width:100%;justify-content:center;margin-top:2px}
 

@@ -210,7 +210,6 @@
   }
 
   B.gameControl = { init, reload: load };
-  document.addEventListener('DOMContentLoaded', init);
   B.store?.subscribe?.((next, prev) => {
     const nextId = next.currentUser?.apiId || '';
     const prevId = prev.currentUser?.apiId || '';

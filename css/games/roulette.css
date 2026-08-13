@@ -2,8 +2,6 @@
 
 /* Game / Roulette */
 
-.game-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
-
 .roulette-page.page-shell{background:radial-gradient(circle at 16% 10%,rgba(0,110,70,.11),transparent 28%),radial-gradient(circle at 86% 16%,rgba(139,87,36,.11),transparent 26%),radial-gradient(circle at 50% 4%,rgba(245,200,66,.045),transparent 34%),linear-gradient(180deg,rgba(5,34,22,.12),transparent 38%),var(--bg)}
 
 .roulette-page.page-shell::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(115deg,transparent 0 18%,rgba(139,87,36,.035) 18% 19%,transparent 19% 48%,rgba(0,110,70,.035) 48% 49%,transparent 49%),repeating-linear-gradient(0deg,transparent 0 54px,rgba(180,255,220,.01) 54px 55px),repeating-linear-gradient(90deg,transparent 0 72px,rgba(245,200,66,.008) 72px 73px);opacity:.9}
@@ -61,12 +59,6 @@
 .roulette-panel::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 0 17%,rgba(212,175,55,.06) 17% 18%,transparent 18% 58%,rgba(180,255,220,.055) 58% 59%,transparent 59%),repeating-linear-gradient(90deg,transparent 0 31px,rgba(180,255,220,.022) 31px 32px),repeating-linear-gradient(0deg,transparent 0 23px,rgba(0,0,0,.07) 23px 24px);opacity:.95;pointer-events:none}
 
 .roulette-panel>*{position:relative;z-index:2}
-
-.chip-row{display:grid;grid-template-columns:repeat(4,var(--bet-chip-size));justify-content:center;gap:var(--bet-chip-gap);margin-bottom:var(--bet-chip-gap)}
-
-.chip-btn{display:flex;align-items:center;justify-content:center;aspect-ratio:1;width:var(--bet-chip-size);min-width:0;padding:0;border-radius:50%;border:2px dashed var(--gold);background:var(--gold-dim);color:var(--gold);font-family:var(--font);font-size:10.5px;line-height:1;font-weight:900;white-space:nowrap;letter-spacing:0}
-
-.chip-btn.selected{background:var(--gold);color:#000;box-shadow:0 0 0 4px var(--gold-dim)}
 
 .roulette-all-in-chip{grid-column:1 / -1;position:relative;aspect-ratio:auto;width:100%;min-height:var(--bet-chip-size);border-radius:999px;border-style:dashed;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:0 18px;background:var(--gold-dim);box-shadow:none;text-align:center;overflow:hidden}
 

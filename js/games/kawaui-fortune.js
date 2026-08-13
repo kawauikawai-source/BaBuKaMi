@@ -14,6 +14,7 @@
   let selectedBet = 5;
   let activeRoundId = null;
   let flying = false;
+  let startPending = false;
   let pollTimer = null;
   let visualFrame = null;
   let visualDone = null;
@@ -29,6 +30,7 @@
   let pendingCashoutVisualMultiplier = null;
   let lastControlPaintAt = 0;
   let pollInFlight = false;
+  let initialized = false;
 
   function currentBalance() {
     return Number(store.getDisplayUser().balance || 0);
@@ -138,7 +140,7 @@
     const action = document.getElementById('crashAction');
     if (action) {
       const multiplierLocked = flying && !cashoutLocked && multiplierValue(visualMultiplier) < CRASH_CASHOUT_MIN_MULTIPLIER;
-      action.disabled = cashoutPending || cashoutLocked || multiplierLocked;
+      action.disabled = startPending || cashoutPending || cashoutLocked || multiplierLocked;
       action.classList.toggle('is-cashout', flying && !cashoutLocked && !multiplierLocked);
       action.classList.toggle('is-locked', cashoutLocked);
       let label = '';
@@ -156,7 +158,7 @@
       action.textContent = String(label || '').toUpperCase();
     }
     document.querySelectorAll('[data-crash-bet]').forEach(btn => {
-      btn.disabled = flying || cashoutLocked;
+      btn.disabled = startPending || flying || cashoutLocked;
     });
   }
 
@@ -522,13 +524,19 @@
   }
 
   async function startRound() {
-    if (flying) return;
+    if (flying || startPending) return;
     if (selectedBet > currentBalance()) {
       ui.showToast(ui.t('err_crash_balance'), 'err');
       return;
     }
+    startPending = true;
+    setControls();
     const result = await store.startDragonCrash(selectedBet);
-    if (showStoreError(result)) return;
+    startPending = false;
+    if (showStoreError(result)) {
+      setControls();
+      return;
+    }
     B.audio?.play?.('drop');
 
     activeRoundId = result.round_id;
@@ -608,7 +616,8 @@
   }
 
   function init() {
-    if (document.body.dataset.page !== 'crash') return;
+    if (document.body.dataset.page !== 'crash' || initialized) return;
+    initialized = true;
     renderBalance();
     renderBets();
     store.getManagerState?.().then(result => {

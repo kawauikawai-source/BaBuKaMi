@@ -195,6 +195,12 @@ const I18N = {
     nav_appraisal: "Оценка",
     nav_contract: "Договор",
     nav_faq: "Вопросы",
+    mobile_menu: "МЕНЮ",
+    mobile_menu_open: "Открыть меню",
+    mobile_menu_close: "Закрыть меню",
+    mobile_navigation: "Мобильная навигация",
+    language_label: "Язык",
+    language_selector: "Выбор языка",
     ticker_label: "Курс души сегодня",
 
     hero_eyebrow: "● БАНК ОНЛАЙН // ДОГОВОР БЕССРОЧНОГО ОТЧУЖДЕНИЯ НЕМАТЕРИАЛЬНОГО АКТИВА",
@@ -318,6 +324,12 @@ const I18N = {
     nav_appraisal: "Valuation",
     nav_contract: "Agreement",
     nav_faq: "FAQ",
+    mobile_menu: "MENU",
+    mobile_menu_open: "Open menu",
+    mobile_menu_close: "Close menu",
+    mobile_navigation: "Mobile navigation",
+    language_label: "Language",
+    language_selector: "Language selector",
     ticker_label: "Soul rate today",
 
     hero_eyebrow: "● BANK ONLINE // PERPETUAL INTANGIBLE ASSET CONVEYANCE AGREEMENT",
@@ -438,7 +450,8 @@ const I18N = {
   }
 };
 
-let currentLang = localStorage.getItem('bukamiku_lang') || 'ru';
+const storedLanguage = localStorage.getItem('bukamiku_lang');
+let currentLang = I18N[storedLanguage] ? storedLanguage : 'ru';
 
 function setLanguage(lang) {
   if (!I18N[lang]) return;
@@ -451,7 +464,9 @@ function setLanguage(lang) {
   document.documentElement.lang = lang;
 
   document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.classList.toggle('is-active', btn.dataset.lang === lang);
+    const active = btn.dataset.lang === lang;
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-pressed', String(active));
   });
 
   document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -475,6 +490,13 @@ function setLanguage(lang) {
     }
   });
 
+  document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+    const key = el.dataset.i18nAriaLabel;
+    if (I18N[lang][key]) {
+      el.setAttribute('aria-label', I18N[lang][key]);
+    }
+  });
+
   document.dispatchEvent(new CustomEvent('bukamiku:language', { detail: { lang } }));
 
   // Фиксация скролла для предотвращения дергания страницы
@@ -483,12 +505,47 @@ function setLanguage(lang) {
 
 function initI18n() {
   document.querySelectorAll('.lang-btn').forEach(btn => {
+    if (btn.dataset.i18nReady === '1') return;
+    btn.dataset.i18nReady = '1';
     btn.addEventListener('click', () => {
       setLanguage(btn.dataset.lang);
     });
   });
 
   setLanguage(currentLang);
+}
+
+function initMobileNavigation() {
+  const toggle = document.querySelector('.mobile-nav-toggle');
+  const drawer = document.getElementById('mobile-nav');
+  const backdrop = document.querySelector('.mobile-nav-backdrop');
+  if (!toggle || !drawer || !backdrop || toggle.dataset.ready === '1') return;
+  toggle.dataset.ready = '1';
+
+  const setOpen = (open) => {
+    const toggleLabelKey = open ? 'mobile_menu_close' : 'mobile_menu_open';
+    toggle.dataset.i18nAriaLabel = toggleLabelKey;
+    toggle.setAttribute('aria-label', I18N[currentLang][toggleLabelKey]);
+    toggle.setAttribute('aria-expanded', String(open));
+    drawer.setAttribute('aria-hidden', String(!open));
+    drawer.classList.toggle('is-open', open);
+    backdrop.hidden = !open;
+    document.body.classList.toggle('is-mobile-nav-open', open);
+  };
+
+  toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  document.querySelectorAll('[data-mobile-nav-close], .mobile-nav__link').forEach((element) => {
+    element.addEventListener('click', () => setOpen(false));
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 1050) setOpen(false);
+  });
 }
 
 /* =============================================================
@@ -500,4 +557,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollReveal();
   initSealSmoothRotation();
   initI18n();
+  initMobileNavigation();
 });
