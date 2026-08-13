@@ -11,7 +11,7 @@
   </style>
 <link rel="stylesheet" href="../css/core/base.css?v=css-modules-v1"/>
 <link rel="stylesheet" href="../css/pages/account-shared.css?v=css-modules-v1"/>
-<link rel="stylesheet" href="../css/pages/profile.css?v=mobile-repair-v2"/>
+<link rel="stylesheet" href="../css/pages/profile.css?v=profile-vip-card-v1"/>
   <link rel="icon" type="image/png" sizes="512x512" href="../assets/favicon-bk-512.png?v=1"/>
   <link rel="apple-touch-icon" href="../assets/favicon-bk-512.png?v=1"/>
   <meta name="theme-color" content="#00d98b"/>
@@ -130,7 +130,13 @@
               <div class="vip-tiers-mini" id="profileVipTiers"></div>
               <button class="btn btn-primary vip-purchase-btn" type="button" id="profile-vip-purchase" data-vip-purchase hidden></button>
               <div class="perk-box">
-                <strong data-i18n="profile_current_perks">Current perks</strong>
+                <div class="profile-vip-current-head">
+                  <span class="profile-vip-current-mark" id="profileCurrentTierMark">B</span>
+                  <div>
+                    <small data-i18n="profile_current_perks">Current perks</small>
+                    <strong id="profileCurrentTierName">Bronze</strong>
+                  </div>
+                </div>
                 <ul class="vip-perks" id="profileCurrentPerks"></ul>
               </div>
               <div class="profile-manager-access" id="profileManagerAccess" hidden>

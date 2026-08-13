@@ -215,6 +215,13 @@
     const vip = vipProgress(user);
     const tier = vip.current;
     const next = vip.next;
+    const currentTierKey = tierKey(tier);
+    const vipPanel = document.querySelector('.overview-vip-panel');
+    if (vipPanel) vipPanel.dataset.vipTier = currentTierKey;
+    const currentTierMark = document.getElementById('profileCurrentTierMark');
+    if (currentTierMark) currentTierMark.textContent = tier.icon;
+    const currentTierName = document.getElementById('profileCurrentTierName');
+    if (currentTierName) currentTierName.textContent = tier.name;
     const vipBar = document.getElementById('vip-bar');
     if (vipBar) vipBar.style.width = vip.progress + '%';
 
@@ -232,7 +239,7 @@
     const tiers = document.getElementById('profileVipTiers');
     if (tiers) {
       tiers.innerHTML = C.vipTiers.map(item => `
-        <div class="vip-tier-mini ${item.name === tier.name ? 'current' : ''} ${next && item.name === next.name && vip.canBuy ? 'unlockable' : ''} ${item.level > tier.level && (!next || item.name !== next.name || !vip.canBuy) ? 'locked' : ''}">
+        <div class="vip-tier-mini vip-tier-${tierKey(item)} ${item.name === tier.name ? 'current' : ''} ${next && item.name === next.name && vip.canBuy ? 'unlockable' : ''} ${item.level > tier.level && (!next || item.name !== next.name || !vip.canBuy) ? 'locked' : ''}">
           <div class="vip-tier-mini-icon">${ui.escapeHTML(item.icon)}</div>
           <div class="vip-tier-mini-name vip-tier-text-${item.name.toLowerCase()}">${ui.escapeHTML(item.name)}</div>
           <div class="vip-tier-mini-pts">${ui.formatNumber(item.min)}${item.max === Infinity ? '+' : '-' + ui.formatNumber(item.max)}</div>

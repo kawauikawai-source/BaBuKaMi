@@ -151,6 +151,63 @@ body[data-page="profile"] #navbar{
 
 .profile-security-section h2{margin-bottom:18px}
 
+/* Current VIP tier uses the same quiet plate language as the home VIP cards. */
+.overview-vip-panel{
+  --profile-tier:#9c7054;
+  position:relative;
+  overflow:hidden;
+  border-color:color-mix(in srgb,var(--profile-tier) 34%,var(--border));
+  background:#0d0f10;
+  box-shadow:inset 0 -3px 0 var(--profile-tier);
+}
+.overview-vip-panel[data-vip-tier="silver"]{--profile-tier:#aebac4}
+.overview-vip-panel[data-vip-tier="gold"]{--profile-tier:#e3bd49}
+.overview-vip-panel[data-vip-tier="platinum"]{--profile-tier:#8dcce4}
+.overview-vip-panel>.section-row{padding-bottom:14px;border-bottom:1px solid var(--border)}
+.overview-vip-panel>.section-row strong{color:var(--profile-tier)}
+.overview-vip-panel .vip-tiers-mini{gap:0;margin:0;border-bottom:1px solid var(--border)}
+.overview-vip-panel .vip-tier-mini{
+  --mini-tier:#9c7054;
+  min-width:0;padding:15px 10px 14px;border:0;border-right:1px solid var(--border);border-radius:0;
+  background:transparent;box-shadow:inset 0 -2px 0 transparent;
+}
+.overview-vip-panel .vip-tier-mini:last-child{border-right:0}
+.overview-vip-panel .vip-tier-mini.vip-tier-silver{--mini-tier:#aebac4}
+.overview-vip-panel .vip-tier-mini.vip-tier-gold{--mini-tier:#e3bd49}
+.overview-vip-panel .vip-tier-mini.vip-tier-platinum{--mini-tier:#8dcce4}
+.overview-vip-panel .vip-tier-mini.current{
+  border-color:var(--border);background:color-mix(in srgb,var(--mini-tier) 7%,transparent);
+  box-shadow:inset 0 -2px 0 var(--mini-tier);
+}
+.overview-vip-panel .vip-tier-mini.unlockable{box-shadow:inset 0 -2px 0 var(--mini-tier)}
+.overview-vip-panel .vip-tier-mini.locked{opacity:.48;filter:none}
+.overview-vip-panel .vip-tier-mini-icon{color:var(--mini-tier);font-size:18px}
+.overview-vip-panel .vip-tier-mini-name{font-size:11px}
+.overview-vip-panel .vip-tier-mini-pts{margin-top:3px;font-size:9px}
+.overview-vip-panel .perk-box{
+  position:relative;margin:18px 0 0;padding:0 0 20px;border:1px solid var(--border);
+  border-bottom:3px solid var(--profile-tier);border-radius:8px;background:#0b0d0e;
+}
+.profile-vip-current-head{
+  display:flex;min-height:88px;align-items:center;gap:16px;padding:17px 20px;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,color-mix(in srgb,var(--profile-tier) 9%,#101214),#0e1011 65%);
+}
+.profile-vip-current-mark{
+  display:grid;width:50px;height:50px;flex:0 0 50px;place-items:center;
+  border:1px solid color-mix(in srgb,var(--profile-tier) 44%,var(--border));border-radius:7px;
+  background:color-mix(in srgb,var(--profile-tier) 8%,#0a0c0d);color:var(--profile-tier);
+  font-family:var(--font);font-size:24px;font-weight:900;
+}
+.profile-vip-current-head small{display:block;margin-bottom:3px;color:var(--text-3);font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+.profile-vip-current-head strong{color:var(--profile-tier);font-family:var(--font);font-size:20px;font-weight:900}
+.overview-vip-panel .perk-box .vip-perks{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px 24px;
+  margin:0;padding:20px 22px 0;list-style:none;
+}
+.overview-vip-panel .perk-box .vip-perks li{display:flex;min-width:0;align-items:flex-start;gap:9px;color:var(--text-2);font-size:12.5px;line-height:1.45}
+.overview-vip-panel .perk-box .vip-perks li::before{content:'\2713';flex:0 0 auto;color:var(--accent);font-weight:900}
+
 .profile-manager-access{
   display:flex;
   align-items:center;
@@ -171,6 +228,15 @@ body[data-page="profile"] #navbar{
 .profile-manager-access .btn{flex:0 0 auto;justify-content:center;min-width:160px}
 
 @media(max-width:620px){
+  .overview-vip-panel{padding:14px}
+  .overview-vip-panel>.section-row{padding:0 2px 12px}
+  .overview-vip-panel .vip-tiers-mini{grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--border);border-radius:7px}
+  .overview-vip-panel .vip-tier-mini{border-bottom:1px solid var(--border)}
+  .overview-vip-panel .vip-tier-mini:nth-child(2){border-right:0}
+  .overview-vip-panel .vip-tier-mini:nth-child(n+3){border-bottom:0}
+  .profile-vip-current-head{min-height:80px;padding:15px 16px}
+  .profile-vip-current-mark{width:46px;height:46px;flex-basis:46px;font-size:21px}
+  .overview-vip-panel .perk-box .vip-perks{grid-template-columns:1fr;padding:17px 17px 0}
   .profile-manager-access{align-items:stretch;flex-direction:column}
   .profile-manager-access .btn{width:100%}
 }
