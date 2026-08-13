@@ -90,14 +90,6 @@
 
 .vip-purchase-btn:not([hidden]){display:flex}
 
-.profile-insight-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
-
-.profile-insight{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:var(--r);padding:14px}
-
-.profile-insight span{display:block;color:var(--text-3);font-family:var(--font);font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
-
-.profile-insight strong{display:block;color:var(--text);font-family:var(--font);font-size:14px;font-weight:900}
-
 .overview-vip-panel{margin-top:18px;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:18px}
 
 .overview-vip-panel .vip-tiers-mini{margin:14px 0}
