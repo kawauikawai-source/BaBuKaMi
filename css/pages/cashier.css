@@ -210,7 +210,54 @@ body[data-page="deposit"] #navbar{
   background:var(--border);
 }
 
-#studio-deposit-preview{grid-template-columns:repeat(4,minmax(0,1fr))}
+.studio-deposit-preview{
+  display:grid;
+  grid-template-columns:minmax(210px,.8fr) minmax(0,1.4fr);
+  margin:18px 0;
+  overflow:hidden;
+  border:1px solid rgba(0,217,139,.24);
+  border-radius:7px;
+  background:#0d1110;
+}
+
+.studio-deposit-balance-cell{
+  display:flex;
+  min-height:118px;
+  flex-direction:column;
+  justify-content:center;
+  border-right:1px solid rgba(0,217,139,.16);
+  padding:20px 22px;
+  background:rgba(0,217,139,.045);
+}
+
+.studio-deposit-balance-cell span,
+.studio-deposit-flow span,
+.studio-deposit-fee span{
+  color:var(--text-3);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+
+.studio-deposit-balance-cell strong{
+  margin-top:8px;
+  color:var(--accent);
+  font-size:28px;
+  line-height:1;
+}
+
+.studio-deposit-balance-cell small{margin-top:9px;color:var(--text-3);font-size:10px}
+.studio-deposit-transfer-cell{min-width:0;padding:14px 18px 18px}
+.studio-deposit-fee{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:12px}
+.studio-deposit-fee strong{color:var(--text-2);font-size:11px}
+.studio-deposit-flow{display:grid;grid-template-columns:minmax(0,1fr) 44px minmax(0,1fr);align-items:center;gap:10px}
+.studio-deposit-flow>div{display:flex;min-width:0;flex-direction:column;gap:6px}
+.studio-deposit-flow strong{color:var(--text);font-size:18px}
+.studio-deposit-flow .is-target{align-items:flex-end;text-align:right}
+.studio-deposit-flow .is-target strong{color:var(--accent)}
+.studio-deposit-flow i{position:relative;height:1px;background:rgba(0,217,139,.32)}
+.studio-deposit-flow i::after{content:"";position:absolute;right:-1px;top:-3px;border:4px solid transparent;border-left-color:var(--accent)}
 
 .withdraw-preview > div{
   display:flex;
@@ -224,7 +271,6 @@ body[data-page="deposit"] #navbar{
 
 .withdraw-preview span{color:var(--text-3);font-size:12px}
 .withdraw-preview strong{color:var(--text-2);font-size:14px}
-.studio-deposit-balance-cell strong{color:var(--accent)}
 .withdraw-preview.has-amount #withdraw-preview-payout{color:var(--accent);font-size:17px}
 
 
@@ -532,7 +578,11 @@ body[data-page="deposit"] #navbar{
   .crypto-network-grid{grid-template-columns:1fr}
   .crypto-network{min-height:44px}
   .withdraw-checkout-summary{grid-template-columns:1fr}
-  #studio-deposit-preview{grid-template-columns:1fr}
+  .studio-deposit-preview{grid-template-columns:1fr}
+  .studio-deposit-balance-cell{min-height:104px;border-right:0;border-bottom:1px solid rgba(0,217,139,.16);padding:18px}
+  .studio-deposit-transfer-cell{padding:14px 16px 18px}
+  .studio-deposit-flow{grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);gap:7px}
+  .studio-deposit-flow strong{font-size:15px}
   .card-detail-grid,.card-checkout-actions{grid-template-columns:1fr}
   .card-oops-modal{padding:22px 18px 20px}
   .card-oops-sticker{height:230px}
