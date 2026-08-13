@@ -575,14 +575,18 @@ body[data-page="home"] #footer > .container{
 .bonus-card.is-future .bonus-cta::after{display:none}
 
 @media(max-width:520px){
+  #hero>.container{width:100%;min-width:0;max-width:none}
   body[data-page="home"] > section > .container,
   body[data-page="home"] #footer > .container{width:100%;padding-left:18px;padding-right:18px}
+  .hero-content{width:100%;min-width:0}
+  .hero-title,.hero-sub{max-width:100%}
+  .hero-title{font-size:36px}
   .tabs.game-category-switch{width:100%}
   .game-category-switch .tab-btn{gap:8px;padding:8px 10px}
   .tab-symbol{flex-basis:30px;width:30px;height:30px;font-size:16px}
   .tab-copy small{font-size:7px;letter-spacing:.07em}
   .hero-content::before,.hero-content::after{display:none}
-  .hero-diagnostics{left:auto;translate:none;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;margin-top:40px}
+  .hero-diagnostics{left:auto;translate:none;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;max-width:100%;margin-top:40px}
   .hero-diagnostic:nth-child(2){border-right:0}
   .hero-diagnostic:nth-child(-n+2){border-bottom:1px solid var(--border)}
   .hero-diagnostic{height:82px;min-height:82px;padding:14px 12px}

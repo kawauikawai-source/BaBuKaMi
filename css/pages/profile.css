@@ -362,9 +362,9 @@ body[data-page="profile"] #navbar{
 
 @media(max-width:620px){
 
-  .profile-page .container{padding:0 14px}
+  .profile-page .container{width:100%;min-width:0;max-width:100%;padding:0 14px}
 
-  .profile-command-head.game-command-head{display:block;min-height:0;margin-bottom:18px;padding:19px 18px 18px}
+  .profile-command-head.game-command-head{display:block;width:100%;min-width:0;max-width:100%;min-height:0;margin-bottom:18px;padding:19px 18px 18px;overflow:hidden}
 
   .profile-command-head.game-command-head .profile-command-copy{width:100%}
 
