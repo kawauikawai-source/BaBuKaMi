@@ -442,7 +442,8 @@
       profileMissingFields: source.profile_missing_fields || [],
       onboardingRequired: Boolean(source.onboarding_required),
       createdAt: source.created_at,
-      lastLoginAt: source.last_login_at
+      lastLoginAt: source.last_login_at,
+      passwordChangedAt: source.password_changed_at || source.passwordChangedAt || ''
     }), 'registered');
   }
 
@@ -1006,6 +1007,74 @@
         saveApiToken(result.access_token);
         const user = setApiUser(result.user, 'auth:login');
         return okUser(user);
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async requestEmailVerification() {
+      try {
+        return await requestApi('/auth/email-verification/request', { method: 'POST' });
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async confirmEmailVerification(token) {
+      try {
+        const result = await requestApi('/auth/email-verification/confirm', {
+          method: 'POST',
+          body: JSON.stringify({ token: String(token || '') })
+        });
+        if (apiToken()) {
+          const user = await requestApi('/users/me');
+          setApiUser(user, 'auth:email-verified');
+        }
+        return result;
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async forgotPassword(email) {
+      try {
+        return await requestApi('/auth/password/forgot', {
+          method: 'POST',
+          body: JSON.stringify({ email: String(email || '').trim() })
+        });
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async resetPassword(token, newPassword) {
+      try {
+        return await requestApi('/auth/password/reset', {
+          method: 'POST',
+          body: JSON.stringify({ token: String(token || ''), new_password: String(newPassword || '') })
+        });
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async changePassword(currentPassword, newPassword) {
+      try {
+        const result = await requestApi('/auth/password/change', {
+          method: 'POST',
+          body: JSON.stringify({ current_password: String(currentPassword || ''), new_password: String(newPassword || '') })
+        });
+        clearApiSession('auth:password-changed');
+        return result;
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async listDeviceSessions() {
+      try {
+        return await requestApi('/auth/sessions');
+      } catch (err) {
+        return fail(authErrorKey(err));
+      }
+    },
+    async revokeDeviceSession(sessionId) {
+      try {
+        return await requestApi('/auth/sessions/' + encodeURIComponent(sessionId), { method: 'DELETE' });
       } catch (err) {
         return fail(authErrorKey(err));
       }

@@ -1220,7 +1220,7 @@
     switchModalTab(tab || 'login');
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
-    const initial = overlay.querySelector('#registerFormWrap:not([hidden]) input, #loginFormWrap:not([hidden]) input, [data-modal-close]');
+    const initial = overlay.querySelector('#registerFormWrap:not([hidden]) input, #loginFormWrap:not([hidden]) input, #forgotPasswordWrap:not([hidden]) input, #resetPasswordWrap:not([hidden]) input, [data-modal-close]');
     if (initial) initial.focus();
   }
 
@@ -1243,10 +1243,35 @@
     });
     const login = document.getElementById('loginFormWrap');
     const register = document.getElementById('registerFormWrap');
+    const forgot = document.getElementById('forgotPasswordWrap');
+    const reset = document.getElementById('resetPasswordWrap');
     if (login) login.hidden = nextTab !== 'login';
     if (register) register.hidden = nextTab !== 'register';
+    if (forgot) forgot.hidden = true;
+    if (reset) reset.hidden = true;
     const sub = document.getElementById('modalSub');
     if (sub) sub.textContent = t(nextTab === 'login' ? 'modal_sub_login' : 'modal_sub_register');
+  }
+
+  function showAuthView(view) {
+    const next = ['login', 'register', 'forgot', 'reset'].includes(view) ? view : 'login';
+    if (next === 'login' || next === 'register') {
+      switchModalTab(next);
+      return;
+    }
+    const authModal = document.querySelector('#modalOverlay .auth-modal');
+    if (authModal) authModal.classList.remove('is-register');
+    document.querySelectorAll('.m-tab').forEach(item => {
+      item.classList.remove('active');
+      item.setAttribute('aria-selected', 'false');
+    });
+    ['login', 'register', 'forgot', 'reset'].forEach(name => {
+      const element = document.getElementById(name === 'register' ? 'registerFormWrap' : name === 'login' ? 'loginFormWrap' : name + 'PasswordWrap');
+      if (element) element.hidden = name !== next;
+    });
+    const sub = document.getElementById('modalSub');
+    if (sub) sub.textContent = t(next === 'forgot' ? 'password_recovery_intro' : 'password_reset_intro');
+    document.querySelector('#' + next + 'PasswordWrap input')?.focus();
   }
 
   function initCookieBanner() {
@@ -1398,6 +1423,7 @@
     showToast,
     confirmAction: confirmDialog,
     openModal,
+    showAuthView,
     closeModal,
     authUrl: homeAuthUrl,
     redirectAfterAuth,

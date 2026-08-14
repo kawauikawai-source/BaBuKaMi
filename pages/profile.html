@@ -230,6 +230,20 @@
             <div class="profile-security-section">
               <h2 data-i18n="profile_security">Security</h2>
               <div class="security-list" id="securityRows"></div>
+              <section class="security-detail-panel" id="passwordChangePanel" hidden>
+                <div class="security-detail-head"><div><span data-i18n="password_access_label">Access security</span><h3 data-i18n="password_change_title">Change password</h3></div><button class="btn btn-outline btn-sm" type="button" data-security-close data-i18n="modal_close">Close</button></div>
+                <form id="passwordChangeForm" class="security-password-form">
+                  <div class="f-group"><label class="f-label" for="currentPassword" data-i18n="password_current">Current password</label><input class="f-input" id="currentPassword" type="password" autocomplete="current-password"/></div>
+                  <div class="f-group"><label class="f-label" for="newPassword" data-i18n="password_new">New password</label><input class="f-input" id="newPassword" type="password" autocomplete="new-password"/></div>
+                  <div class="f-group"><label class="f-label" for="newPasswordConfirm" data-i18n="password_confirm">Repeat password</label><input class="f-input" id="newPasswordConfirm" type="password" autocomplete="new-password"/></div>
+                  <button class="btn btn-primary" type="submit" data-i18n="password_change_submit">Update password</button>
+                </form>
+              </section>
+              <section class="security-detail-panel" id="deviceSessionsPanel" hidden>
+                <div class="security-detail-head"><div><span data-i18n="devices_access_label">Account access</span><h3 data-i18n="devices_title">Active devices</h3></div><button class="btn btn-outline btn-sm" type="button" data-security-close data-i18n="modal_close">Close</button></div>
+                <p class="security-detail-copy" data-i18n="devices_intro">Review devices signed into your Kawaui ID and revoke anything unfamiliar.</p>
+                <div class="device-session-list" id="deviceSessionList"></div>
+              </section>
             </div>
           </div>
 

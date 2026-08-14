@@ -36,6 +36,7 @@ class AlembicMigrationTest(unittest.TestCase):
                 self.assertTrue(inspector.has_table("identity_app_sessions"))
                 self.assertTrue(inspector.has_table("identity_consents"))
                 self.assertTrue(inspector.has_table("soul_appraisals"))
+                self.assertTrue(inspector.has_table("account_action_tokens"))
                 self.assertFalse(inspector.has_table("arctic_cash_boards"))
                 self.assertTrue(inspector.has_table("alembic_version"))
                 refresh_columns = {column["name"]: column for column in inspector.get_columns("refresh_sessions")}
@@ -47,6 +48,7 @@ class AlembicMigrationTest(unittest.TestCase):
                 self.assertIn("first_name", user_columns)
                 self.assertIn("last_name", user_columns)
                 self.assertIn("kyc_status", user_columns)
+                self.assertIn("password_changed_at", user_columns)
                 game_round_columns = {column["name"]: column for column in inspector.get_columns("game_rounds")}
                 self.assertIn("result_json", game_round_columns)
                 self.assertIn("status", game_round_columns)

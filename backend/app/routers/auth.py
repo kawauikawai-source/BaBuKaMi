@@ -7,8 +7,9 @@ from urllib.parse import urlencode
 import httpx
 import jwt
 from authlib.integrations.starlette_client import OAuth
-from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, Response, status
 from fastapi.responses import RedirectResponse
+from starlette.background import BackgroundTask
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
@@ -24,15 +25,22 @@ from app.core.security import (
 )
 from app.db.session import get_db
 from app.deps import apply_admin_email_role, get_current_user
-from app.models import IdentityAppSession, RefreshSession, User
+from app.models import AccountActionToken, IdentityAppSession, RefreshSession, User
 from app.schemas import (
+    AccountTokenRequest,
+    ChangePasswordRequest,
+    DeviceSessionPublic,
+    ForgotPasswordRequest,
     GoogleStatusResponse,
     LoginRequest,
     MessageResponse,
     RegisterRequest,
+    ResetPasswordRequest,
     TokenResponse,
     UserPublic,
 )
+from app.services.audit import add_audit_log
+from app.services.email import send_new_login_email, send_password_reset_email, send_verification_email
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -90,6 +98,99 @@ def request_user_agent(request: Request) -> str:
 
 def request_ip(request: Request) -> str:
     return (request.client.host if request.client else "")[:64]
+
+
+def token_hash(token: str) -> str:
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+
+def frontend_link(parameter: str, token: str) -> str:
+    base = settings.public_base_url.strip().rstrip("/")
+    return f"{base}/index.html?{urlencode({parameter: token})}"
+
+
+def create_account_token(db: Session, user: User, purpose: str, ttl: timedelta) -> str:
+    now = utc_now()
+    db.execute(
+        update(AccountActionToken)
+        .where(
+            AccountActionToken.user_id == user.id,
+            AccountActionToken.purpose == purpose,
+            AccountActionToken.used_at.is_(None),
+        )
+        .values(used_at=now)
+        .execution_options(synchronize_session=False)
+    )
+    raw_token = secrets.token_urlsafe(48)
+    db.add(
+        AccountActionToken(
+            user_id=user.id,
+            purpose=purpose,
+            token_hash=token_hash(raw_token),
+            expires_at=now + ttl,
+        )
+    )
+    return raw_token
+
+
+def valid_account_token(db: Session, raw_token: str, purpose: str) -> AccountActionToken | None:
+    item = db.scalar(
+        select(AccountActionToken).where(
+            AccountActionToken.token_hash == token_hash(raw_token),
+            AccountActionToken.purpose == purpose,
+            AccountActionToken.used_at.is_(None),
+        )
+    )
+    if not item or aware_utc(item.expires_at) <= utc_now():
+        return None
+    return item
+
+
+def device_details(user_agent: str) -> tuple[str, str]:
+    source = (user_agent or "").lower()
+    device = "Mobile" if any(value in source for value in ("mobile", "android", "iphone")) else "Computer"
+    if "iphone" in source or "ipad" in source:
+        device = "iPhone / iPad"
+    elif "android" in source:
+        device = "Android"
+    elif "windows" in source:
+        device = "Windows"
+    elif "mac os" in source or "macintosh" in source:
+        device = "macOS"
+    browser = "Browser"
+    for needle, label in (("edg/", "Edge"), ("opr/", "Opera"), ("chrome/", "Chrome"), ("firefox/", "Firefox"), ("safari/", "Safari")):
+        if needle in source:
+            browser = label
+            break
+    return device, browser
+
+
+def ip_hint(ip_address: str) -> str:
+    value = str(ip_address or "")
+    if "." in value:
+        parts = value.split(".")
+        return ".".join(parts[:2] + ["*", "*"]) if len(parts) == 4 else "hidden"
+    return (value[:4] + ":…") if value else "hidden"
+
+
+def revoke_identity_sessions(db: Session, user_id: int, reason: str) -> None:
+    revoke_all_refresh_sessions(db, user_id, reason)
+    db.execute(
+        update(IdentityAppSession)
+        .where(IdentityAppSession.user_id == user_id, IdentityAppSession.revoked_at.is_(None))
+        .values(revoked_at=utc_now())
+        .execution_options(synchronize_session=False)
+    )
+
+
+def should_notify_login(user: User) -> bool:
+    return bool(user.last_login_at and user.email_verified and "@users.telegram.bambiku.dev" not in user.email)
+
+
+def schedule_login_notice(background_tasks: BackgroundTasks, user: User, request: Request) -> None:
+    if should_notify_login(user):
+        device, browser = device_details(request_user_agent(request))
+        background_tasks.add_task(send_new_login_email, user.email, f"{device} · {browser}", utc_now().isoformat())
 
 
 def create_code_verifier() -> str:
@@ -263,6 +364,7 @@ def validate_telegram_id_token(id_token: str, nonce: str | None = None) -> dict:
 def register(
     request: Request,
     response: Response,
+    background_tasks: BackgroundTasks,
     payload: RegisterRequest,
     db: Session = Depends(get_db),
 ) -> TokenResponse:
@@ -290,6 +392,15 @@ def register(
     apply_admin_email_role(user)
     db.add(user)
     db.flush()
+    verification_token = create_account_token(
+        db, user, "verify_email", timedelta(hours=settings.email_verification_expire_hours)
+    )
+    background_tasks.add_task(
+        send_verification_email,
+        user.email,
+        user.name,
+        frontend_link("verify_email", verification_token),
+    )
     return issue_token_response(user, request, response, db)
 
 
@@ -299,6 +410,7 @@ def register(
 def login(
     request: Request,
     response: Response,
+    background_tasks: BackgroundTasks,
     payload: LoginRequest,
     db: Session = Depends(get_db),
 ) -> TokenResponse:
@@ -306,6 +418,7 @@ def login(
     if not user or not verify_password(payload.password, user.password_hash):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
 
+    schedule_login_notice(background_tasks, user, request)
     user.last_login_at = datetime.now(UTC)
     apply_admin_email_role(user)
     db.add(user)
@@ -401,6 +514,184 @@ def logout_all(
     db.commit()
     clear_refresh_cookie(response)
     return MessageResponse(message="Logged out from all sessions")
+
+
+@router.post("/email-verification/request", response_model=MessageResponse)
+@limiter.limit(settings.rate_limit_account_email)
+def request_email_verification(
+    request: Request,
+    background_tasks: BackgroundTasks,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> MessageResponse:
+    if current_user.email_verified:
+        return MessageResponse(message="Email already verified")
+    raw_token = create_account_token(
+        db, current_user, "verify_email", timedelta(hours=settings.email_verification_expire_hours)
+    )
+    add_audit_log(db, action="auth.email_verification.request", actor_user=current_user, target_user=current_user, request=request)
+    db.commit()
+    background_tasks.add_task(
+        send_verification_email,
+        current_user.email,
+        current_user.name,
+        frontend_link("verify_email", raw_token),
+    )
+    return MessageResponse(message="Verification email sent")
+
+
+@router.post("/email-verification/confirm", response_model=MessageResponse)
+def confirm_email_verification(
+    request: Request,
+    payload: AccountTokenRequest,
+    db: Session = Depends(get_db),
+) -> MessageResponse:
+    item = valid_account_token(db, payload.token, "verify_email")
+    if not item:
+        raise api_error("err_email_verification_invalid", status.HTTP_422_UNPROCESSABLE_CONTENT)
+    user = db.get(User, item.user_id)
+    if not user:
+        raise api_error("err_email_verification_invalid", status.HTTP_422_UNPROCESSABLE_CONTENT)
+    item.used_at = utc_now()
+    user.email_verified = True
+    add_audit_log(db, action="auth.email_verification.confirm", actor_user=user, target_user=user, request=request)
+    db.commit()
+    return MessageResponse(message="Email verified")
+
+
+@router.post("/password/forgot", response_model=MessageResponse)
+@limiter.limit(settings.rate_limit_account_email)
+def forgot_password(
+    request: Request,
+    payload: ForgotPasswordRequest,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+) -> MessageResponse:
+    user = find_user_by_email(db, payload.email)
+    if user and user.is_active and "@users.telegram.bambiku.dev" not in user.email:
+        raw_token = create_account_token(
+            db, user, "reset_password", timedelta(minutes=settings.password_reset_expire_minutes)
+        )
+        add_audit_log(db, action="auth.password_reset.request", target_user=user, request=request)
+        db.commit()
+        background_tasks.add_task(
+            send_password_reset_email,
+            user.email,
+            user.name,
+            frontend_link("reset_password", raw_token),
+        )
+    return MessageResponse(message="If the account exists, a recovery email has been sent")
+
+
+@router.post("/password/reset", response_model=MessageResponse)
+def reset_password(
+    request: Request,
+    response: Response,
+    payload: ResetPasswordRequest,
+    db: Session = Depends(get_db),
+) -> MessageResponse:
+    item = valid_account_token(db, payload.token, "reset_password")
+    if not item:
+        raise api_error("err_password_reset_invalid", status.HTTP_422_UNPROCESSABLE_CONTENT)
+    user = db.get(User, item.user_id)
+    if not user:
+        raise api_error("err_password_reset_invalid", status.HTTP_422_UNPROCESSABLE_CONTENT)
+    item.used_at = utc_now()
+    user.password_hash = hash_password(payload.new_password)
+    user.password_changed_at = utc_now()
+    revoke_identity_sessions(db, user.id, "password_reset")
+    add_audit_log(db, action="auth.password.reset", actor_user=user, target_user=user, request=request)
+    db.commit()
+    clear_refresh_cookie(response)
+    return MessageResponse(message="Password changed")
+
+
+@router.post("/password/change", response_model=MessageResponse)
+def change_password(
+    request: Request,
+    response: Response,
+    payload: ChangePasswordRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> MessageResponse:
+    if not verify_password(payload.current_password, current_user.password_hash):
+        raise api_error("err_current_password", status.HTTP_422_UNPROCESSABLE_CONTENT)
+    if verify_password(payload.new_password, current_user.password_hash):
+        raise api_error("err_password_unchanged", status.HTTP_422_UNPROCESSABLE_CONTENT)
+    current_user.password_hash = hash_password(payload.new_password)
+    current_user.password_changed_at = utc_now()
+    revoke_identity_sessions(db, current_user.id, "password_change")
+    add_audit_log(db, action="auth.password.change", actor_user=current_user, target_user=current_user, request=request)
+    db.commit()
+    clear_refresh_cookie(response)
+    return MessageResponse(message="Password changed")
+
+
+@router.get("/sessions", response_model=list[DeviceSessionPublic])
+def list_device_sessions(
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> list[DeviceSessionPublic]:
+    now = utc_now()
+    token = request.cookies.get(settings.refresh_cookie_name, "")
+    current_hash = hash_refresh_token(token) if token else ""
+    sessions = db.scalars(
+        select(RefreshSession)
+        .where(
+            RefreshSession.user_id == current_user.id,
+            RefreshSession.revoked_at.is_(None),
+            RefreshSession.expires_at > now,
+        )
+        .order_by(RefreshSession.created_at.desc())
+    ).all()
+    result = []
+    for session in sessions:
+        device, browser = device_details(session.user_agent)
+        result.append(
+            DeviceSessionPublic(
+                id=session.id,
+                device=device,
+                browser=browser,
+                ip_hint=ip_hint(session.ip_address),
+                created_at=session.created_at,
+                last_used_at=session.last_used_at,
+                expires_at=session.expires_at,
+                current=session.token_hash == current_hash,
+            )
+        )
+    return result
+
+
+@router.delete("/sessions/{session_id}", response_model=MessageResponse)
+def revoke_device_session(
+    session_id: int,
+    request: Request,
+    response: Response,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> MessageResponse:
+    session = db.scalar(
+        select(RefreshSession).where(RefreshSession.id == session_id, RefreshSession.user_id == current_user.id)
+    )
+    if not session or session.revoked_at is not None:
+        raise api_error("err_session_not_found", status.HTTP_404_NOT_FOUND)
+    current_token = request.cookies.get(settings.refresh_cookie_name, "")
+    is_current = bool(current_token and session.token_hash == hash_refresh_token(current_token))
+    session.revoked_at = utc_now()
+    session.revoked_reason = "device_revoked"
+    add_audit_log(
+        db,
+        action="auth.session.revoke",
+        actor_user=current_user,
+        target_user=current_user,
+        metadata={"session_id": session.id, "current": is_current},
+        request=request,
+    )
+    db.commit()
+    if is_current:
+        clear_refresh_cookie(response)
+    return MessageResponse(message="Session revoked")
 
 
 @router.get("/google/status", response_model=GoogleStatusResponse)
@@ -522,6 +813,7 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
         user.first_name = user.first_name or profile_first[:128]
         user.last_name = user.last_name or profile_last[:128]
 
+    notify_login = should_notify_login(user)
     user.last_login_at = datetime.now(UTC)
     apply_admin_email_role(user)
     db.flush()
@@ -534,6 +826,11 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
     separator = "&" if "?" in settings.google_success_redirect else "?"
     response = RedirectResponse(f"{settings.google_success_redirect}{separator}{query}")
     set_refresh_cookie(response, refresh_token)
+    if notify_login:
+        device, browser = device_details(request_user_agent(request))
+        response.background = BackgroundTask(
+            send_new_login_email, user.email, f"{device} / {browser}", utc_now().isoformat()
+        )
     return response
 
 

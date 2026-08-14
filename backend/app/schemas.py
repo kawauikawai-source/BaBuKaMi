@@ -34,6 +34,7 @@ class UserPublic(BaseModel):
     is_admin: bool = False
     created_at: datetime
     last_login_at: datetime | None = None
+    password_changed_at: datetime | None = None
 
     @computed_field
     @property
@@ -144,6 +145,34 @@ class TokenResponse(BaseModel):
 
 class MessageResponse(BaseModel):
     message: str
+
+
+class AccountTokenRequest(BaseModel):
+    token: str = Field(min_length=32, max_length=256)
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordRequest(AccountTokenRequest):
+    new_password: str = Field(min_length=8, max_length=128)
+
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str = Field(min_length=1, max_length=128)
+    new_password: str = Field(min_length=8, max_length=128)
+
+
+class DeviceSessionPublic(BaseModel):
+    id: int
+    device: str
+    browser: str
+    ip_hint: str
+    created_at: datetime
+    last_used_at: datetime | None = None
+    expires_at: datetime
+    current: bool = False
 
 
 class GameControlSettingsUpdateRequest(BaseModel):

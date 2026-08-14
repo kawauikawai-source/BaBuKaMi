@@ -322,8 +322,15 @@ section{padding:88px 0}
 .f-forgot{
   text-align:right;font-size:11.5px;color:var(--text-3);
   display:block;margin-top:-8px;margin-bottom:6px;transition:color var(--dur) var(--ease);
+  margin-left:auto;padding:0;border:0;background:none;font-family:inherit;
 }
 .f-forgot:hover{color:var(--accent)}
+.auth-recovery{max-width:410px;margin:0 auto}
+.auth-recovery-head{margin-bottom:20px}
+.auth-recovery-head span{color:var(--accent);font-size:9px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+.auth-recovery-head h3{margin:5px 0 7px;font-family:var(--font);font-size:22px}
+.auth-recovery-head p{margin:0;color:var(--text-3);font-size:12px;line-height:1.55}
+.auth-recovery-back{width:100%;justify-content:center;margin-top:9px}
 .f-divider{
   display:flex;align-items:center;gap:10px;
   font-size:10.5px;color:var(--text-3);margin:14px 0;

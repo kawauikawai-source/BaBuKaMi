@@ -243,10 +243,41 @@
             <input class="f-input" id="loginPass" type="password" data-i18n-ph="form_pass_ph" placeholder="Your password" autocomplete="current-password"/>
             <span class="f-error" id="loginPassErr" role="alert"></span>
           </div>
-          <a href="mailto:support@bambiku.com" class="f-forgot" data-i18n="form_forgot">Forgot password?</a>
+          <button type="button" class="f-forgot" data-auth-view="forgot" data-i18n="form_forgot">Forgot password?</button>
           <button type="submit" class="btn btn-primary f-submit" data-i18n="form_submit_login">Sign In</button>
           <div class="f-divider" data-i18n="form_or">or continue with</div>
           <div class="f-socials" data-social-providers></div>
+        </form>
+      </div>
+
+      <div id="forgotPasswordWrap" class="auth-recovery" hidden>
+        <div class="auth-recovery-head">
+          <span data-i18n="password_recovery_label">Account recovery</span>
+          <h3 data-i18n="password_recovery_title">Reset your password</h3>
+          <p data-i18n="password_recovery_intro">Enter your email and we will send a secure recovery link.</p>
+        </div>
+        <form id="forgotPasswordForm" novalidate>
+          <div class="f-group">
+            <label class="f-label" for="forgotEmail" data-i18n="form_email">Email Address</label>
+            <input class="f-input" id="forgotEmail" type="email" data-i18n-ph="form_email_ph" placeholder="you@example.com" autocomplete="email"/>
+            <span class="f-error" id="forgotEmailErr" role="alert"></span>
+          </div>
+          <button type="submit" class="btn btn-primary f-submit" data-i18n="password_recovery_send">Send recovery link</button>
+          <button type="button" class="btn btn-outline auth-recovery-back" data-auth-view="login" data-i18n="password_recovery_back">Back to sign in</button>
+        </form>
+      </div>
+
+      <div id="resetPasswordWrap" class="auth-recovery" hidden>
+        <div class="auth-recovery-head">
+          <span data-i18n="password_reset_label">New access key</span>
+          <h3 data-i18n="password_reset_title">Create a new password</h3>
+          <p data-i18n="password_reset_intro">The recovery link is single-use. All active devices will be signed out.</p>
+        </div>
+        <form id="resetPasswordForm" novalidate>
+          <div class="f-group"><label class="f-label" for="resetPassword" data-i18n="password_new">New password</label><input class="f-input" id="resetPassword" type="password" autocomplete="new-password"/><span class="f-error" id="resetPasswordErr" role="alert"></span></div>
+          <div class="f-group"><label class="f-label" for="resetPasswordConfirm" data-i18n="password_confirm">Repeat password</label><input class="f-input" id="resetPasswordConfirm" type="password" autocomplete="new-password"/><span class="f-error" id="resetPasswordConfirmErr" role="alert"></span></div>
+          <button type="submit" class="btn btn-primary f-submit" data-i18n="password_reset_submit">Change password</button>
+          <button type="button" class="btn btn-outline auth-recovery-back" data-auth-view="login" data-i18n="password_recovery_back">Back to sign in</button>
         </form>
       </div>
 

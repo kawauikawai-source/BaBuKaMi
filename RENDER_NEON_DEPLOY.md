@@ -64,6 +64,19 @@ The deploy performs these steps automatically:
 
 Render generates `BAMBIKU_SECRET_KEY`, the Kawaui ID client secret shared between services, and the BuKaMiKu cookie secret. These values never enter Git or browser JavaScript.
 
+To enable email verification, password recovery, and new-login notifications, add these secret values to the `bambiku` service under **Environment**:
+
+```text
+BAMBIKU_SMTP_HOST
+BAMBIKU_SMTP_PORT=587
+BAMBIKU_SMTP_USERNAME
+BAMBIKU_SMTP_PASSWORD
+BAMBIKU_SMTP_FROM_EMAIL
+BAMBIKU_SMTP_USE_TLS=true
+```
+
+Without SMTP configuration the application remains usable, but account emails are skipped and a warning is written to the backend log. Never commit SMTP credentials.
+
 ## 4. Verify the deployment
 
 Open the Render URL and check:

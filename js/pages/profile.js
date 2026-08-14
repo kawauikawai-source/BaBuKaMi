@@ -272,7 +272,9 @@
         label: ui.t('profile_password'),
         meta: ui.t('profile_password_updated', { date: passwordDate }),
         status: '',
-        statusClass: ''
+        statusClass: '',
+        action: 'password',
+        actionLabel: ui.t('password_change_action')
       },
       {
         label: ui.t('profile_2fa'),
@@ -284,7 +286,17 @@
         label: ui.t('profile_email_verify'),
         meta: user.email,
         status: ui.t(security.emailVerified ? 'status_verified' : 'status_unverified'),
-        statusClass: security.emailVerified ? 'status-ok' : 'status-warn'
+        statusClass: security.emailVerified ? 'status-ok' : 'status-warn',
+        action: security.emailVerified ? '' : 'verify-email',
+        actionLabel: ui.t('email_verification_action')
+      },
+      {
+        label: ui.t('devices_title'),
+        meta: ui.t('devices_row_meta'),
+        status: '',
+        statusClass: '',
+        action: 'devices',
+        actionLabel: ui.t('devices_manage')
       },
       {
         label: ui.t('profile_kyc'),
@@ -320,11 +332,100 @@
         <div class="security-row-actions">
           ${row.status ? `<span class="${row.statusClass}">${ui.escapeHTML(row.status)}</span>` : ''}
           ${row.action === 'kyc' ? `<button class="btn btn-outline btn-sm security-action" type="button" data-kyc-open>${ui.escapeHTML(row.actionLabel)}</button>` : ''}
+          ${row.action === 'password' ? `<button class="btn btn-outline btn-sm security-action" type="button" data-password-change>${ui.escapeHTML(row.actionLabel)}</button>` : ''}
+          ${row.action === 'verify-email' ? `<button class="btn btn-outline btn-sm security-action" type="button" data-email-verify>${ui.escapeHTML(row.actionLabel)}</button>` : ''}
+          ${row.action === 'devices' ? `<button class="btn btn-outline btn-sm security-action" type="button" data-device-sessions>${ui.escapeHTML(row.actionLabel)}</button>` : ''}
           ${row.action === 'logout' ? `<button class="btn btn-outline btn-sm security-action" type="button" data-profile-logout>${ui.escapeHTML(row.actionLabel)}</button>` : ''}
           ${row.action === 'logout-all' ? `<button class="btn btn-outline btn-sm security-action" type="button" data-logout-all>${ui.escapeHTML(row.actionLabel)}</button>` : ''}
         </div>
       </div>
     `).join('');
+  }
+
+  function showSecurityPanel(panelId) {
+    ['passwordChangePanel', 'deviceSessionsPanel'].forEach(id => {
+      const panel = document.getElementById(id);
+      if (panel) panel.hidden = id !== panelId;
+    });
+    if (panelId) document.getElementById(panelId)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  async function requestEmailVerification() {
+    const result = await store.requestEmailVerification();
+    ui.showToast(ui.t(result.error || 'email_verification_sent'), result.error ? 'err' : undefined);
+  }
+
+  function renderDeviceSessions(sessions) {
+    const list = document.getElementById('deviceSessionList');
+    if (!list) return;
+    if (!sessions.length) {
+      list.innerHTML = `<div class="device-session-empty">${ui.escapeHTML(ui.t('devices_empty'))}</div>`;
+      return;
+    }
+    list.innerHTML = sessions.map(session => {
+      const lastActive = session.last_used_at || session.created_at;
+      return `<article class="device-session${session.current ? ' is-current' : ''}">
+        <div class="device-session-icon" aria-hidden="true">${/mobile|android|iphone/i.test(session.device) ? 'M' : 'D'}</div>
+        <div class="device-session-copy"><strong>${ui.escapeHTML(session.device)} · ${ui.escapeHTML(session.browser)}</strong><span>${ui.escapeHTML(session.ip_hint)} · ${ui.escapeHTML(ui.t('devices_last_active', { date: formatDate(lastActive) }))}</span></div>
+        <div class="device-session-action">${session.current ? `<span class="device-current">${ui.escapeHTML(ui.t('devices_current'))}</span>` : ''}<button class="btn btn-outline btn-sm" type="button" data-session-revoke="${session.id}" data-session-current="${session.current ? '1' : '0'}">${ui.escapeHTML(ui.t('devices_revoke'))}</button></div>
+      </article>`;
+    }).join('');
+  }
+
+  async function loadDeviceSessions() {
+    const list = document.getElementById('deviceSessionList');
+    if (list) list.innerHTML = `<div class="device-session-empty">${ui.escapeHTML(ui.t('state_loading_title'))}</div>`;
+    const result = await store.listDeviceSessions();
+    if (result.error) {
+      if (list) list.innerHTML = `<div class="device-session-empty is-error">${ui.escapeHTML(ui.t(result.error))}</div>`;
+      return;
+    }
+    renderDeviceSessions(Array.isArray(result) ? result : []);
+  }
+
+  async function revokeDeviceSession(button) {
+    button.disabled = true;
+    const result = await store.revokeDeviceSession(button.dataset.sessionRevoke);
+    if (result.error) {
+      button.disabled = false;
+      ui.showToast(ui.t(result.error), 'err');
+      return;
+    }
+    ui.showToast(ui.t('devices_revoked'));
+    if (button.dataset.sessionCurrent === '1') {
+      store.logout();
+      global.location.href = '../index.html?auth=login';
+      return;
+    }
+    loadDeviceSessions();
+  }
+
+  async function changePassword(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const current = document.getElementById('currentPassword')?.value || '';
+    const next = document.getElementById('newPassword')?.value || '';
+    const confirmation = document.getElementById('newPasswordConfirm')?.value || '';
+    if (next !== confirmation) {
+      ui.showToast(ui.t('err_password_mismatch'), 'err');
+      return;
+    }
+    const validation = store.validatePassword(next);
+    if (validation) {
+      ui.showToast(ui.t(validation), 'err');
+      return;
+    }
+    const submit = form.querySelector('[type="submit"]');
+    if (submit) submit.disabled = true;
+    const result = await store.changePassword(current, next);
+    if (submit) submit.disabled = false;
+    if (result.error) {
+      ui.showToast(ui.t(result.error), 'err');
+      return;
+    }
+    form.reset();
+    ui.showToast(ui.t('password_change_success'));
+    global.location.href = '../index.html?auth=login';
   }
 
   function renderProfileCompletion(user) {
@@ -794,8 +895,20 @@
     document.getElementById('inp-fname')?.addEventListener('input', clearPersonalErrors);
     document.getElementById('securityRows')?.addEventListener('click', event => {
       if (event.target.closest('[data-kyc-open]')) setKycModalOpen(true);
+      if (event.target.closest('[data-password-change]')) showSecurityPanel('passwordChangePanel');
+      if (event.target.closest('[data-email-verify]')) requestEmailVerification();
+      if (event.target.closest('[data-device-sessions]')) {
+        showSecurityPanel('deviceSessionsPanel');
+        loadDeviceSessions();
+      }
       if (event.target.closest('[data-profile-logout]')) logoutCurrentSession();
       if (event.target.closest('[data-logout-all]')) logoutAllSessions();
+    });
+    document.querySelectorAll('[data-security-close]').forEach(button => button.addEventListener('click', () => showSecurityPanel('')));
+    document.getElementById('passwordChangeForm')?.addEventListener('submit', changePassword);
+    document.getElementById('deviceSessionList')?.addEventListener('click', event => {
+      const button = event.target.closest('[data-session-revoke]');
+      if (button) revokeDeviceSession(button);
     });
     document.getElementById('kycOverlay')?.addEventListener('click', event => {
       if (event.target === event.currentTarget || event.target.closest('[data-kyc-close]')) setKycModalOpen(false);

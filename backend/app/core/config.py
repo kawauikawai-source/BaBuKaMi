@@ -40,6 +40,7 @@ class Settings(BaseSettings):
     rate_limit_vip_purchase: str = "10/minute"
     rate_limit_manager_messages: str = "30/minute"
     rate_limit_manager_actions: str = "15/minute"
+    rate_limit_account_email: str = "5/hour"
     admin_emails: str = Field(default="", validation_alias=AliasChoices("BAMBIKU_ADMIN_EMAILS", "ADMIN_EMAILS"))
 
     google_client_id: str = ""
@@ -63,6 +64,19 @@ class Settings(BaseSettings):
     bukamiku_redirect_uri: str = "http://127.0.0.1:5600/auth/callback"
     identity_code_ttl_seconds: int = 60
     identity_session_expire_days: int = 30
+    email_verification_expire_hours: int = 24
+    password_reset_expire_minutes: int = 30
+    smtp_host: str = ""
+    smtp_port: int = 587
+    smtp_username: str = ""
+    smtp_password: str = ""
+    smtp_from_email: str = ""
+    smtp_use_tls: bool = True
+
+    @computed_field
+    @property
+    def email_delivery_enabled(self) -> bool:
+        return bool(self.smtp_host.strip() and self.smtp_from_email.strip())
 
     @model_validator(mode="after")
     def validate_production_security(self) -> "Settings":

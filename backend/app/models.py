@@ -44,6 +44,7 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
     last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    password_changed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     transactions: Mapped[list["Transaction"]] = relationship(back_populates="user")
     refresh_sessions: Mapped[list["RefreshSession"]] = relationship(back_populates="user")
     game_rounds: Mapped[list["GameRound"]] = relationship(back_populates="user")
@@ -68,6 +69,7 @@ class User(Base):
     studio_transactions: Mapped[list["StudioTransaction"]] = relationship(back_populates="user")
     identity_sessions: Mapped[list["IdentityAppSession"]] = relationship(back_populates="user")
     soul_appraisals: Mapped[list["SoulAppraisal"]] = relationship(back_populates="user")
+    account_action_tokens: Mapped[list["AccountActionToken"]] = relationship(back_populates="user")
 
 
 class GameControlSettings(Base):
@@ -227,6 +229,24 @@ class RefreshSession(Base):
 
     user: Mapped[User] = relationship(back_populates="refresh_sessions", foreign_keys=[user_id])
     replaced_by_session: Mapped["RefreshSession | None"] = relationship(remote_side=[id])
+
+
+class AccountActionToken(Base):
+    __tablename__ = "account_action_tokens"
+    __table_args__ = (
+        CheckConstraint("purpose IN ('verify_email', 'reset_password')", name="ck_account_action_token_purpose"),
+        Index("ix_account_action_tokens_user_purpose", "user_id", "purpose", "created_at"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
+    purpose: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
+    token_hash: Mapped[str] = mapped_column(String(64), nullable=False, unique=True, index=True)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+    user: Mapped[User] = relationship(back_populates="account_action_tokens")
 
 
 class AbuseEvent(Base):

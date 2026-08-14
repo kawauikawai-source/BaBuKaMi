@@ -6,6 +6,7 @@
   const ui = B.ui;
   let initialized = false;
   let registerStep = 1;
+  let resetToken = '';
 
   function validateEmail(email) {
     const key = store.validateEmail(email);
@@ -203,11 +204,84 @@
     ui.redirectAfterAuth?.();
   }
 
+  function showAuthView(view) {
+    ui.showAuthView?.(view);
+  }
+
+  async function handleForgotPassword(event) {
+    event.preventDefault();
+    const form = event.target;
+    const email = field('forgotEmail');
+    const error = field('forgotEmailErr');
+    const valid = showFieldError(email, error, validateEmail(email.value));
+    if (!valid) return;
+    setSubmitBusy(form, true);
+    const result = await store.forgotPassword(email.value);
+    setSubmitBusy(form, false);
+    if (result.error) {
+      ui.showToast(ui.t(result.error), 'err');
+      return;
+    }
+    ui.showToast(ui.t('password_recovery_sent'));
+    form.reset();
+    showAuthView('login');
+  }
+
+  async function handleResetPassword(event) {
+    event.preventDefault();
+    const form = event.target;
+    const password = field('resetPassword');
+    const confirmation = field('resetPasswordConfirm');
+    const passwordError = field('resetPasswordErr');
+    const confirmationError = field('resetPasswordConfirmErr');
+    const passwordValid = showFieldError(password, passwordError, validatePassword(password.value));
+    const confirmationValid = showFieldError(
+      confirmation,
+      confirmationError,
+      confirmation.value === password.value ? '' : ui.t('err_password_mismatch')
+    );
+    if (!passwordValid || !confirmationValid) return;
+    setSubmitBusy(form, true);
+    const result = await store.resetPassword(resetToken, password.value);
+    setSubmitBusy(form, false);
+    if (result.error) {
+      ui.showToast(ui.t(result.error), 'err');
+      return;
+    }
+    resetToken = '';
+    form.reset();
+    ui.showToast(ui.t('password_reset_success'));
+    showAuthView('login');
+  }
+
+  async function consumeAccountLinks() {
+    const url = new URL(global.location.href);
+    const verificationToken = url.searchParams.get('verify_email');
+    resetToken = url.searchParams.get('reset_password') || '';
+    if (!verificationToken && !resetToken) return;
+    url.searchParams.delete('verify_email');
+    url.searchParams.delete('reset_password');
+    global.history.replaceState({}, '', url.pathname + url.search + url.hash);
+    if (verificationToken) {
+      const result = await store.confirmEmailVerification(verificationToken);
+      ui.showToast(ui.t(result.error || 'email_verification_success'), result.error ? 'err' : 'ok');
+    }
+    if (resetToken) {
+      ui.openModal('login');
+      showAuthView('reset');
+    }
+  }
+
   function init() {
     if (initialized) return;
     initialized = true;
     document.getElementById('loginForm')?.addEventListener('submit', handleLogin);
     document.getElementById('registerForm')?.addEventListener('submit', handleRegister);
+    document.getElementById('forgotPasswordForm')?.addEventListener('submit', handleForgotPassword);
+    document.getElementById('resetPasswordForm')?.addEventListener('submit', handleResetPassword);
+    document.querySelectorAll('[data-auth-view]').forEach(button => {
+      button.addEventListener('click', () => showAuthView(button.dataset.authView));
+    });
     document.querySelector('[data-register-next]')?.addEventListener('click', () => {
       if (validateRegisterStep(registerStep)) setRegisterStep(registerStep + 1);
     });
@@ -225,6 +299,7 @@
     initRealtimeValidation('loginEmail', 'loginEmailErr');
     initRealtimeValidation('regEmail', 'regEmailErr');
     setRegisterStep(1);
+    consumeAccountLinks();
   }
 
   B.auth = { init };

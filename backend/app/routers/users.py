@@ -49,7 +49,9 @@ def update_my_profile(
         existing = db.scalar(select(User).where(User.email == email, User.id != current_user.id))
         if existing:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already registered")
-        current_user.email = email
+        if email != current_user.email:
+            current_user.email = email
+            current_user.email_verified = False
     if "phone" in data and data["phone"] is not None:
         current_user.phone = data["phone"].strip()
     if "dob" in data and data["dob"] is not None:
