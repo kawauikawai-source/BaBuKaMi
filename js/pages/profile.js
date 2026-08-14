@@ -222,6 +222,8 @@
     if (currentTierMark) currentTierMark.textContent = tier.icon;
     const currentTierName = document.getElementById('profileCurrentTierName');
     if (currentTierName) currentTierName.textContent = tier.name;
+    const currentPerkCard = document.getElementById('profileCurrentPerkCard');
+    if (currentPerkCard) currentPerkCard.hidden = false;
     const vipBar = document.getElementById('vip-bar');
     if (vipBar) vipBar.style.width = vip.progress + '%';
 

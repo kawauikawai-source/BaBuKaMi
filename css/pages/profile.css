@@ -228,15 +228,19 @@ body[data-page="profile"] #navbar{
 .profile-manager-access .btn{flex:0 0 auto;justify-content:center;min-width:160px}
 
 @media(max-width:620px){
-  .overview-vip-panel{padding:14px}
+  .overview-vip-panel{padding:14px;border-color:var(--border);box-shadow:inset 0 -3px 0 var(--profile-tier)}
   .overview-vip-panel>.section-row{padding:0 2px 12px}
   .overview-vip-panel .vip-tiers-mini{grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--border);border-radius:7px}
   .overview-vip-panel .vip-tier-mini{border-bottom:1px solid var(--border)}
   .overview-vip-panel .vip-tier-mini:nth-child(2){border-right:0}
   .overview-vip-panel .vip-tier-mini:nth-child(n+3){border-bottom:0}
-  .profile-vip-current-head{min-height:80px;padding:15px 16px}
+  .overview-vip-panel .perk-box{margin-top:14px;padding-bottom:18px;border-color:var(--border);border-bottom-color:var(--profile-tier);background:#0c0e0f}
+  .profile-vip-current-head{min-height:86px;padding:16px 17px;justify-content:space-between}
+  .profile-vip-current-head>div{order:-1;min-width:0}
   .profile-vip-current-mark{width:46px;height:46px;flex-basis:46px;font-size:21px}
-  .overview-vip-panel .perk-box .vip-perks{grid-template-columns:1fr;padding:17px 17px 0}
+  .profile-vip-current-head strong{font-size:20px}
+  .overview-vip-panel .perk-box .vip-perks{grid-template-columns:1fr;gap:12px;padding:18px 17px 0}
+  .overview-vip-panel .perk-box .vip-perks li{font-size:14px;line-height:1.45}
   .profile-manager-access{align-items:stretch;flex-direction:column}
   .profile-manager-access .btn{width:100%}
 }
@@ -428,13 +432,13 @@ body[data-page="profile"] #navbar{
 
 @media(max-width:620px){
 
-  .profile-page .container{width:100%;min-width:0;max-width:100%;padding:0 14px}
+  .profile-page .container{width:100%;min-width:0;max-width:100%;padding:0 18px}
 
-  .profile-command-head.game-command-head{display:block;width:100%;min-width:0;max-width:100%;min-height:0;margin-bottom:18px;padding:19px 18px 18px;overflow:hidden}
+  .profile-command-head.game-command-head{display:block;width:100%;min-width:0;max-width:100%;min-height:0;margin-bottom:18px;padding:20px 19px;overflow:hidden}
 
   .profile-command-head.game-command-head .profile-command-copy{width:100%}
 
-  .profile-command-head.game-command-head .page-title{margin-top:10px;font-size:36px;line-height:.98}
+  .profile-command-head.game-command-head .page-title{max-width:100%;margin-top:10px;font-size:clamp(36px,11vw,43px);line-height:.98;overflow-wrap:anywhere}
 
   .profile-command-head.game-command-head .page-sub{max-width:280px;margin-top:10px;font-size:14px;line-height:1.55}
 
@@ -448,7 +452,7 @@ body[data-page="profile"] #navbar{
 
   .profile-command-head .profile-command-meta strong{font-size:10px}
 
-  .profile-command-head .profile-command-back{position:static;width:auto;min-width:108px;min-height:42px;margin:12px 0 0 auto;padding:9px 16px}
+  .profile-command-head .profile-command-back{position:static;width:100%;min-height:44px;margin:12px 0 0;padding:9px 16px;justify-content:center}
 
   .profile-sidebar,.profile-content{padding:20px 16px}
 
