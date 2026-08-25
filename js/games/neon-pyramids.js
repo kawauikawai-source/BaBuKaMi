@@ -424,8 +424,6 @@
     renderStatus();
     renderActions();
     renderRecent();
-    document.querySelector('.blocks-panel')?.classList.toggle('is-round-active', isActive());
-    document.querySelector('.blocks-layout')?.classList.toggle('is-round-active', isActive());
   }
 
   function recordSettledRound(result) {

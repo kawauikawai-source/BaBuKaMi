@@ -159,8 +159,6 @@
     renderStatus();
     renderAction();
     renderRecent();
-    document.querySelector('.mines-panel')?.classList.toggle('is-round-active', isRoundActive());
-    document.querySelector('.mines-layout')?.classList.toggle('is-round-active', isRoundActive());
   }
 
   function showStoreError(result) {

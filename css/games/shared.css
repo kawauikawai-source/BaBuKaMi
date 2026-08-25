@@ -125,47 +125,12 @@
   .crash-chart-labels{left:18px;right:18px}
   .slot-reels{grid-template-rows:repeat(3,86px);gap:8px}
   .slot-cell span{font-size:28px}
-  .roulette-table-wrap{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:10px 0}
-  .roulette-table{width:100%;min-width:0;max-width:100%}
-  .roulette-number-grid{grid-template-columns:minmax(34px,44px) repeat(12,minmax(0,1fr));grid-template-rows:repeat(3,38px);gap:2px}
+  .slot-cell small{font-size:9px}
+  .roulette-table{min-width:720px}
+  .roulette-number-grid{grid-template-columns:50px repeat(12,minmax(44px,1fr));grid-template-rows:repeat(3,42px)}
   .number-bet.zero{grid-column:1;grid-row:1 / span 3}
   .roulette-outside-grid,.inside-buttons,.inside-buttons.compact,.preset-grid{grid-template-columns:repeat(3,1fr)}
-  .roulette-advanced-toggle{width:100%;min-width:0}
-}
-
-/* ── MOBILE CONSOLE ACTIVE ROUND BAR ───────────────────────── */
-@media (max-width: 768px) {
-  .game-console-panel.is-round-active .chip-row,
-  .game-console-panel.is-round-active .bet-slip,
-  .game-console-panel.is-round-active .plinko-options,
-  .game-console-panel.is-round-active .slot-bet-box:not(.is-active-action) {
-    display: none !important;
-  }
-  .game-console-panel.is-round-active {
-    position: fixed !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    z-index: 120 !important;
-    padding: 10px 16px calc(10px + var(--sab)) !important;
-    background: rgba(15,15,17,0.95) !important;
-    backdrop-filter: blur(16px) !important;
-    border-top: 1px solid var(--border-h) !important;
-    box-shadow: 0 -10px 40px rgba(0,0,0,0.6) !important;
-    margin: 0 !important;
-  }
-  .game-console-panel.is-round-active .btn-primary,
-  .game-console-panel.is-round-active .crash-action-btn,
-  .game-console-panel.is-round-active .mines-action-btn,
-  .game-console-panel.is-round-active .blocks-action-btn,
-  .game-console-panel.is-round-active .slot-spin-btn,
-  .game-console-panel.is-round-active .plinko-drop-btn,
-  .game-console-panel.is-round-active .roulette-spin-btn {
-    min-height: 52px !important;
-    font-size: 16px !important;
-    margin: 0 !important;
-    width: 100% !important;
-  }
+  .roulette-advanced-toggle{min-width:720px}
 }
 
 @media (prefers-reduced-motion:reduce){

@@ -48,10 +48,6 @@
   --bet-chip-gap: 8px;
   --ease:         cubic-bezier(0.4,0,0.2,1);
   --dur:          0.22s;
-  --sat:          env(safe-area-inset-top, 0px);
-  --sab:          env(safe-area-inset-bottom, 0px);
-  --sal:          env(safe-area-inset-left, 0px);
-  --sar:          env(safe-area-inset-right, 0px);
 }
 
 
@@ -153,14 +149,14 @@ section{padding:88px 0}
 /* ── NAVBAR ──────────────────────────────── */
 #navbar{
   position:fixed;top:0;left:0;right:0;z-index:100;
-  padding:calc(18px + var(--sat)) 0 18px;
+  padding:18px 0;
   transition:background var(--dur),backdrop-filter var(--dur),padding var(--dur),border-color var(--dur);
   border-bottom:1px solid transparent;
 }
 #navbar.scrolled{
   background:rgba(8,8,9,.88);
   backdrop-filter:blur(22px);
-  padding:calc(12px + var(--sat)) 0 12px;border-color:var(--border);
+  padding:12px 0;border-color:var(--border);
 }
 .nav-inner{display:flex;align-items:center}
 .logo{
@@ -205,7 +201,7 @@ section{padding:88px 0}
   backdrop-filter:blur(14px);z-index:200;
   display:flex;align-items:center;justify-content:center;
   opacity:0;pointer-events:none;transition:opacity var(--dur) var(--ease);
-  padding:calc(16px + var(--sat)) calc(16px + var(--sar)) calc(16px + var(--sab)) calc(16px + var(--sal));
+  padding:16px;
 }
 .overlay.open{opacity:1;pointer-events:all}
 .modal{

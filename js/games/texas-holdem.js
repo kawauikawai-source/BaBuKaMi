@@ -349,8 +349,6 @@
     renderResult();
     renderRecent();
     renderRankGallery();
-    document.querySelector('.holdem-panel')?.classList.toggle('is-round-active', isActive());
-    document.querySelector('.holdem-layout')?.classList.toggle('is-round-active', isActive());
   }
 
   function rememberRound(round) {

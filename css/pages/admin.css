@@ -672,24 +672,5 @@
   .admin-support-message{max-width:94%}
 }
 
-.admin-table-wrap, .admin-card-wrap {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-@media (max-width: 768px) {
-  .admin-layout, .admin-grid {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .admin-support-user-strip {
-    grid-template-columns: 1fr !important;
-  }
-}
-
 
 
