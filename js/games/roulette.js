@@ -601,6 +601,8 @@
     if (spin) spin.disabled = spinning || !bets.size;
     renderChips();
     document.querySelector('.roulette-table-wrap')?.classList.toggle('is-disabled', spinning);
+    document.querySelector('.roulette-panel')?.classList.toggle('is-round-active', spinning);
+    document.querySelector('.roulette-layout')?.classList.toggle('is-round-active', spinning);
     syncBetHighlights();
   }
 

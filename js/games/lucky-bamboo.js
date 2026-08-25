@@ -195,6 +195,11 @@
     });
   }
 
+  function syncSpinActiveState() {
+    document.querySelector('.slot-panel')?.classList.toggle('is-round-active', spinning);
+    document.querySelector('.slot-layout')?.classList.toggle('is-round-active', spinning);
+  }
+
   async function spin() {
     if (spinning) return;
     if (selectedBet > currentBalance()) {
@@ -202,6 +207,7 @@
       return;
     }
     spinning = true;
+    syncSpinActiveState();
     document.getElementById('slotSpin').disabled = true;
     resetResultUi();
     renderGrid(EMPTY_GRID, [], '');
@@ -210,6 +216,7 @@
     const result = await store.playLuckyBamboo(selectedBet);
     if (showStoreError(result)) {
       spinning = false;
+      syncSpinActiveState();
       document.getElementById('slotSpin').disabled = false;
       return;
     }
@@ -229,6 +236,7 @@
     renderRecent();
     renderBalance();
     spinning = false;
+    syncSpinActiveState();
     document.getElementById('slotSpin').disabled = false;
   }
 

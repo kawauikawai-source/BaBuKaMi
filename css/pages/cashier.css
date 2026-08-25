@@ -603,6 +603,11 @@ body[data-page="deposit"] #navbar{
   .card-oops-sticker img{width:min(230px,74vw);height:230px}
 }
 
+@media(max-width:480px){
+  .cashier-page .info-list,.crypto-asset-grid{grid-template-columns:1fr}
+  .cashier-page .preset-grid{grid-template-columns:repeat(2,1fr)}
+}
+
 @media(prefers-reduced-motion:reduce){
   .cashier-tab,.cashier-page .method-btn,.cashier-page .preset-btn,.card-checkout-step,.payment-rail,.card-oops-overlay,.card-oops-modal{transition:none}
 }

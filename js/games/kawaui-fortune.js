@@ -160,6 +160,8 @@
     document.querySelectorAll('[data-crash-bet]').forEach(btn => {
       btn.disabled = startPending || flying || cashoutLocked;
     });
+    document.querySelector('.crash-panel')?.classList.toggle('is-round-active', flying);
+    document.querySelector('.crash-layout')?.classList.toggle('is-round-active', flying);
   }
 
   function drawVisual(multiplier, status) {

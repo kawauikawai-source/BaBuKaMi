@@ -793,6 +793,7 @@
     if (button) button.disabled = true;
     clearResultClasses();
     if (stage) stage.classList.add('is-dropping');
+    document.querySelector('.plinko-panel')?.classList.add('is-round-active');
     renderBoard(clientPockets(selectedRows, selectedRisk));
     ui.setText('plinkoResult', ui.t('plinko_dropping'));
     B.audio?.play?.('drop');
@@ -802,6 +803,7 @@
       busy = false;
       if (button) button.disabled = false;
       if (stage) stage.classList.remove('is-dropping');
+      document.querySelector('.plinko-panel')?.classList.remove('is-round-active');
       ui.setText('plinkoResult', ui.t('plinko_waiting'));
       return;
     }
@@ -826,6 +828,7 @@
     renderRecent();
     renderBalance();
     busy = false;
+    document.querySelector('.plinko-panel')?.classList.remove('is-round-active');
     if (button) button.disabled = false;
   }
 
